@@ -1,0 +1,21 @@
+{
+  "name": "league-match",
+  "version": "0.1.0",
+  "main": "dist/app.js",
+  "private": true,
+  "scripts": {
+    "test": "tslint 'src/**/*.ts'",
+    "build": "tsc -p .",
+    "watch": "tsc -w -p .",
+    "start": "npm-run-all --parallel watch serve",
+    "serve": "tabris serve"
+  },
+  "dependencies": {
+    "tabris": "^2.0.0-rc1"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.0.2",
+    "tslint": "^5.4.3",
+    "typescript": "^2.3.4"
+  }
+}

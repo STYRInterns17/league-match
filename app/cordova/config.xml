@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="example.league.match" version="0.1.0">
+  <name>League Match</name>
+  <description>
+    Create a league and compete.
+  </description>
+  <author email="michael@styr.com">
+    Michael Rojas, Nick Uzelac, Curt Sapp
+  </author>
+</widget>
