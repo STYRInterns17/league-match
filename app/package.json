@@ -1,5 +1,5 @@
 {
-  "name": "league-match",
+  "name": "testproject",
   "version": "0.1.0",
   "main": "dist/app.js",
   "private": true,
@@ -11,11 +11,16 @@
     "serve": "tabris serve"
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
     "tabris": "^2.0.0-rc1"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.16.3",
+    "@types/express": "^4.0.35",
+    "@types/node": "^7.0.22",
     "npm-run-all": "^4.0.2",
-    "tslint": "^5.4.3",
-    "typescript": "^2.3.4"
+    "tslint": "^5.3.2",
+    "typescript": "^2.3.3"
   }
 }

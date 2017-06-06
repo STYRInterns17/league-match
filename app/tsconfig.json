@@ -8,4 +8,10 @@
   "include": [
     "./src/**/*.ts"
   ]
+  "types": [
+    "node"
+  ]
+  "exclude": [
+    "node_modules"
+  ]
 }
