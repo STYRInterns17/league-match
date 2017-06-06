@@ -6,14 +6,21 @@ import {customButton} from './customButton';
 export class HomePage extends BasePage {
 
     constructor() {
-        super(true);
-
+        super();
     }
 
     public createComponents(): void {
-        var drawer = tabris.ui.drawer;
+        let drawer = tabris.ui.drawer;
         drawer.background = '#37474f';
         drawer.enabled = true;
+
+        let navigationView = new tabris.NavigationView({
+            left: 0, top: 0, right: 0, bottom: 0
+        }).appendTo(tabris.ui.contentView);
+
+
+        this.page.appendTo(navigationView);
+        this.page.background = '#37474f';
 
         drawer.on('open', function() {
             console.log('drawer opened');
@@ -21,37 +28,19 @@ export class HomePage extends BasePage {
             console.log('drawer closed');
         });
 
-        let button = new tabris.Button({
-            centerX: 0,
-            text: 'Profile'
-            top: 'prev() 10',
-            background: '#448aff'
-        });
-        drawer.append(button);
+        let profileButton = new customButton({}, 'Profile');
+        profileButton.appendTo(drawer);
 
-        let button1 = new tabris.Button({
-            centerX: 0,
-            text: 'Profile'
-            top: 'prev() 20',
-            background: '#448aff'
-        });
-        drawer.append(button1);
+        let notificationButton = new customButton({}, 'Profile');
+        profileButton.appendTo(drawer);
 
-        let button2 = new tabris.Button({
-            centerX: 0,
-            text: 'Profile'
-            top: 'prev() 20',
-            background: '#448aff'
-        });
-        drawer.append(button2);
+        let leagueButton = new customButton({}, 'Profile');
+        profileButton.appendTo(drawer);
 
-        let button3 = new tabris.Button({
-            centerX: 0,
-            text: 'Profile'
-            top: 'prev() 20',
-            background: '#448aff'
-        });
-        drawer.append(button3);
+        let adminButton = new customButton({}, 'Profile');
+        profileButton.appendTo(drawer);
+
+
     }
 
 }

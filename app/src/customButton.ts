@@ -9,17 +9,25 @@ export class customButton extends tabris.Composite{
         super(config);
 
         this.cornerRadius = 5;
+        this.top = 'prev() 10';
+        this.left = 10;
+        this.right = 10;
+        this.height = 50;
+        this.background = '#448aff';
 
         let inner = new tabris.Composite({
-            top: 2, left: 2, right: 2, bottom: 2,
-            background: '#00daff'
+            background: '#448aff',
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
         }).appendTo(this);
 
         new tabris.TextView({
-            centerX: 0, centerY:0,
+            centerX: 0,
+            centerY: 0,
             text: text,
-            font: 'bold 20px',
-            textColor: '#15fff4'
+            font: 'bold 20px'
         }).appendTo(inner);
     }
 
