@@ -8,10 +8,8 @@ getLeagueUsers(): Users[]; *Mic
 getLeagueMatchHistory(): Match[]; *Mic
 postCreateLeauge(pref: LeaguePreferences): void; //Setup up timezone *Mic
 
-getAssociations(userId: User): Users[]; *Curt...eventually
-postAddAssociation(user1: User, user2: User): void; *Curt...eventually
 
-postSendEmailInvite(address: string, League): void; *Curt...eventually
+deleteLeague(leagueId: League) :void; *Mic
 
 postMatch(leagueId: League,match: Match, submitter: User): void; *Curt
 postMatchApproved(league: League, match: Match): void; *Curt
@@ -24,4 +22,8 @@ postAcivityHistory(daysRelativeToToday: number, activityValue: number): void; //
 
 postBroadCast(leagueId: League, submitter: User, msg: string) :void; *Curt
 
-deleteLeague(leagueId: League) :void; *Mic
+
+
+getAssociations(userId: User): Users[]; *Curt...eventually
+
+postSendEmailInvite(address: string, League): void; *Curt...eventually
