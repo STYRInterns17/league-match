@@ -4,39 +4,52 @@
 
 import * as tabris from "tabris";
 import {BasePage} from './BasePage';
-import { NavigationView, Page, ui } from 'tabris';
+import construct = Reflect.construct;
 
-export class LoginPage {
-
-    navigationView: NavigationView;
-
-    //constructor() { super(true); }
+export class LoginPage extends BasePage{
 
     private userEmail;
     private userPassword;
 
+    constructor(){
+        super();
+    }
+
     public createComponents(): void {
 
         console.log('This is the login page');
-
-        /*let back = new tabris.Composite({
-        background: '#00FF00',
-        layoutData: {left: 0, top: 0, right: 0, bottom: 0}
-    }).appendTo(tabris.ui.contentView);
-
-        let bottomHolder = new tabris.Composite({
-            layoutData: {left: 0, right: 0, top: 0, bottom: 0}
-        }).appendTo(back);*/
-
+        
         let navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0,
-            background: '#00FF00'
+            background: '#ffffff'
         }).appendTo(tabris.ui.contentView);
 
-        new tabris.Page({
-            title: 'Page'
-        }).appendTo(navigationView);
+        this.page.appendTo(navigationView);
+        this.page.background = '#37474f';
 
+        new tabris.TextView({
+            layoutData: {left: 25, top: "20%", right: 25},
+            alignment: "center",
+            font: "bold 48px",
+            textColor: 'yellow',
+            text: "League Match"
+        }).appendTo(this.page);
+
+        this.userEmail = new tabris.TextInput({
+            layoutData: {left: 25, right: 25, top: "prev() 10", height: 50},
+            message: 'Email',
+            keyboard: 'email',
+            textColor: 'black',
+            id: 'userEmail'
+        }).appendTo(this.page);
+
+        this.userPassword = new tabris.TextInput(({
+            layoutData: {left: 25, right: 25, top: "prev() 10", height: 50},
+            message: 'Password',
+            type: 'password',
+            id: "userPassword",
+            textColor: 'black'
+        })).appendTo(this.page);
     }
 
     /*
@@ -58,3 +71,6 @@ export class LoginPage {
      Move page accordingly
      */
 }
+
+let loginPage = new LoginPage();
+loginPage.createComponents();
