@@ -290,7 +290,7 @@ class MainPage {
             });
         }
 
-        // Completed Tasks section
+        // Completed Tasks section Test
 
         let drawer = ui.drawer;
 
