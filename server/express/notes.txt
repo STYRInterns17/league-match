@@ -1,0 +1,6 @@
+npm install express --save
+npm install body-parser --save
+
+npm install @types/node --save-dev
+npm install @types/express --save-dev
+npm install @types/body-parser --save-dev

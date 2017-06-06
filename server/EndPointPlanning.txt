@@ -1,0 +1,27 @@
+postUserSettings(pref: UserPreferences): void; *Nick
+getUserSettings(): UserPreferences; Nick
+
+postValidateLogin(address: string, password: string): boolean; *Curt
+signUp *Curt
+
+getLeagueUsers(): Users[]; *Mic
+getLeagueMatchHistory(): Match[]; *Mic
+postCreateLeauge(pref: LeaguePreferences): void; //Setup up timezone *Mic
+
+getAssociations(userId: User): Users[]; *Curt...eventually
+postAddAssociation(user1: User, user2: User): void; *Curt...eventually
+
+postSendEmailInvite(address: string, League): void; *Curt...eventually
+
+postMatch(leagueId: League,match: Match, submitter: User): void; *Curt
+postMatchApproved(league: League, match: Match): void; *Curt
+
+getNotifications(userId: User): Notificiation[]; *Curt
+postNotification(toUser: User, msg: String, submitter: string): void;*Curt
+
+getActivityHistory(userId: User, dateRange: Dates?) : number[]; *Nick
+postAcivityHistory(daysRelativeToToday: number, activityValue: number): void; //Not all today is the same *Nick
+
+postBroadCast(leagueId: League, submitter: User, msg: string) :void; *Curt
+
+deleteLeague(league: League) :void; *Mic
