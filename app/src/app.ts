@@ -16,7 +16,8 @@ createPage();
 
 function createPage(title) {
     let page = new Page({
-        title: title || 'Initial Page'
+        title: title || 'Initial Page',
+        background: '#0000FF'
     }).appendTo(navigationView);
     new Button({
         left: 16, top: 16, right: 16,
