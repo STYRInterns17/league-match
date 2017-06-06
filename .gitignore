@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+server/express/.idea/
+server/express/dist/
