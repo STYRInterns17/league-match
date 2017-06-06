@@ -1,4 +1,3 @@
-///<reference path="Reminder.ts"/>
 import * as http from 'http';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
@@ -35,7 +34,7 @@ class App {
          * working so far. This function will change when we start to add more
          * API endpoints */
         let router = express.Router();
-        // placeholder route handler
+
 
 
 
@@ -46,15 +45,12 @@ class App {
         });
 
 
-
-
-        router.post('/reminder', (req, res) => {
+        router.post('/user/pref', (req, res) => {
             res.json({
-                message: 'Your reminder has been added to the list.'
+                success: true
             });
 
             console.log(req.body);
-            
             console.log('Added reminder to list');
         });
 

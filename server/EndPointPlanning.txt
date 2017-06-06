@@ -24,4 +24,4 @@ postAcivityHistory(daysRelativeToToday: number, activityValue: number): void; //
 
 postBroadCast(leagueId: League, submitter: User, msg: string) :void; *Curt
 
-deleteLeague(league: League) :void; *Mic
+deleteLeague(leagueId: League) :void; *Mic
