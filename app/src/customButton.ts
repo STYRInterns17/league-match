@@ -28,7 +28,7 @@ export class customButton extends tabris.Composite{
         if(type === 'tap'){
             buttonEvent = function(event: any) {
                 listener(event);
-                this.animate({
+                /*this.animate({
                     opacity: 0.5,
                     transform: {
                         rotation: 1.5 * Math.PI,
@@ -41,7 +41,7 @@ export class customButton extends tabris.Composite{
                     repeat: 1,
                     reverse: true,
                     easing: 'ease-out'
-                });
+                });*/
             };
         } else {
             buttonEvent = listener;
