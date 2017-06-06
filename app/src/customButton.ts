@@ -2,14 +2,13 @@
  * Created by STYRLab1 on 5/31/2017.
  */
 
-import * as tabris from "tabris";
+import * as tabris from 'tabris';
 
 export class customButton extends tabris.Composite{
     constructor(config: tabris.CompositeProperties, text: string){
         super(config);
 
         this.cornerRadius = 5;
-        this.top = 'prev() 10';
         this.left = 10;
         this.right = 10;
         this.height = 50;
@@ -32,7 +31,7 @@ export class customButton extends tabris.Composite{
     }
 
     on(type: string, listener: (event: any) => void, context?: Object): this {
-        var buttonEvent;
+        let buttonEvent;
         if(type === 'tap'){
             buttonEvent = function(event: any) {
                 listener(event);
