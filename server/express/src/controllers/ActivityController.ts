@@ -1,7 +1,9 @@
+import {DBManager} from "../db/DBManager";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
 export class ActivityController {
+
 
     //Added another data point to acitivity history
     public static appendHistory(userId: number, activityValue: number): boolean {
