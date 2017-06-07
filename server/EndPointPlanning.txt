@@ -6,7 +6,7 @@ signUp *Curt
 
 getLeagueUsers(): Users[]; *Mic
 getLeagueMatchHistory(): Match[]; *Mic
-postCreateLeauge(pref: LeaguePreferences): void; //Setup up timezone *Mic
+postCreateLeague(pref: LeaguePreferences): void; //Setup up timezone *Mic
 
 
 deleteLeague(leagueId: League) :void; *Mic
@@ -14,11 +14,11 @@ deleteLeague(leagueId: League) :void; *Mic
 postMatch(leagueId: League,match: Match, submitter: User): void; *Curt
 postMatchApproved(league: League, match: Match): void; *Curt
 
-getNotifications(userId: User): Notificiation[]; *Curt
+getNotifications(userId: User): Notification[]; *Curt
 postNotification(toUser: User, msg: String, submitter: string): void;*Curt
 
 getActivityHistory(userId: User, dateRange: Dates?) : number[]; *Nick
-postAcivityHistory(daysRelativeToToday: number, activityValue: number): void; //Not all today is the same *Nick
+postActivityHistory(daysRelativeToToday: number, activityValue: number): void; //Not all today is the same *Nick
 
 postBroadCast(leagueId: League, submitter: User, msg: string) :void; *Curt
 
