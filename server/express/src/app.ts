@@ -25,7 +25,6 @@ class App {
         server.listen(3000);
         console.log('We are now listening on 3000');
         //console.log(JSON.stringify({userPref: new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1), userId: 1}));
-
     }
 
     // Configure Express middleware.

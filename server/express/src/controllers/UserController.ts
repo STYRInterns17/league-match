@@ -1,6 +1,7 @@
 import {UserPreferences} from "../models/UserPreferences";
 import {User} from "../models/User";
 import {DBManager} from "../db/DBManager";
+import {NotificationController} from "./NotificationController";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
@@ -12,6 +13,8 @@ export class UserController {
     public static create(pref: UserPreferences): boolean {
         //DBManager add user to db
         DBManager.appendItemToTable(this.TABLE, new User(pref));
+        // Create a notification list for the new user
+        NotificationController.create();
         //Return success y/n
         return true;
     }

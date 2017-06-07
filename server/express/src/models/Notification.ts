@@ -1,12 +1,11 @@
-import {IStorable} from "../middleware/IStorable";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
-export class Notification implements IStorable{
+export class Notification {
     public message: string;
     public submitterUser: string;
     public submitterLeague: string;
-    public id: number;
+    public index: number;
     public read: boolean;
 
     constructor(msg: string, submitterUser: string, submitterLeague: string) {
