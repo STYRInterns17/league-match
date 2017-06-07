@@ -165,6 +165,10 @@ export class LoginPage extends BasePage{
                         "bio": bio.text,
                         "avatarId": 0
                     };
+
+
+
+
                 }
             }).appendTo(signUpPage);
         }).appendTo(this.page);
