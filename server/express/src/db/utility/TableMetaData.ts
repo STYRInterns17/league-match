@@ -5,5 +5,8 @@
 export class TableMetaData {
     public pageCount: number;
     public itemsInLastPage: number;
-
+    constructor() {
+        this.pageCount = 0;
+        this.itemsInLastPage = 0;
+    }
 }

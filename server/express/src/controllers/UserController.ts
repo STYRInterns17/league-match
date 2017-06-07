@@ -10,7 +10,7 @@ export class UserController {
     //Create a new user
     public static create(pref: UserPreferences): boolean {
         //DBManager add user to db
-        DBManager.appendItemToTable('User', new User(pref));
+        DBManager.appendItemToTable('Users', new User(pref));
         //Return success y/n
         return true;
     }
@@ -33,7 +33,7 @@ export class UserController {
     public static getPreferences(userid: number): UserPreferences {
         //DBManager get user
         //return preferences of user, not whole user
-        return new UserPreferences();
+        return new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1);
     }
 
     public static validate(email: string, password: string): boolean {

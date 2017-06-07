@@ -46,21 +46,36 @@ export class DBManager {
     public static init(): void {
         // Validate that all tables that should exist do exist
         // If not create them
+        console.log('DB Init');
 
-        for(let i: number = 0; i < this.TABLES.length; i++) {
+        //If PATH folder does not exist create it
+        try {
+            this.fs.accessSync(this.PATH);
+        } catch (e) {
+            this.fs.mkdir(this.PATH);
+            console.log(this.PATH + ' created');
+        };
 
-            this.fs.readdir(this.PATH + this.TABLES[i], (err, files) => {
-                if (err) {
-                    //If table does not exist, create new table aka folder
-                    this.createTable(this.TABLES[i]);
-                }
-            });
+        for(var i: number = 0; i < this.TABLES.length; i++) {
+
+            try {
+                this.fs.accessSync(this.PATH + this.TABLES[i] + '/');
+            } catch (e) {
+                console.log('File did not exist');
+                //If table does not exist, create new table aka folder
+                this.createTable(this.TABLES[i]);
+                //Create meta data for table
+                this.writeTableMetaData(this.TABLES[i], new TableMetaData());
+            };
+
         }
+        console.log('DB Init complete');
 
     }
 
     private static createTable(name: string) {
-        this.fs.mkdir(this.PATH + name, (err2) => {
+        console.log('Trying to make table');
+        this.fs.mkdir(this.PATH + name + '/', (err2) => {
             if (err2) {
                 return console.error(err2);
             }
@@ -79,9 +94,13 @@ export class DBManager {
     }
 
     public static appendItemToTable(table: string, item: IStorable) {
+        console.log('Append to table');
         let metaData: TableMetaData = this.incrementTableItemsInLastPage(table);
+        console.log('Append to table2');
         let pageData: any = this.getPage(table, metaData.pageCount);
+        console.log('Append to table3');
         item.id = metaData.pageCount * this.PAGESIZE + metaData.itemsInLastPage;
+        console.log('Append to table4');
         pageData.push(item);
 
         this.writeToPage(table, metaData.pageCount, item);
@@ -111,28 +130,32 @@ export class DBManager {
 
     private static getTableMetaData(table: string): TableMetaData {
         let tableMetaData: TableMetaData;
+        console.log(this.PATH + table + '/' + 'meta.data');
         // Get current meta data
-        this.fs.readFile(this.PATH + table + '/' + 'meta', (err, data) => {
+        this.fs.readFile(this.PATH + table + '/' + 'meta.data', (err, data) => {
             if (err) {
                 return console.error(err);
             }
             tableMetaData = JSON.parse(data);
+            console.log('Got parsed');
         });
+        console.log(tableMetaData);
         return tableMetaData;
     }
 
     private static writeTableMetaData(table: string, metaData: TableMetaData): void {
         // Save updated meta data
-        this.fs.writeFile(this.PATH + table + '/' + 'meta', JSON.stringify(metaData),  (err) => {
-            if (err) {
-                return console.error(err);
+        this.fs.writeFile(this.PATH + table + '/' + 'meta.data', JSON.stringify(metaData), (err) => {
+            if(err) {
+                return console.log(err);
             }
         });
+
     }
 
     private static incrementTableItemsInLastPage(table: string): TableMetaData {
         let tableMetaData: TableMetaData = this.getTableMetaData(table);
-
+        console.log(tableMetaData);
         // Increment Page Count
         if(tableMetaData.itemsInLastPage + 1 > this.PAGESIZE) {
             // If last page is full, increment total page counter and reset objects in last page counter
