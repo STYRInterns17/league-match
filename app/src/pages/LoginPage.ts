@@ -91,7 +91,8 @@ export class LoginPage extends BasePage{
             }).on('accept', ({text}) => {
                 new tabris.TextView({
                     layoutData: {top: '40%', left: '20%', right: '70%'},
-                    text: text
+                    text: text,
+                    font: 'bold 24px'
                 }).appendTo(signUpPage);
             }).appendTo(signUpPage);
 
@@ -101,13 +102,37 @@ export class LoginPage extends BasePage{
             }).on('accept', ({text}) => {
                 new tabris.TextView({
                     layoutData: {top: '40%', right: '20%', left: '60%'},
-                    text: text
+                    text: text,
+                    font: 'bold 24px'
                 }).appendTo(signUpPage);
-            }).appendTo(signUpPage)
+            }).appendTo(signUpPage);
+
+            let bio = new tabris.TextInput({
+                layoutData: {top: '60%', left: 0, centerX: 0},
+                message: 'Tell us about yourself...'
+            }).on('accept', ({text}) => {
+                new tabris.TextView({
+                    layoutData: {top: '70%', right: 0, left: 0},
+                    text: text,
+                    font: 'bold 12px'
+                }).appendTo(signUpPage);
+            }).appendTo(signUpPage);
 
 
-
-
+            new tabris.Button ({
+                layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
+                text: 'Next'
+            }).on('select', () => {
+                if(bio.text == "" || firstName.text == "" || lastName.text == ""){
+                    window.plugins.toast.showShortCenter('Please fill all fields to continue...');
+                }
+                else {
+                    let userInformation = new tabris.Page({
+                        title: 'Finish Up',
+                        background: '#b8d2ff'
+                    }).appendTo(navigationView);
+                }
+            }).appendTo(signUpPage);
         }).appendTo(this.page);
     }
 
