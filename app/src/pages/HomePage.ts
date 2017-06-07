@@ -1,8 +1,8 @@
 import * as tabris from 'tabris';
 
 import {BasePage} from './BasePage';
-import {Leaderboard} from './Leaderboard';
-import {customButton} from './customButton';
+import {Leaderboard} from '../Leaderboard';
+import {customButton} from '../customButton';
 
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
