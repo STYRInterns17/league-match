@@ -5,6 +5,7 @@
 import * as tabris from "tabris";
 import {BasePage} from './BasePage';
 import construct = Reflect.construct;
+import {Page} from "tabris";
 
 export class LoginPage extends BasePage{
 
@@ -15,7 +16,7 @@ export class LoginPage extends BasePage{
 
     public createComponents(): void {
 
-        console.log('This is the login page');
+        console.log('TEST');
         
         let navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0,
@@ -50,12 +51,12 @@ export class LoginPage extends BasePage{
         })).appendTo(this.page);
 
         new tabris.Button ({
-            layoutData: {left: '5%', right: '5%', top: '5%', bottom: '5%'},
+            layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
             text: 'Sign in'
         }).appendTo(this.page);
 
         new tabris.TextView({
-            layoutData: {left: 0, right: 0, bottom: 50, height: 40},
+            layoutData: {left: 0, right: 0, bottom: 0, height: 40},
             highlightOnTouch: true,
             font: "bold 14px",
             alignment: 'center',
@@ -65,27 +66,6 @@ export class LoginPage extends BasePage{
             console.log('Working Button');
         }).appendTo(this.page);
     }
-
-    /*login() {
-        var request = new LoginEmailRequest();
-
-        request.email = this.userEmail.get('text');
-
-        request.password = this.userPassword.get('text');
-    }*/
-
-    /*form() {
-
-    }
-
-    validUser() {
-        if(form.userEmail === "myUserEmail" && form.password.value === 'myUserPassword'){
-            window.open()
-        }
-        else {
-            alert("Username or Password is incorrect")
-        }
-    }*/
 
     /*
     User Email --> tabris.TextInput
