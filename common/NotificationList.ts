@@ -1,5 +1,5 @@
-import {IStorable} from "../middleware/IStorable";
-import {Notification} from "../models/Notification"
+import {IStorable} from "../server/express/src/middleware/IStorable";
+import {Notification} from "./Notification"
 /**
  * Created by STYR-Curt on 6/7/2017.
  */

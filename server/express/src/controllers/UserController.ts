@@ -1,5 +1,5 @@
-import {UserPreferences} from "../models/UserPreferences";
-import {User} from "../models/User";
+import {UserPreferences} from "../../../../common/UserPreferences";
+import {User} from "../../../../common/User";
 import {DBManager} from "../db/DBManager";
 import {NotificationController} from "./NotificationController";
 /**
