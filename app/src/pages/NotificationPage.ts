@@ -11,6 +11,10 @@ export class NotificationPage extends BasePage {
         super();
         this.page.title = 'Notification Page';
         this.createComponents();
+
+        this.page.on('disappear', () => {
+            //Mark all active reminders as read
+        })
     }
 
     public createComponents(): void {
