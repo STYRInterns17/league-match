@@ -7,6 +7,7 @@ import {BasePage} from './BasePage';
 import {Leaderboard} from '../Leaderboard';
 import {customButton} from '../customButton';
 import {AdminPage} from './AdminPage';
+import {LeaguePage} from "./LeaguePage";
 
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
@@ -36,18 +37,20 @@ export class HomePage extends BasePage {
         drawer.background = '#37474f';
         this.page.on('disappear', () => drawer.enabled = false ).on('appear', () => drawer.enabled = true );
         //CREATE BUTTONS
-        let profileButton = new customButton({top: 'prev() 10'}, 'Profile').on('tap', () => console.log('Profile Button Tapped'));
+
+        //Add admin verification method here:
+        let adminButton = new customButton({top: 'prev() 30'}, 'Administrator').on('tap', () => this.navigationView.append(new AdminPage('test', 'test').createAdminPage()));
+        adminButton.appendTo(drawer);
+
+        let profileButton = new customButton({top: 'prev() 30'}, 'Profile').on('tap', () => console.log('Profile Button Tapped'));
         profileButton.appendTo(drawer);
 
         let notificationButton = new customButton({top: 'prev() 30'}, 'Notifications');
         notificationButton.appendTo(drawer);
 
-        let leagueButton = new customButton({top: 'prev() 30'}, 'Leagues');
+        let leagueButton = new customButton({top: 'prev() 30'}, 'Leagues').on('tap', () => this.navigationView.append(new LeaguePage(this.navigationView).createLeaguePage()));
         leagueButton.appendTo(drawer);
 
-        //Add admin verification method here:
-        let adminButton = new customButton({top: 'prev() 30'}, 'Administrator').on('tap', () => this.navigationView.append(new AdminPage('test', 'test').createAdminPage()));
-        adminButton.appendTo(drawer);
 
         let leaderBoard = new Leaderboard();
         let collectionViewLeader = leaderBoard.createLeaderBoard([['Michael', 1200, 'avatar1.png'],['Nick', 4, 'avatar1.png'],['Curt', 1200, 'avatar1.png'],['Sal', 9000, 'avatar1.png'], ['Santa', 1200, 'avatar1.png'], ['Rudolph', 1400, 'avatar1.png'], ['Gus', 900, 'avatar1.png'], ['Octocat', 400, 'avatar2.png']]);
