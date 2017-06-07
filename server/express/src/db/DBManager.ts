@@ -138,7 +138,7 @@ export class DBManager {
 
     private static getPage(table: string, pageNum: number): Promise<IStorable[]> {
         let p = new Promise((resolve, reject) => {
-            console.log(this.PATH + table + '/' + pageNum + '.json');
+            //console.log(this.PATH + table + '/' + pageNum + '.json');
             this.fs.readFile(this.PATH + table + '/' + pageNum + '.json', (err, data) => {
                 if (err) {
                     reject(err);
