@@ -1,6 +1,6 @@
 import {DBManager} from "../db/DBManager";
-import {Notification} from "../models/Notification"
-import {NotificationList} from "../models/NotificationList";
+import {Notification} from "../../../../common/Notification"
+import {NotificationList} from "../../../../common/NotificationList";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
