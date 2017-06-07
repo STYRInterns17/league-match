@@ -123,9 +123,22 @@ export class DBManager {
 
     }
 
+    //Get entire page,
+
+    //[User at id index] = User
+    //Write back page
+    public static updateItem(table: string, item: IStorable): void {
+
+        this.getPage(table, this.getPageNumOfId(item.id)).then((pageData: IStorable[]) => {
+            pageData[this.getItemIndexOfId(item.id)] = item;
+            this.writeToPage(table, this.getPageNumOfId(item.id), pageData);
+        });
+
+    }
+
     private static getPage(table: string, pageNum: number): Promise<IStorable[]> {
         let p = new Promise((resolve, reject) => {
-            console.log(this.PATH + table + '/' + pageNum + '.json');
+            //console.log(this.PATH + table + '/' + pageNum + '.json');
             this.fs.readFile(this.PATH + table + '/' + pageNum + '.json', (err, data) => {
                 if (err) {
                     reject(err);

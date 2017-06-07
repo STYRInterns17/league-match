@@ -6,11 +6,12 @@ import {DBManager} from "../db/DBManager";
  */
 export class UserController {
 
+    private static TABLE = 'Users'
 
     //Create a new user
     public static create(pref: UserPreferences): boolean {
         //DBManager add user to db
-        DBManager.appendItemToTable('Users', new User(pref));
+        DBManager.appendItemToTable(this.TABLE, new User(pref));
         //Return success y/n
         return true;
     }
@@ -19,7 +20,7 @@ export class UserController {
     public static get(userId: number): Promise<User> {
         //DBManager get user from db
         let p = new Promise((resolve, reject) => {
-            DBManager.getItemFromTable('Users', userId).then((user) => {
+            DBManager.getItemFromTable(this.TABLE, userId).then((user) => {
                 resolve(user);
             });
 
@@ -31,7 +32,10 @@ export class UserController {
     // id, which user to update. newPref, the new preferences
     public static updatePreferences(userId: number, newPref: UserPreferences): boolean {
         //DBManager get user, update user preferences
-
+        this.get(userId).then((user) => {
+            user.pref = newPref;
+            DBManager.updateItem(this.TABLE, user);
+        });
         return true;
     }
 

@@ -1,8 +1,8 @@
-postUserSettings(pref: UserPreferences): void; *Nick
+postUserSettings(pref: UserPreferences): void; *Nick, sorry I did it -Curt
 getUserSettings(): UserPreferences; Nick
 
-postValidateLogin(address: string, password: string): boolean; *Curt
-signUp *Curt
+postValidateLogin(address: string, password: string): userId; *Nick
+createUser(userPref: UserPreferences): boolean; *Nick, sorry I did this one too -Curt
 
 getLeagueUsers(): Users[]; *Mic
 getLeagueMatchHistory(): Match[]; *Mic

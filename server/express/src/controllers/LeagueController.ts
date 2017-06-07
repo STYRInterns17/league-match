@@ -1,9 +1,14 @@
 import {LeaguePreferences} from "../models/LeaguePreferences";
 import {Match} from "../models/Match";
+import {League} from "../models/League";
+import {DBManager} from "../db/DBManager";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
 export class LeagueController {
+
+    private static TABLE = 'Leagues';
+
     public static create(ownerId: number, pref: LeaguePreferences): boolean {
         //DBManager add League to db
 
@@ -11,14 +16,20 @@ export class LeagueController {
         return true;
     }
 
-    public static delete(leagueId: number): boolean {
-        //DBManager remove League from db
+    public static get(leagueId: number): Promise<League> {
+        //DBManager get user from db
+        let p = new Promise((resolve, reject) => {
+            DBManager.getItemFromTable(this.TABLE, leagueId).then((user) => {
+                resolve(user);
+            });
 
-        return true;
+        });
+
+        return p;
     }
 
-    public static get(id: number): boolean {
-        //DBManager get league from db
+    public static delete(id: number): boolean {
+        //DBManager delete league from db
 
 
         return true;
