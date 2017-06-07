@@ -1,14 +1,16 @@
 import {UserPreferences} from "../models/UserPreferences";
 import {User} from "../models/User";
+import {DBManager} from "../db/DBManager";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
 export class UserController {
 
+
     //Create a new user
     public static create(pref: UserPreferences): boolean {
         //DBManager add user to db
-
+        DBManager.appendItemToTable('User', new User(pref));
         //Return success y/n
         return true;
     }

@@ -7,6 +7,7 @@ import {User} from "./models/User";
 import {LeagueController} from "./controllers/LeagueController";
 import {NotificationController} from "./controllers/NotificationController";
 import {ActivityController} from "./controllers/ActivityController";
+import {DBManager} from "./db/DBManager";
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -19,6 +20,7 @@ class App {
         this.express = express();
         this.middleware();
         this.routes();
+        DBManager.init(); // Initialize database
         const server = http.createServer(this.express);
         server.listen(3000);
         console.log('We are now listening on 3000')

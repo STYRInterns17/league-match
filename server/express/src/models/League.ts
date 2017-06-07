@@ -1,8 +1,9 @@
 import {LeaguePreferences} from "./LeaguePreferences";
+import {IStorable} from "../middleware/IStorable";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
-export class League {
+export class League implements  IStorable{
     //The unique identifier for league lookup in db
     public id: number;
     //Leagues can only have one owner, ownership can not be transferred
