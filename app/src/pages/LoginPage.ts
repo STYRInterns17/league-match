@@ -11,9 +11,7 @@ export class LoginPage extends BasePage{
     private userEmail;
     private userPassword;
 
-    constructor(){
-        super();
-    }
+    constructor(){ super(); }
 
     public createComponents(): void {
 
@@ -50,7 +48,44 @@ export class LoginPage extends BasePage{
             id: "userPassword",
             textColor: 'black'
         })).appendTo(this.page);
+
+        new tabris.Button ({
+            layoutData: {left: '5%', right: '5%', top: '5%', bottom: '5%'},
+            text: 'Sign in'
+        }).appendTo(this.page);
+
+        new tabris.TextView({
+            layoutData: {left: 0, right: 0, bottom: 50, height: 40},
+            highlightOnTouch: true,
+            font: "bold 14px",
+            alignment: 'center',
+            text: 'Sign up!',
+            textColor: 'white'
+        }).on('tap', () => {
+            console.log('Working Button');
+        }).appendTo(this.page);
     }
+
+    /*login() {
+        var request = new LoginEmailRequest();
+
+        request.email = this.userEmail.get('text');
+
+        request.password = this.userPassword.get('text');
+    }*/
+
+    /*form() {
+
+    }
+
+    validUser() {
+        if(form.userEmail === "myUserEmail" && form.password.value === 'myUserPassword'){
+            window.open()
+        }
+        else {
+            alert("Username or Password is incorrect")
+        }
+    }*/
 
     /*
     User Email --> tabris.TextInput
@@ -71,6 +106,5 @@ export class LoginPage extends BasePage{
      Move page accordingly
      */
 }
-
 let loginPage = new LoginPage();
 loginPage.createComponents();
