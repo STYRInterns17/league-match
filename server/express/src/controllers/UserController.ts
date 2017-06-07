@@ -16,11 +16,16 @@ export class UserController {
     }
 
     //Get user by Id
-    public static get(userId: number): boolean {
+    public static get(userId: number): Promise<User> {
         //DBManager get user from db
+        let p = new Promise((resolve, reject) => {
+            DBManager.getItemFromTable('Users', userId).then((user) => {
+                resolve(user);
+            });
 
+        });
 
-        return true;
+        return p;
     }
 
     // id, which user to update. newPref, the new preferences

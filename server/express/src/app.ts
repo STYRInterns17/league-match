@@ -24,7 +24,7 @@ class App {
         const server = http.createServer(this.express);
         server.listen(3000);
         console.log('We are now listening on 3000');
-        console.log(JSON.stringify({userPref: new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1)}));
+        //console.log(JSON.stringify({userPref: new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1)}));
 
     }
 
@@ -49,8 +49,11 @@ class App {
         //GetUser
         router.get('/user', (req,res) => {
             let userId:number = req.query.userId;
-
-            res.json(UserController.get(userId));
+            console.log('Getting user: ' + userId);
+            UserController.get(userId).then((user) => {
+                console.log(user);
+                res.json(user);
+            });
         });
 
         //CreateNewUser, SignUp

@@ -82,7 +82,7 @@ export class DBManager {
             }
             console.log("Creating table: " + name);
         });
-        this.fs.writeFile(this.PATH + name + '/' + '0.json', JSON.stringify([]) , (err) => {
+        this.fs.writeFile(this.PATH + name + '/' + '0.json', JSON.stringify([]), (err) => {
             if (err) {
                 return console.log(err);
             }
@@ -91,13 +91,23 @@ export class DBManager {
     }
 
 
-    public static getItemFromTable(table: string, itemId: number): any {
-        return this.getItemFromPage(table, itemId);
+    public static getItemFromTable(table: string, itemId: number): Promise<IStorable> {
+        let p = new Promise((resolve, reject) => {
+            resolve(this.getItemFromPage(table, itemId));
+        });
+
+        return p;
     }
 
-    private static getItemFromPage(table: string, itemId: number): any {
-        let page = this.getPage(table, this.getPageNumOfId(itemId));
-        return page[this.getItemIndexOfId(itemId)];
+    private static getItemFromPage(table: string, itemId: number): Promise<IStorable[]> {
+        let p = new Promise((resolve, reject) => {
+            this.getPage(table, this.getPageNumOfId(itemId)).then((page) => {
+                resolve(page[this.getItemIndexOfId(itemId)]);
+            });
+        });
+
+        return p;
+
     }
 
     public static appendItemToTable(table: string, item: IStorable): void {
