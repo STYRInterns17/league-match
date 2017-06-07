@@ -8,7 +8,7 @@ import {Leaderboard} from '../Leaderboard';
 import {customButton} from '../customButton';
 import {AdminPage} from './AdminPage';
 import {LeaguePage} from "./LeaguePage";
-
+//tesdkjsdjkfhskdfgjfgjfgjfgjfgj
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
     constructor(){
@@ -27,7 +27,7 @@ export class HomePage extends BasePage {
             centerX: 0
         }).appendTo(this.page);
         textComp.append(new tabris.TextView({
-            text: 'Leaderboards',
+            text: 'Leaderboards of (League Name)',
             font: 'bold 20px',
             textColor: '#fff'
         }));
