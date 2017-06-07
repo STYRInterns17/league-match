@@ -1,8 +1,9 @@
 import * as tabris from 'tabris';
 
 import {BasePage} from './BasePage';
-import {Leaderboard} from './Leaderboard';
-import {customButton} from './customButton';
+import {Leaderboard} from '../Leaderboard';
+import {customButton} from '../customButton';
+import {AdminPage} from './AdminPage';
 
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
@@ -11,6 +12,7 @@ export class HomePage extends BasePage {
         this.navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0
         }).appendTo(tabris.ui.contentView);
+        console.log('ASDFGHJKDFGIK dfgdfgTHIS');
     }
 
     public createComponents(): void {
@@ -31,12 +33,10 @@ export class HomePage extends BasePage {
         drawer.enabled = true;
 
         drawer.on('open', function() {
-            console.log('drawer opened');
         }).on('close', function() {
-            console.log('drawer closed');
         });
         //CREATE BUTTONS
-        let profileButton = new customButton({top: 'prev() 10'}, 'Profile');
+        let profileButton = new customButton({top: 'prev() 10'}, 'Profile').on('tap', () => console.log('Profile Button Tapped'));
         profileButton.appendTo(drawer);
 
         let notificationButton = new customButton({top: 'prev() 30'}, 'Notifications');
@@ -44,12 +44,12 @@ export class HomePage extends BasePage {
 
         let leagueButton = new customButton({top: 'prev() 30'}, 'Leagues');
         leagueButton.appendTo(drawer);
-
-        let adminButton = new customButton({top: 'prev() 30'}, 'Administrator');
+        //Add admin verification method here:
+        let adminButton = new customButton({top: 'prev() 30'}, 'Administrator').on('tap', () => console.log('Admin Button Tapped'));
         adminButton.appendTo(drawer);
 
         let leaderBoard = new Leaderboard();
-        let collectionViewLeader = leaderBoard.createLeaderBoard();
+        let collectionViewLeader = leaderBoard.createLeaderBoard([['Michael', 1200, 'avatar1.png'],['Nick', 4, 'avatar1.png'],['Curt', 1200, 'avatar1.png'],['Sal', 9000, 'avatar1.png'], ['Santa', 1200, 'avatar1.png'], ['Rudolph', 1400, 'avatar1.png'], ['Gus', 900, 'avatar1.png'], ['Octocat', 400, 'avatar2.png']]);
         this.page.append(collectionViewLeader);
 
     }
