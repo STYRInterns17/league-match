@@ -27,14 +27,18 @@ export class NotificationController {
     //Send Notification to a User
     public static sendNotificationToUser(message: string, userId: number, submitterName: string, submitterLeague: string): boolean {
         //Write to notification table at userId
-        DBManager.appendItemToTable(this.TABLE, new Notification(message, submitterName, submitterLeague));
+        this.getNotifications(userId).then(notificationList => {
+           let notification = new Notification(message, submitterName, submitterLeague);
+           notificationList.list.push(notification);
+           DBManager.updateItem(this.TABLE, notificationList);
+        });
 
 
         return true;
     }
 
     //Get all of a Users pending notifications
-    public static getNotifications(userId: number): Promise<Notification[]> {
+    public static getNotifications(userId: number): Promise<NotificationList> {
         //Return DBManager get pendingNotifications at in Notification Table at userId
         let p = new Promise((resolve, reject) => {
             DBManager.getItemFromTable(this.TABLE, userId).then((notificationList) => {
@@ -51,6 +55,11 @@ export class NotificationController {
         //Remove notification by notificationId
         //return success
 
+        this.getNotifications(userId).then(notificationList => {
+            notificationList.list.splice(notificationId, 1);
+            DBManager.updateItem(this.TABLE, notificationList);
+        });
+
         return true;
     }
 
@@ -58,6 +67,14 @@ export class NotificationController {
         // DBManager get list of notifications
         // Mark all notifications as read
         // return success
+        this.getNotifications(userId).then(notificationList => {
+            for(let i = 0; i < notificationList.list.length; i++) {
+                notificationList.list[i].read = true;
+            }
+            DBManager.updateItem(this.TABLE, notificationList);
+        });
+
+        return true;
     }
 
 
