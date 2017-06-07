@@ -13,14 +13,13 @@ export class DBManager {
     //each page contains an array of objects with a max size of PAGESIZE
 
 
-
     /*
-    Notes on FS
+     Notes on FS
 
-    fs.writeFile will create the file if it does not exist
-    however fs.writeFile can not create directories
+     fs.writeFile will create the file if it does not exist
+     however fs.writeFile can not create directories
 
-    fs.readFile will giveback the contents of a file asyncly
+     fs.readFile will giveback the contents of a file asyncly
 
      this will make directories for you but only one at a time.
      for example if tmp did not exist already this would error out,
@@ -54,9 +53,10 @@ export class DBManager {
         } catch (e) {
             this.fs.mkdir(this.PATH);
             console.log(this.PATH + ' created');
-        };
+        }
+        ;
 
-        for(var i: number = 0; i < this.TABLES.length; i++) {
+        for (var i: number = 0; i < this.TABLES.length; i++) {
 
             try {
                 this.fs.accessSync(this.PATH + this.TABLES[i] + '/');
@@ -66,7 +66,8 @@ export class DBManager {
                 this.createTable(this.TABLES[i]);
                 //Create meta data for table
                 this.writeTableMetaData(this.TABLES[i], new TableMetaData());
-            };
+            }
+            ;
 
         }
         console.log('DB Init complete');
@@ -81,6 +82,12 @@ export class DBManager {
             }
             console.log("Creating table: " + name);
         });
+        this.fs.writeFile(this.PATH + name + '/' + '0.json', JSON.stringify([]) , (err) => {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("Creating first item: " + name + '/' + '0.json');
+        })
     }
 
 
@@ -93,26 +100,32 @@ export class DBManager {
         return page[this.getItemIndexOfId(itemId)];
     }
 
-    public static appendItemToTable(table: string, item: IStorable) {
-        console.log('Append to table');
-        let metaData: TableMetaData = this.incrementTableItemsInLastPage(table);
-        console.log('Append to table2');
-        let pageData: any = this.getPage(table, metaData.pageCount);
-        console.log('Append to table3');
-        item.id = metaData.pageCount * this.PAGESIZE + metaData.itemsInLastPage;
-        console.log('Append to table4');
-        pageData.push(item);
+    public static appendItemToTable(table: string, item: IStorable): void {
 
-        this.writeToPage(table, metaData.pageCount, item);
+        this.incrementTableItemsInLastPage(table).then((metaData: TableMetaData) => {
+            this.getPage(table, metaData.pageCount).then((pageData: IStorable[]) => {
+                // - 1 is because if there is one item in the page we need index 0
+                item.id = metaData.pageCount * this.PAGESIZE + metaData.itemsInLastPage - 1;
+                pageData.push(item);
+                this.writeToPage(table, metaData.pageCount, pageData);
+            });
+        });
+
     }
 
-    private static getPage(table: string, pageNum: number): any {
-        this.fs.readFile(this.PATH + table + '/' + pageNum, (err, data) => {
-            if (err) {
-                return console.error(err);
-            }
-            return JSON.parse(data);
+    private static getPage(table: string, pageNum: number): Promise<IStorable[]> {
+        let p = new Promise((resolve, reject) => {
+            console.log(this.PATH + table + '/' + pageNum + '.json');
+            this.fs.readFile(this.PATH + table + '/' + pageNum + '.json', (err, data) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(JSON.parse(data));
+            });
         });
+
+        return p;
+
     }
 
     private static getTableById(tableId: number) {
@@ -120,59 +133,72 @@ export class DBManager {
     }
 
     private static incrementTablePageCount(table: string) {
-        let tableMetaData: TableMetaData = this.getTableMetaData(table);
-
-        // Increment Page Count
-        tableMetaData.pageCount++;
-
-        this.writeTableMetaData(table, tableMetaData);
+        this.getTableMetaData(table).then((metaData: TableMetaData) => {
+            // Increment Page Count
+            metaData.pageCount++;
+            this.writeTableMetaData(table, metaData);
+        });
     }
 
-    private static getTableMetaData(table: string): TableMetaData {
-        let tableMetaData: TableMetaData;
-        console.log(this.PATH + table + '/' + 'meta.data');
-        // Get current meta data
-        this.fs.readFile(this.PATH + table + '/' + 'meta.data', (err, data) => {
-            if (err) {
-                return console.error(err);
-            }
-            tableMetaData = JSON.parse(data);
-            console.log('Got parsed');
+    private static getTableMetaData(table: string): Promise<TableMetaData> {
+        let p = new Promise((resolve, reject) => {
+            console.log(this.PATH + table + '/' + 'meta.json');
+            // Get current meta data
+            this.fs.readFile(this.PATH + table + '/' + 'meta.json', (err, data) => {
+                let tableMetaData: TableMetaData;
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                    return;
+                }
+                console.log(data);
+                tableMetaData = JSON.parse(data);
+                console.log('Got parsed');
+                console.log(tableMetaData);
+                resolve(tableMetaData);
+            });
+
         });
-        console.log(tableMetaData);
-        return tableMetaData;
+
+        return p;
     }
 
     private static writeTableMetaData(table: string, metaData: TableMetaData): void {
         // Save updated meta data
-        this.fs.writeFile(this.PATH + table + '/' + 'meta.data', JSON.stringify(metaData), (err) => {
-            if(err) {
+        this.fs.writeFile(this.PATH + table + '/' + 'meta.json', JSON.stringify(metaData), (err) => {
+            if (err) {
                 return console.log(err);
             }
         });
 
     }
 
-    private static incrementTableItemsInLastPage(table: string): TableMetaData {
-        let tableMetaData: TableMetaData = this.getTableMetaData(table);
-        console.log(tableMetaData);
-        // Increment Page Count
-        if(tableMetaData.itemsInLastPage + 1 > this.PAGESIZE) {
-            // If last page is full, increment total page counter and reset objects in last page counter
-            this.incrementTablePageCount(table);
-            tableMetaData.itemsInLastPage = 1;
-        } else {
-            // If last page is not full, increment objects in last page counter
-            tableMetaData.itemsInLastPage++;
-        }
+    private static incrementTableItemsInLastPage(table: string): Promise<TableMetaData> {
+        let p = new Promise((resolve, reject) => {
+            this.getTableMetaData(table).then((metaData: TableMetaData) => {
+                // Increment Page Count
+                if (metaData.itemsInLastPage + 1 > this.PAGESIZE) {
+                    // If last page is full, increment total page counter and reset objects in last page counter
+                    this.incrementTablePageCount(table);
+                    metaData.itemsInLastPage = 1;
+                } else {
+                    // If last page is not full, increment objects in last page counter
+                    metaData.itemsInLastPage++;
+                }
 
-        this.writeTableMetaData(table, tableMetaData);
+                this.writeTableMetaData(table, metaData);
+                resolve(metaData);
+            });
 
-        return tableMetaData;
+        });
+
+        return p;
+
+
     }
 
-    private static writeToPage(table: string, pageNum: number, data: any) {
-        this.fs.writeFile(this.PATH + table + '/' + pageNum + '.data', JSON.stringify(data),  (err) => {
+    private static writeToPage(table: string, pageNum: number, data: IStorable[]) {
+        this.fs.writeFile(this.PATH + table + '/' + pageNum + '.json', JSON.stringify(data), (err) => {
             if (err) {
                 return console.error(err);
             }
