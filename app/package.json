@@ -1,7 +1,7 @@
 {
   "name": "testproject",
   "version": "0.1.0",
-  "main": "dist/LoginPage.js",
+  "main": "dist/pages/HomePage.js",
   "private": true,
   "scripts": {
     "test": "tslint 'src/**/*.ts'",
