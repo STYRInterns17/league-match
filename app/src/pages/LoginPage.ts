@@ -63,7 +63,51 @@ export class LoginPage extends BasePage{
             text: 'Sign up!',
             textColor: 'white'
         }).on('tap', () => {
-            console.log('Working Button');
+
+            let signUpPage = new tabris.Page({
+                title: 'Create an Account!',
+                background: '#b8d2ff'
+            }).appendTo(navigationView);
+
+            let profilePic = new tabris.Composite({
+                layoutData: {left: 0, right: 0, bottom: '60%', top: 0},
+                background: '#0bfffa'
+            }).appendTo(signUpPage);
+
+            let imageHolder = new tabris.ImageView({
+                layoutData: {left: 0, right: 0, bottom: 0, top: 0},
+            }).appendTo(profilePic);
+
+            imageHolder.set("image", {src: "http://gazettereview.com/wp-content/uploads/2016/03/facebook-avatar.jpg"});
+
+            let profileAttributeSection = new tabris.Composite({
+                layoutData: {left: 0, right: 0, bottom: 0, top: '40%'},
+                background: '#5fffba'
+            }).appendTo(signUpPage);
+
+            let firstName = new tabris.TextInput({
+                layoutData: {top: '50%', left: '20%'},
+                message: 'First name'
+            }).on('accept', ({text}) => {
+                new tabris.TextView({
+                    layoutData: {top: '40%', left: '20%', right: '70%'},
+                    text: text
+                }).appendTo(signUpPage);
+            }).appendTo(signUpPage);
+
+            let lastName = new tabris.TextInput({
+                layoutData: {top: '50%', left: '60%'},
+                message: 'Last name'
+            }).on('accept', ({text}) => {
+                new tabris.TextView({
+                    layoutData: {top: '40%', right: '20%', left: '60%'},
+                    text: text
+                }).appendTo(signUpPage);
+            }).appendTo(signUpPage)
+
+
+
+
         }).appendTo(this.page);
     }
 
