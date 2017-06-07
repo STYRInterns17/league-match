@@ -14,6 +14,7 @@ export abstract class BasePage  {
             bottom: 0,
             top: 0
         });
+        this.page.background = '#37474f';
     }
 
     // public abstract navigationTo(): void;

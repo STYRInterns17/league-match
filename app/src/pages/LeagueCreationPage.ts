@@ -1,19 +1,16 @@
+/**
+ * Created by STYRLabs2 on 6/7/2017.
+ */
 import {BasePage} from './BasePage';
 import * as tabris from 'tabris';
 import {Composite} from "tabris";
 
-/**
- * Created by STYRLabs2 on 6/7/2017.
- */
 
-export class AdminPage extends BasePage{
-    //League ID will be used when communicating with the DB
-    private leagueID: string;
-    private userID: string;
-    constructor(leagueIdentification: string, userIdentification: string){
+export class LeagueCreationPage extends BasePage{
+    private ownerID: string;
+    constructor(userIdentification: string){
         super();
-        this.leagueID = leagueIdentification;
-        this.userID = userIdentification;
+        this.ownerID = userIdentification;
     }
 
     public createAdminPage(){

@@ -1,3 +1,6 @@
+/**
+ * Created by STYRLabs2 on 6/6/2017.
+ */
 import * as tabris from 'tabris';
 
 import {BasePage} from './BasePage';
@@ -12,10 +15,10 @@ export class HomePage extends BasePage {
         this.navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0
         }).appendTo(tabris.ui.contentView);
-        console.log('ASDFGHJKDFGIK dfgdfgTHIS');
     }
 
     public createComponents(): void {
+
         this.page.appendTo(this.navigationView);
         this.page.background = '#37474f';
         //CREATE TEXT COMP
@@ -29,12 +32,9 @@ export class HomePage extends BasePage {
         }));
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
-        drawer.background = '#37474f';
         drawer.enabled = true;
-
-        drawer.on('open', function() {
-        }).on('close', function() {
-        });
+        drawer.background = '#37474f';
+        this.page.on('disappear', () => drawer.enabled = false ).on('appear', () => drawer.enabled = true );
         //CREATE BUTTONS
         let profileButton = new customButton({top: 'prev() 10'}, 'Profile').on('tap', () => console.log('Profile Button Tapped'));
         profileButton.appendTo(drawer);
@@ -44,8 +44,9 @@ export class HomePage extends BasePage {
 
         let leagueButton = new customButton({top: 'prev() 30'}, 'Leagues');
         leagueButton.appendTo(drawer);
+
         //Add admin verification method here:
-        let adminButton = new customButton({top: 'prev() 30'}, 'Administrator').on('tap', () => console.log('Admin Button Tapped'));
+        let adminButton = new customButton({top: 'prev() 30'}, 'Administrator').on('tap', () => this.navigationView.append(new AdminPage('test', 'test').createAdminPage()));
         adminButton.appendTo(drawer);
 
         let leaderBoard = new Leaderboard();
