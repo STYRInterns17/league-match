@@ -12,7 +12,7 @@ export class HomePage extends BasePage {
         this.navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0
         }).appendTo(tabris.ui.contentView);
-        console.log('ASDFGHJKDFGIK THIS');
+        console.log('ASDFGHJKDFGIK dfgdfgTHIS');
     }
 
     public createComponents(): void {
