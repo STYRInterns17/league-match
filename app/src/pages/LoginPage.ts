@@ -20,7 +20,7 @@ export class LoginPage extends BasePage{
         
         let navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0,
-            background: '#ffffff'
+            background: '#fffafd',
         }).appendTo(tabris.ui.contentView);
 
         this.page.appendTo(navigationView);
