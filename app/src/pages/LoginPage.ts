@@ -6,6 +6,7 @@ import * as tabris from "tabris";
 import {BasePage} from './BasePage';
 import construct = Reflect.construct;
 import {Page} from "tabris";
+import {UserPreferences} from "../../../server/express/src/models/UserPreferences";
 
 export class LoginPage extends BasePage{
 
@@ -108,7 +109,7 @@ export class LoginPage extends BasePage{
             }).appendTo(signUpPage);
 
             let bio = new tabris.TextInput({
-                layoutData: {top: '60%', left: 0, centerX: 0},
+                layoutData: {top: '60%', centerX: 0},
                 message: 'Tell us about yourself...'
             }).on('accept', ({text}) => {
                 new tabris.TextView({
@@ -127,10 +128,44 @@ export class LoginPage extends BasePage{
                     window.plugins.toast.showShortCenter('Please fill all fields to continue...');
                 }
                 else {
+
                     let userInformation = new tabris.Page({
                         title: 'Finish Up',
                         background: '#b8d2ff'
                     }).appendTo(navigationView);
+
+                    let userEmailSignUp = new tabris.TextInput({
+                        layoutData: {left: 25, right: 25, top: '30%', height: 50},
+                        message: 'Email',
+                        keyboard: 'email',
+                        textColor: 'black',
+                        id: 'userEmail',
+                    }).appendTo(userInformation);
+
+                    let userPasswordSignUp = new tabris.TextInput({
+                        layoutData: {left: 25, right: 25, top: "prev() 10", height: 50},
+                        message: 'Password',
+                        type: 'password',
+                        id: "userPassword",
+                        textColor: 'black',
+                    }).on('accept', ({emailText}) => {
+                        new tabris.TextView({
+                            top: 'prev() 20', left: '20%',
+                            text: emailText,
+                        }).appendTo(userInformation)
+                    }).appendTo(userInformation);
+
+                    new tabris.Button ({
+                        layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
+                        text: 'Sign in'
+                    }).appendTo(userInformation);
+
+                    passingUserInformation = {
+                        "email": userEmailSignUp.id,
+                        "password": userPasswordSignUp.id,
+                        "bio": bio.text,
+                        "avatarId": 0
+                    };
                 }
             }).appendTo(signUpPage);
         }).appendTo(this.page);
