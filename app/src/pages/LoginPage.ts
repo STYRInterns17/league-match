@@ -6,7 +6,6 @@ import * as tabris from "tabris";
 import {BasePage} from './BasePage';
 import construct = Reflect.construct;
 import {Page} from "tabris";
-import {UserPreferences} from "../../../server/express/src/models/UserPreferences";
 
 export class LoginPage extends BasePage{
 
