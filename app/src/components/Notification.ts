@@ -20,7 +20,14 @@ export class Notification extends  tabris.Composite{
 
     public read(): void {
         this.background = '#BDBDBD';
+        // Change background color
+        // Notify server that background has been changed
 
+    }
+
+    public dismiss(): void {
+        // Dispose of this element
+        // Notify server that it has been disposed of
     }
 
 
