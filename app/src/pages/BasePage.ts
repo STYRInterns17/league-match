@@ -4,7 +4,7 @@
 
 import * as tabris from "tabris";
 
-export abstract class BasePage  {
+export abstract class BasePage {
     public page: tabris.Page;
 
     constructor() {
