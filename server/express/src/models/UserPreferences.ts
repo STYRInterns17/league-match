@@ -6,4 +6,10 @@ export class UserPreferences {
     public password: string;
     public bio: string;
     public avatarId: number;
+    constructor(email: string, password: string, bio: string, avatarId: number) {
+        this.email = email;
+        this.password = password;
+        this.bio = bio;
+        this.avatarId = avatarId;
+    }
 }

@@ -15,4 +15,11 @@ export class League implements  IStorable{
 
     public pref: LeaguePreferences;
 
+    constructor(ownerId: number, pref: LeaguePreferences) {
+        this.ownerId = ownerId;
+        this.pref = pref;
+        this.adminIds = [];
+        this.playerIds = [];
+    }
+
 }
