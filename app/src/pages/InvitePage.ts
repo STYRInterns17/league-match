@@ -26,7 +26,7 @@ export class InvitePage extends BasePage{
              (new tabris.TextView({
                  top: 'prev() 20', left: '20%',
                  text: text + ' added!'
-             }).appendTo(comp);
+             }).appendTo(comp));
 
         }).appendTo(this.page);
         return this.page

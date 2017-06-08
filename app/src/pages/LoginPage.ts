@@ -5,8 +5,9 @@
 import * as tabris from "tabris";
 import {BasePage} from './BasePage';
 import construct = Reflect.construct;
-import {Page} from "tabris";
+//import {Page} from "tabris";
 import {ServiceLayer} from "../ServiceLayer";
+import {UserPreferences} from "../../../common/UserPreferences";
 
 export class LoginPage extends BasePage{
 
@@ -70,7 +71,51 @@ export class LoginPage extends BasePage{
                 background: '#b8d2ff'
             }).appendTo(navigationView);
 
-            let profilePic = new tabris.Composite({
+            let usernameSignUp = new tabris.TextInput({
+                layoutData: {left: 25, right: 25, top: '30%', height: 50},
+                message: 'Email'
+            }).on('accept', ({text}) => {
+                new tabris.TextView({
+                    layoutData: {top: '70%', right: 0, left: 0},
+                    text: text,
+                    font: 'bold 12px'
+                }).appendTo(signUpPage);
+            }).appendTo(signUpPage);
+
+            let usernamePasswordSignUp = new tabris.TextInput({
+                layoutData: {left: 25, right: 25, top: 'prev() 20', height: 50},
+                message: 'Password'
+            }).on('accept', ({text}) => {
+                new tabris.TextView({
+                    layoutData: {top: '70%', right: 0, left: 0},
+                    text: text,
+                    font: 'bold 12px'
+                }).appendTo(signUpPage);
+            }).appendTo(signUpPage);
+
+            new tabris.Button ({
+                layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
+                text: 'Sign in'
+            }).on('select', () => {
+
+                if(usernameSignUp.text == "" || usernamePasswordSignUp.text == ""){
+                    window.plugins.toast.showShortCenter('Please fill all fields to continue...');
+                }
+                else {
+                    console.log('hi');
+                    let passingUserInformation = {
+                        userPref: new UserPreferences('email@gmail.com', 'pass', 'I like train', 2)
+                    };
+
+                    ServiceLayer.httpPostAsync('/user', passingUserInformation, (response: Response) => {})
+
+                    signUpPage.dispose();
+                }
+            }).appendTo(signUpPage)
+
+
+
+            /*let profilePic = new tabris.Composite({
                 layoutData: {left: 0, right: 0, bottom: '60%', top: 0},
                 background: '#0bfffa'
             }).appendTo(signUpPage);
@@ -155,21 +200,32 @@ export class LoginPage extends BasePage{
                         }).appendTo(userInformation)
                     }).appendTo(userInformation);
 
+                    let testingPassword = new tabris.TextInput({
+                        layoutData: {top: '60%', centerX: 0},
+                        message: 'Pass'
+                    }).on('accept', ({text}) => {
+                        new tabris.TextView({
+                            layoutData: {top: '70%', right: 0, left: 0},
+                            text: text,
+                            font: 'bold 12px'
+                        }).appendTo(userInformation);
+                    }).appendTo(userInformation);
+
                     new tabris.Button ({
                         layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
                         text: 'Sign in'
                     }).appendTo(userInformation);
 
                     let passingUserInformation = {
-                        "email": userEmailSignUp.id,
-                        "password": userPasswordSignUp.id,
+                        "email": userEmailSignUp.text,
+                        "password": testingPassword.text,
                         "bio": bio.text,
                         "avatarId": 0
                     };
 
                    ServiceLayer.httpPostAsync('/user', passingUserInformation, (response: Response) => {})
                 }
-            }).appendTo(signUpPage);
+            }).appendTo(signUpPage);*/
         }).appendTo(this.page);
     }
 

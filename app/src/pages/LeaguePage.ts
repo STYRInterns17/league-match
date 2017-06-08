@@ -38,10 +38,6 @@ export class LeaguePage extends BasePage{
         }
         }).on('refresh', () => console.log('IM REFRESHING!'
 
-        setTimeout(function(){
-            collectionView.refreshIndicator = false;
-        }, 1000)
-
         ));
 
 
