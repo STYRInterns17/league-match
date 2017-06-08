@@ -55,6 +55,13 @@ export class LoginPage extends BasePage{
         new tabris.Button ({
             layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
             text: 'Sign in'
+        }).on('select', () => {
+
+            let userValidation = {
+                userPref: new UserPreferences(user.text, usernamePasswordSignUp.text, 'I like trains', 1)
+            };
+
+            ServiceLayer.httpGetAsync('/user', userValidation, (response: Response) => {});
         }).appendTo(this.page);
 
         new tabris.TextView({
