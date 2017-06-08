@@ -102,12 +102,23 @@ export class LoginPage extends BasePage{
                     window.plugins.toast.showShortCenter('Please fill all fields to continue...');
                 }
                 else {
-                    console.log('hi');
-                    let passingUserInformation = {
-                        userPref: new UserPreferences('email@gmail.com', 'pass', 'I like train', 2)
+                    /*let passingUserInformation = {
+                        "email": usernameSignUp.text,
+                        "password": usernamePasswordSignUp.text,
+                        "bio": 'I love STYR',
+                        "avatarId": 0
                     };
 
                     ServiceLayer.httpPostAsync('/user', passingUserInformation, (response: Response) => {})
+
+                    signUpPage.dispose();*/
+
+                    console.log('hi');
+                    let passingUserInformation = {
+                        userPref: new UserPreferences(usernameSignUp.text, usernamePasswordSignUp.text, 'I like trains', 1)
+                    };
+
+                    ServiceLayer.httpPostAsync('/user', passingUserInformation, (response: Response) => {});
 
                     signUpPage.dispose();
                 }

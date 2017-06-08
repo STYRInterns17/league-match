@@ -10,7 +10,7 @@ import {ActivityController} from "./controllers/ActivityController";
 import {DBManager} from "./db/DBManager";
 import {json} from "body-parser";
 
-console.log('hello');
+console.log('[Hit App.ts]');
 
 // Creates and configures an ExpressJS web server.
 class App {
