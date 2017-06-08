@@ -33,18 +33,10 @@ export class LeaguePage extends BasePage{
             updateCell: (cell, index) => {
             //let person = people[index];
             cell.apply({
-                Button: {text: 'TEST!!!'}
+                Button: {text: 'TEST!!dfhdf'}
             });
         }
-        }).on('refresh', () => console.log('IM REFRESHING!'
-
-        setTimeout(function(){
-            collectionView.refreshIndicator = false;
-        }, 1000)
-
-        ));
-
-
+        }).on('refresh', () => console.log('IM REFRESHING!'));
 
         comp1.append(collectionView);
         comp2.append(new customButton({centerY: 0}, '➕ Create a League' ).on('tap', () => this.navigationView.append(new LeagueCreationPage('test').createAdminPage())));

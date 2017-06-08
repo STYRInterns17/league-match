@@ -185,6 +185,7 @@ export class DBManager {
                     reject(err);
                     return;
                 }
+                console.log('HEREj');
                 console.log(data);
                 tableMetaData = JSON.parse(data);
                 console.log('Got parsed');

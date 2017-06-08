@@ -47,7 +47,7 @@ export class LeagueController {
         //DBManager get league
 
         //Return list of users in league
--
+
         return [];
     }
 

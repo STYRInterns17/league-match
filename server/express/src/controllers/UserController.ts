@@ -7,7 +7,7 @@ import {NotificationController} from "./NotificationController";
  */
 export class UserController {
 
-    private static TABLE = 'Users'
+    private static TABLE = 'Users';
 
     //Create a new user
     public static create(pref: UserPreferences): boolean {
