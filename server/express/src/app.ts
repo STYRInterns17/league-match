@@ -8,7 +8,9 @@ import {LeagueController} from "./controllers/LeagueController";
 import {NotificationController} from "./controllers/NotificationController";
 import {ActivityController} from "./controllers/ActivityController";
 import {DBManager} from "./db/DBManager";
+import {json} from "body-parser";
 
+console.log('hee')
 // Creates and configures an ExpressJS web server.
 class App {
 
@@ -59,6 +61,7 @@ class App {
         router.post('/user', (req,res) =>{
             let userPref: UserPreferences = req.body.userPref;
             console.log(req.body.userPref);
+            console.log('hi');
             UserController.create(userPref);
             res.json({
                 success: true

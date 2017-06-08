@@ -6,6 +6,7 @@ import * as tabris from "tabris";
 import {BasePage} from './BasePage';
 import construct = Reflect.construct;
 import {Page} from "tabris";
+import {ServiceLayer} from "../ServiceLayer";
 
 export class LoginPage extends BasePage{
 
@@ -159,16 +160,14 @@ export class LoginPage extends BasePage{
                         text: 'Sign in'
                     }).appendTo(userInformation);
 
-                    passingUserInformation = {
+                    let passingUserInformation = {
                         "email": userEmailSignUp.id,
                         "password": userPasswordSignUp.id,
                         "bio": bio.text,
                         "avatarId": 0
                     };
 
-
-
-
+                   ServiceLayer.httpPostAsync('/user', passingUserInformation, (response: Response) => {})
                 }
             }).appendTo(signUpPage);
         }).appendTo(this.page);
