@@ -136,6 +136,17 @@ export class DBManager {
 
     }
 
+    //Will replace an item with an empty object just containing its orginal id
+    //Once created the id can not be reused but the data can be cleaned up to quicken
+    //File read and write times
+    
+    public static voidItem(table: string, item: IStorable): void {
+        this.getPage(table, this.getPageNumOfId(item.id)).then((pageData: IStorable[]) => {
+            pageData[this.getItemIndexOfId(item.id)] = {id: item.id};
+            this.writeToPage(table, this.getPageNumOfId(item.id), pageData);
+        })
+    }
+
     private static getPage(table: string, pageNum: number): Promise<IStorable[]> {
         let p = new Promise((resolve, reject) => {
             //console.log(this.PATH + table + '/' + pageNum + '.json');
