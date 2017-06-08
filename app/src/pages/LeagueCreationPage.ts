@@ -5,6 +5,7 @@ import {BasePage} from './BasePage';
 import * as tabris from 'tabris';
 import {Composite, TextView} from "tabris";
 import {customButton} from '../customButton';
+import {InvitePage} from "./InvitePage";
 
 const HIGH_SCORE = [
     {
@@ -77,7 +78,7 @@ export class LeagueCreationPage extends BasePage{
             right: '10%',
             itemCount: SCORE_RANGE.length,
             itemText: (index) => SCORE_RANGE[index].name,
-            selectionIndex: 0
+            selectionIndex: 1
         }).appendTo(scoreComp);
 
         let highestScore = new Composite({
@@ -93,16 +94,16 @@ export class LeagueCreationPage extends BasePage{
             right: '10%',
             itemCount: HIGH_SCORE.length,
             itemText: (index) => HIGH_SCORE[index].name,
-            selectionIndex: 0
+            selectionIndex: 1
         }).appendTo(highestScore);
 
-        new customButton({
+        let inviteButton = new customButton({
             top: 'prev() 40',
             left: '10%',
             right: '10%',
-        }, 'Invite...').appendTo(this.page);
+        }, 'Invite.hfjg..').on('tap', () => this.page.parent().append(new InvitePage().createInvitePage()));
 
-
+        inviteButton.appendTo(this.page);
         return this.page;
     }
 

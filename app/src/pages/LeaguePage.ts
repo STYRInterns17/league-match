@@ -21,6 +21,7 @@ export class LeaguePage extends BasePage{
             left: 0, top: 0, right: 0, bottom: 0,
             itemCount: 10,
             cellHeight: 100,
+            refreshEnabled: true,
             createCell: () => {
             let cell = new tabris.Composite();
 
@@ -35,7 +36,13 @@ export class LeaguePage extends BasePage{
                 Button: {text: 'TEST!!!'}
             });
         }
-        });
+        }).on('refresh', () => console.log('IM REFRESHING!'
+
+        setTimeout(function(){
+            collectionView.refreshIndicator = false;
+        }, 1000)
+
+        ));
 
 
 

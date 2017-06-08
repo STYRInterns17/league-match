@@ -11,7 +11,7 @@ export class LeagueController {
 
     public static create(ownerId: number, pref: LeaguePreferences): boolean {
         //DBManager add League to db
-
+        DBManager.appendItemToTable(this.TABLE, new League(ownerId, pref));
         //Return success y/n
         return true;
     }
@@ -37,7 +37,9 @@ export class LeagueController {
     //id, which league to update. newPref, the new preferences
     public static updatePreferences(id: number, newPref: LeaguePreferences): boolean {
         //DBManager get league, update league preferences
-
+        this.get(id).then((league) => {
+            DBManager.updateItem(this.TABLE, league);
+        });
         return true;
     }
 
