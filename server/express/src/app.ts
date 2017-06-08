@@ -10,8 +10,7 @@ import {ActivityController} from "./controllers/ActivityController";
 import {DBManager} from "./db/DBManager";
 import {json} from "body-parser";
 
-console.log('[Hit App.ts]');
-
+console.log('heemeh');
 // Creates and configures an ExpressJS web server.
 class App {
 
@@ -116,7 +115,7 @@ class App {
         //CreateNewLeague
         router.post('/league', (req, res) => {
             let ownerId = req.body.userId;
-            let leaguePref = req.body.pref;
+            let leaguePref = req.body.leaguePref;
 
             res.json(LeagueController.create(ownerId, leaguePref));
         });

@@ -6,6 +6,8 @@ import * as tabris from 'tabris';
 import {Composite, TextView} from "tabris";
 import {customButton} from '../customButton';
 import {InvitePage} from "./InvitePage";
+import {ServiceLayer} from "../ServiceLayer";
+import {LeaguePreferences} from "../../../common/LeaguePreferences";
 
 const HIGH_SCORE = [
     {
@@ -97,11 +99,19 @@ export class LeagueCreationPage extends BasePage{
             selectionIndex: 1
         }).appendTo(highestScore);
 
+        let LeagueInfo = {
+            ownerId: 10,
+            leaguePref: new LeaguePreferences(true, 'Test League', 'Arizona')
+        };
+
         let inviteButton = new customButton({
             top: 'prev() 40',
             left: '10%',
             right: '10%',
-        }, 'Invite.hfjg..').on('tap', () => this.page.parent().append(new InvitePage().createInvitePage()));
+        }, 'Invite...').on('tap', () =>
+            /*this.page.parent().append(new InvitePage().createInvitePage())*/
+            ServiceLayer.httpPostAsync('/league', LeagueInfo, (response: Response) => {} )
+        );
 
         inviteButton.appendTo(this.page);
         return this.page;

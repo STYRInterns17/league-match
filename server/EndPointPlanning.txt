@@ -6,7 +6,7 @@ createUser(userPref: UserPreferences): boolean; *Nick, sorry I did this one too 
 
 getLeagueUsers(): Users[]; *Mic
 getLeagueMatchHistory(): Match[]; *Mic
-postCreateLeague(pref: LeaguePreferences): void; //Setup up timezone *Mic
+postCreateLeague(pref: LeaguePreferences): void; //Setup up timezone *Mic will be local time, eventually will change to time zones
 
 
 deleteLeague(leagueId: League) :void; *Mic
