@@ -90,7 +90,6 @@ export class DBManager {
         })
     }
 
-
     public static getItemFromTable(table: string, itemId: number): Promise<IStorable> {
         let p = new Promise((resolve, reject) => {
             resolve(this.getItemFromPage(table, itemId));
