@@ -1,6 +1,6 @@
-import {LeaguePreferences} from "../models/LeaguePreferences";
-import {Match} from "../models/Match";
-import {League} from "../models/League";
+import {LeaguePreferences} from "../../../../common/LeaguePreferences";
+import {Match} from "../../../../common/Match";
+import {League} from "../../../../common/League";
 import {DBManager} from "../db/DBManager";
 /**
  * Created by STYR-Curt on 6/6/2017.

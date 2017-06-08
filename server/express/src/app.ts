@@ -2,13 +2,15 @@ import * as http from 'http';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import {UserController} from "./controllers/UserController";
-import {UserPreferences} from "./models/UserPreferences";
-import {User} from "./models/User";
+import {UserPreferences} from "../../../common/UserPreferences";
+import {User} from "../../../common/User";
 import {LeagueController} from "./controllers/LeagueController";
 import {NotificationController} from "./controllers/NotificationController";
 import {ActivityController} from "./controllers/ActivityController";
 import {DBManager} from "./db/DBManager";
+import {json} from "body-parser";
 
+console.log('hee')
 // Creates and configures an ExpressJS web server.
 class App {
 
@@ -59,6 +61,7 @@ class App {
         router.post('/user', (req,res) =>{
             let userPref: UserPreferences = req.body.userPref;
             console.log(req.body.userPref);
+            console.log('hi');
             UserController.create(userPref);
             res.json({
                 success: true
@@ -144,9 +147,11 @@ class App {
 
         //Get Notifications
         router.get('/notification/user', (req, res) => {
-            let userId = req.query.id;
+            let userId:number = req.query.userId;
 
-            res.json(NotificationController.getNotifications(userId));
+            NotificationController.getNotifications(userId).then((notificationList) => {
+                res.json(notificationList.list);
+            });
         });
 
         //Dismiss Notification
@@ -157,13 +162,21 @@ class App {
             res.json(NotificationController.dismissNotification(userId, notificationId));
         });
 
+        // Read all Notifications
+        router.post('/notication/user/read', (req,res) => {
+            let userId = req.body.userId;
+
+            res.json(NotificationController.readAllNotifications(userId));
+        });
+
         //Send Notification To User
         router.post('/notification/user', (req, res) => {
             let userId = req.body.userId;
             let message = req.body.message;
-            let submitterId = req.body.sumbmitterId;
+            let submitterName = req.body.submitterName;
+            let submitterLeague = req.body.submitterLeague;
 
-            res.json(NotificationController.sendNotificationToUser(message,userId,submitterId));
+            res.json(NotificationController.sendNotificationToUser(message,userId,submitterName,submitterLeague));
         });
 
         //Send Notification To Entire League aka BroadCast
