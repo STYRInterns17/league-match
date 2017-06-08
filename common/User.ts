@@ -1,6 +1,6 @@
 
 import {UserPreferences} from "./UserPreferences";
-import {IStorable} from "../middleware/IStorable";
+import {IStorable} from "../server/express/src/middleware/IStorable";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */

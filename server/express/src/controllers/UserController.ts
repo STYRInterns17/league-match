@@ -26,7 +26,6 @@ export class UserController {
             DBManager.getItemFromTable(this.TABLE, userId).then((user) => {
                 resolve(user);
             });
-
         });
 
         return p;
