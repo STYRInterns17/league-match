@@ -100,6 +100,7 @@ export class LeagueCreationPage extends BasePage{
         }).appendTo(highestScore);
 
         let LeagueInfo = {
+            //place userId of current logged in user here
             ownerId: 10,
             leaguePref: new LeaguePreferences(true, 'Test League', 'Arizona')
         };
@@ -110,8 +111,7 @@ export class LeagueCreationPage extends BasePage{
             right: '10%',
         }, 'Invite...').on('tap', () =>
             /*this.page.parent().append(new InvitePage().createInvitePage())*/
-            ServiceLayer.httpPostAsync('/league', LeagueInfo, (response: Response) => {} )
-        );
+            ServiceLayer.httpPostAsync('/league', LeagueInfo, (response: Response) => {} ));
 
         inviteButton.appendTo(this.page);
         return this.page;

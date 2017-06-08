@@ -8,14 +8,20 @@ import {Leaderboard} from '../Leaderboard';
 import {customButton} from '../customButton';
 import {AdminPage} from './AdminPage';
 import {LeaguePage} from "./LeaguePage";
+import {ServiceLayer} from "../ServiceLayer";
+import {User} from "../../../common/User";
 //tesdkjsdjkfhskdfgjfgjfgjfgjfgj
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
-    constructor(){
+    public userId: string;
+    public user: User;
+    public userLeagueIds: Array = [];
+    constructor() {
         super();
         this.navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0
         }).appendTo(tabris.ui.contentView);
+
     }
 
     public createComponents(): void {
@@ -51,10 +57,25 @@ export class HomePage extends BasePage {
         let leagueButton = new customButton({top: 'prev() 30'}, 'Leagues').on('tap', () => this.navigationView.append(new LeaguePage(this.navigationView).createLeaguePage()));
         leagueButton.appendTo(drawer);
 
-
-        let leaderBoard = new Leaderboard();
-        let collectionViewLeader = leaderBoard.createLeaderBoard([['Michael', 1200, 'avatar1.png'],['Nick', 4, 'avatar1.png'],['Curt', 1200, 'avatar1.png'],['Sal', 9000, 'avatar1.png'], ['Santa', 1200, 'avatar1.png'], ['Rudolph', 1400, 'avatar1.png'], ['Gus', 900, 'avatar1.png'], ['Octocat', 400, 'avatar2.png']]);
-        this.page.append(collectionViewLeader);
+        //delete this line when the userId is set by login
+        localStorage.setItem('userId', '0');
+        this.userId = localStorage.getItem('userId');
+        ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
+            localStorage.setItem('userObj', JSON.stringify(response));
+            this.user = JSON.parse(localStorage.getItem('userObj'));
+            for(let i = 0; i<this.user.leagues.length; i++){
+                this.userLeagueIds.push(this.user.leagues[i])
+                // ServiceLayer.httpGetAsync('/league', 'leagueId=' + this.user.leagues[i].toString(), (response) => {
+                //     this.leagues.push(response);
+                // })
+            }
+            localStorage.setItem('userLeagueId', this.userLeagueIds.toString());
+            //this part stays in HomePage///////////////////////////////////////
+            let leaderBoard = new Leaderboard();
+            let collectionViewLeader = leaderBoard.createLeaderBoard([['Michael', 1200, 'avatar1.png'],['Nick', 4, 'avatar1.png'],['Curt', 1200, 'avatar1.png'],['Sal', 9000, 'avatar1.png'], ['Santa', 1200, 'avatar1.png'], ['Rudolph', 1400, 'avatar1.png'], ['Gus', 900, 'avatar1.png'], ['Octocat', 400, 'avatar2.png']]);
+            this.page.append(collectionViewLeader);
+            //////////////////////////////////////////////////////
+        });
 
     }
 

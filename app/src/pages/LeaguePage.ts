@@ -16,10 +16,11 @@ export class LeaguePage extends BasePage{
         let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0}).appendTo(this.page);
         let comp2 = new tabris.Composite({top: comp1, bottom: 0, left: 0, right: 0}).appendTo(this.page);
         this.page.title = 'Leagues';
+        let userObj = JSON.parse(localStorage.getItem('userObj'));
 
         let collectionView = new tabris.CollectionView({
             left: 0, top: 0, right: 0, bottom: 0,
-            itemCount: 10,
+            itemCount: userObj.leagues.length,
             cellHeight: 100,
             refreshEnabled: true,
             createCell: () => {
