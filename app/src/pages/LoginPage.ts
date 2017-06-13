@@ -85,7 +85,7 @@ export class LoginPage extends BasePage{
                 new tabris.TextView({
                     layoutData: {top: '70%', right: 0, left: 0},
                     text: text,
-                    font: 'bold 12px'
+                    font: 'bold 12px',
                 }).appendTo(signUpPage);
             }).appendTo(signUpPage);
 
