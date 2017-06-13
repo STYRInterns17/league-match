@@ -11,7 +11,6 @@ import {TextView} from "tabris";
 import {ColorScheme} from "../ColorScheme";
 
 export class NotificationPage extends BasePage {
-    public navigationView: tabris.NavigationView;
     private notifications: Notification[];
     private notificationView: tabris.CollectionView;
 
@@ -19,7 +18,6 @@ export class NotificationPage extends BasePage {
         super();
         this.page.title = 'Notifications';
         this.notifications = [];
-        localStorage.setItem('userId', '0');
         this.getNotifications().then((notifications) => {
             this.notifications = notifications;
 
@@ -35,7 +33,6 @@ export class NotificationPage extends BasePage {
     }
 
     public createComponents(): void {
-        console.log(ColorScheme.Accent);
         this.page.background = ColorScheme.Background;
         let notificationContainer = new tabris.Composite({
             left: 20, right: 20, top: 0, bottom: 0,

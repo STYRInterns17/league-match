@@ -19,6 +19,7 @@ export class UserController {
             // Add User email to map
             MapManager.createItem('emails',user.pref.email, user.id);
             //Return success y/n
+            console.log('true');
             return true;
         }).catch(reason => {
             return false;
@@ -53,14 +54,22 @@ export class UserController {
         return new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1);
     }
 
-    public static validate(email: string, password: string): boolean {
+    public static validate(email: string, password: string, itemId: string): boolean {
         //DBManager search through users, find matching email
         //If password === password, return true;
         //else return false;
 
-        DBManager.getItemFromTable(this.TABLE, 0);
+        if(MapManager.doesItemExist('emails', email)){
+            if(password === userValidation.getPreferences(itemId).password){
+                return true;
+            }
+            else
+                { return false; }
+        }
+        else
+            { return false; }
 
-        return true;
+        //DBManager.getItemFromTable(this.TABLE, 0);
     }
 
     public static getAssociations(userId: number, mask: string): number[] {

@@ -8,6 +8,9 @@ import construct = Reflect.construct;
 //import {Page} from "tabris";
 import {ServiceLayer} from "../ServiceLayer";
 import {UserPreferences} from "../../../common/UserPreferences";
+import {UserController} from "../../../server/express/src/controllers/UserController";
+import {User} from "../../../common/User";
+
 
 export class LoginPage extends BasePage{
 
@@ -58,10 +61,11 @@ export class LoginPage extends BasePage{
         }).on('select', () => {
 
             let userValidation = {
-                userPref: new UserPreferences(user.text, usernamePasswordSignUp.text, 'I like trains', 1)
+                userPref: new UserPreferences(this.userEmail.text, this.userPassword.text, "", 0) // Bio/avatar resetting issue possibility
             };
 
-            ServiceLayer.httpGetAsync('/user', userValidation, (response: Response) => {});
+            ServiceLayer.httpPostAsync('/user/validate', userValidation, (response: Response) => {});
+
         }).appendTo(this.page);
 
         new tabris.TextView({
@@ -109,23 +113,14 @@ export class LoginPage extends BasePage{
                     window.plugins.toast.showShortCenter('Please fill all fields to continue...');
                 }
                 else {
-                    /*let passingUserInformation = {
+                    let userPref = {
                         "email": usernameSignUp.text,
                         "password": usernamePasswordSignUp.text,
                         "bio": 'I love STYR',
                         "avatarId": 0
                     };
 
-                    ServiceLayer.httpPostAsync('/user', passingUserInformation, (response: Response) => {})
-
-                    signUpPage.dispose();*/
-
-                    console.log('hi');
-                    let passingUserInformation = {
-                        userPref: new UserPreferences(usernameSignUp.text, usernamePasswordSignUp.text, 'I like trains', 1)
-                    };
-
-                    ServiceLayer.httpPostAsync('/user', passingUserInformation, (response: Response) => {});
+                    ServiceLayer.httpPostAsync('/user', userPref, (response: Response) => {});
 
                     signUpPage.dispose();
                 }
