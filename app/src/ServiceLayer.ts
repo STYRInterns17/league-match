@@ -40,9 +40,9 @@ export class ServiceLayer {
         console.log(JSON.stringify(data));
 
         fetch(fetchRequest).then((res)=>{
-            callback(res);
             return res.json();
         }).then((json)=>{
+            callback(json);
             console.log('Post Success');
         }).catch((ex)=>{
             console.log('Post Request Error');
