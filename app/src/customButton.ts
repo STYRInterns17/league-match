@@ -9,18 +9,20 @@ export class customButton extends tabris.Composite{
         super(config);
 
         this.cornerRadius = 5;
-        this.left = 10;
+        /*this.left = 10;
         this.right = 10;
         this.height = 50;
-        this.background = '#448aff';
+        this.background = '#448aff';*/
 
         let inner = new tabris.Composite({
-            background: '#448aff',
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0
+            background: this.background,
+            left: 2,
+            right: 2,
+            top: 2,
+            bottom: 2
         }).appendTo(this);
+
+        this.background = '#ffffff';
 
         new tabris.TextView({
             centerX: 0,
@@ -31,30 +33,25 @@ export class customButton extends tabris.Composite{
     }
 
     on(type: string, listener: (event: any) => void, context?: Object): this {
-        let buttonEvent;
-        if(type === 'tap'){
-            buttonEvent = function(event: any) {
-                listener(event);
-                /*this.animate({
-                    opacity: 0.5,
-                    transform: {
-                        rotation: 1.5 * Math.PI,
-                        scaleX: 2.0,
-                        scaleY: 2.0
-                    }
+        let fullEvent;
+        if(type === 'tap') {
+            fullEvent = function(event: any) {
+                this.animate({
+                    opacity: 0.5
                 }, {
                     delay: 0,
-                    duration: 1000,
+                    duration: 100,
                     repeat: 1,
                     reverse: true,
                     easing: 'ease-out'
-                });*/
+                });
+                listener(event);
             };
         } else {
-            buttonEvent = listener;
+            fullEvent = listener;
         }
 
-        super.on(type, buttonEvent, context);
+        super.on(type, fullEvent, context);
         return this;
     }
 }
