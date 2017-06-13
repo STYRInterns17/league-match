@@ -4,15 +4,22 @@
 import * as tabris from 'tabris/tabris';
 
 export class NotificationComposite extends  tabris.Composite{
-    public message: string;
-    public submitterUser: string;
-    public submitterLeague: string;
+    public test: 'yeet';
+    private message: tabris.TextView;
+    private submitterInfo: tabris.TextView;
     // Composite already has an id number, this name can not be reused
     public db_id: number;
     public wasRead: boolean;
 
-    constructor(config: tabris.CompositeProperties) {
+
+
+    constructor(config: tabris.CompositeProperties, message: string) {
         super(config);
+    }
+
+    update(msg: string, subUser: string, subLeague: string): void {
+        this.message.text = msg;
+        this.submitterInfo.text = 'from ' + subUser + ' @' + subLeague;
     }
 
 
