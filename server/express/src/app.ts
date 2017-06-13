@@ -95,6 +95,14 @@ class App {
             res.json(UserController.validate(email, password));
         });
 
+        //GetLeague
+        router.get('/league', (req,res) => {
+            let leagueId: number = req.query.leagueId;
+
+            LeagueController.get(leagueId).then(value => {
+                res.json(value);
+            });
+        });
 
         //GetLeagueUserIds
         router.get('/league/users', (req,res) => {
