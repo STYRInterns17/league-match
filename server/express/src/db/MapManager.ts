@@ -59,7 +59,6 @@ export class MapManager {
                     console.log('found');
                     resolve(JSON.parse(data));
                 }
-
             });
         });
     }

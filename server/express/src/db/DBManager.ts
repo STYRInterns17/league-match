@@ -42,14 +42,10 @@ export class DBManager {
 
     private static fs = require('fs');
 
-
-
     public static init(): void {
         // Validate that all tables that should exist do exist
         // If not create them
         console.log('DB Init');
-
-
 
         //If PATH folder does not exist create it
         try {

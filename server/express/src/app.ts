@@ -84,15 +84,14 @@ class App {
         //GetUserSettings
         router.get('/user/pref', (req,res) => {
             let userId: number = req.query.userId;
-
             res.json(UserController.getPreferences(userId));
+
         });
 
         //Validate User Login
         router.post('/user/validate', (req,res) => {
             let email: string = req.body.email;
             let password: string = req.body.password;
-
             res.json(UserController.validate(email, password));
         });
 
