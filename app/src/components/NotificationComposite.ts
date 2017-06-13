@@ -3,6 +3,7 @@
  */
 import * as tabris from 'tabris/tabris';
 
+// This class is unused now
 export class NotificationComposite extends  tabris.Composite{
     public test: 'yeet';
     private message: tabris.TextView;
