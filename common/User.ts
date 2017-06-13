@@ -18,12 +18,12 @@ export class User implements  IStorable{
     // User settings, bio etc
     public pref: UserPreferences;
 
-    constructor(pref: UserPreferences) {
+    constructor(pref: UserPreferences, email: string) {
         this.pref = pref;
         this.joinDate = new Date(); //This will need to be updated to account for time zones
         this.leagues = [];
         this.mmr = [];
-        this.email = '';
+        this.email = email;
     }
 
 }

@@ -61,10 +61,13 @@ export class LoginPage extends BasePage{
         }).on('select', () => {
 
             let userValidation = {
-                userPref: new UserPreferences(this.userEmail.text, this.userPassword.text, "", 0) // Bio/avatar resetting issue possibility
+                userEmail: this.userEmail.text,
+                userPassword: this.userPassword.text
             };
 
-            ServiceLayer.httpPostAsync('/user/validate', userValidation, (response: Response) => {});
+            ServiceLayer.httpPostAsync('/user/validate', userValidation, (response: Response) => {
+               
+            });
 
         }).appendTo(this.page);
 
@@ -114,10 +117,8 @@ export class LoginPage extends BasePage{
                 }
                 else {
                     let userPref = {
-                        "email": usernameSignUp.text,
-                        "password": usernamePasswordSignUp.text,
-                        "bio": 'I love STYR',
-                        "avatarId": 0
+                        userEmail: usernameSignUp.text,
+                        userPref: new UserPreferences(usernamePasswordSignUp.text, "Tell us about yourself!", 0)
                     };
 
                     ServiceLayer.httpPostAsync('/user', userPref, (response: Response) => {});
