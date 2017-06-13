@@ -109,16 +109,19 @@ export class DBManager {
 
     }
 
-    public static appendItemToTable(table: string, item: IStorable): void {
-
-        this.incrementTableItemsInLastPage(table).then((metaData: TableMetaData) => {
-            this.getPage(table, metaData.pageCount).then((pageData: IStorable[]) => {
-                // - 1 is because if there is one item in the page we need index 0
-                item.id = metaData.pageCount * this.PAGESIZE + metaData.itemsInLastPage - 1;
-                pageData.push(item);
-                this.writeToPage(table, metaData.pageCount, pageData);
+    public static appendItemToTable(table: string, item: IStorable): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.incrementTableItemsInLastPage(table).then((metaData: TableMetaData) => {
+                this.getPage(table, metaData.pageCount).then((pageData: IStorable[]) => {
+                    // - 1 is because if there is one item in the page we need index 0
+                    item.id = metaData.pageCount * this.PAGESIZE + metaData.itemsInLastPage - 1;
+                    pageData.push(item);
+                    this.writeToPage(table, metaData.pageCount, pageData);
+                    resolve(item);
+                });
             });
         });
+
 
     }
 
