@@ -2,6 +2,7 @@ import {UserPreferences} from "../../../../common/UserPreferences";
 import {User} from "../../../../common/User";
 import {DBManager} from "../db/DBManager";
 import {NotificationController} from "./NotificationController";
+import {MapManager} from "../db/MapManager";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
@@ -12,11 +13,16 @@ export class UserController {
     //Create a new user
     public static create(pref: UserPreferences): boolean {
         //DBManager add user to db
-        DBManager.appendItemToTable(this.TABLE, new User(pref));
-        // Create a notification list for the new user
-        NotificationController.create();
-        //Return success y/n
-        return true;
+        DBManager.appendItemToTable(this.TABLE, new User(pref)).then(user => {
+            // Create a notification list for the new user
+            NotificationController.create();
+            // Add User email to map
+            MapManager.createItem('emails',user.pref.email, user.id);
+            //Return success y/n
+            return true;
+        }).catch(reason => {
+            return false;
+        });
     }
 
     //Get user by Id

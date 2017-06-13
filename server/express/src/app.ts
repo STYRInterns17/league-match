@@ -9,6 +9,7 @@ import {NotificationController} from "./controllers/NotificationController";
 import {ActivityController} from "./controllers/ActivityController";
 import {DBManager} from "./db/DBManager";
 import {json} from "body-parser";
+import {MapManager} from "./db/MapManager";
 
 console.log('heemeh');
 // Creates and configures an ExpressJS web server.
@@ -23,6 +24,7 @@ class App {
         this.middleware();
         this.routes();
         DBManager.init(); // Initialize database
+        MapManager.init();
         const server = http.createServer(this.express);
         server.listen(3000);
         console.log('We are now listening on 3000');
@@ -61,7 +63,6 @@ class App {
         router.post('/user', (req,res) =>{
             let userPref: UserPreferences = req.body.userPref;
             console.log(req.body.userPref);
-            console.log('hi');
             UserController.create(userPref);
             res.json({
                 success: true
@@ -93,6 +94,33 @@ class App {
             let password: string = req.body.password;
 
             res.json(UserController.validate(email, password));
+        });
+
+        // Get User by email
+        router.get('/user/id', (req,res) => {
+            let email: string = req.query.email;
+            MapManager.getItemId('emails', email).then(id => {
+                res.json(id);
+            }).catch(reason => {
+                res.json({success: false});
+            });
+        });
+
+        // Does User email exist
+        router.get('/user/email', (req,res) => {
+            let email: string = req.query.email;
+
+            // TODO move into UserController
+            MapManager.doesItemExist('emails', email).then(doesExist => {
+                res.json(JSON.stringify(doesExist));
+            });
+        });
+
+        router.post('/user/email/update', (req,res) => {
+            let oldEmail: string = req.body.oldEmail;
+            let newEmail: string = req.body.newEmail;
+
+            // TODO Finish This
         });
 
 
@@ -150,6 +178,7 @@ class App {
             let userId:number = req.query.userId;
 
             NotificationController.getNotifications(userId).then((notificationList) => {
+                console.log(notificationList.list);
                 res.json(notificationList.list);
             });
         });
