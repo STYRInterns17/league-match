@@ -13,6 +13,8 @@ export class User implements  IStorable{
     public leagues: number[];
     //The current MMR of the player in the same index as leagues array
     public mmr: number[];
+    //Email of the user, not a preference because protocol must be done to change it
+    public email: string;
     // User settings, bio etc
     public pref: UserPreferences;
 
@@ -21,6 +23,7 @@ export class User implements  IStorable{
         this.joinDate = new Date(); //This will need to be updated to account for time zones
         this.leagues = [];
         this.mmr = [];
+        this.email = '';
     }
 
 }
