@@ -40,6 +40,13 @@ export class UserController {
         return p;
     }
 
+    // id, which user to update.
+    public static updateUser(updatedUser: User): boolean {
+        //DBManager get user, update user preferences
+            DBManager.updateItem(this.TABLE, updatedUser);
+        return true;
+    }
+
     // id, which user to update. newPref, the new preferences
     public static updatePreferences(userId: number, newPref: UserPreferences): boolean {
         //DBManager get user, update user preferences

@@ -3,10 +3,11 @@
  */
 const {CollectionView, Composite, TextView, ImageView} = require('tabris');
 const IMAGE_PATH = 'assets/';
+
 export class Leaderboard{
 
-
     public createLeaderBoard(users: Array): tabris.CollectionView{
+
         let people = users.map(([name, mmr, image]) => ({name, mmr, image: IMAGE_PATH + image }));
         function bubbleSortByMMR(a: Array)
         {
