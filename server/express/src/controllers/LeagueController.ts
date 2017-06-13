@@ -17,10 +17,11 @@ export class LeagueController {
     }
 
     public static get(leagueId: number): Promise<League> {
-        //DBManager get user from db
+        //DBManager get league from db
         let p = new Promise((resolve, reject) => {
-            DBManager.getItemFromTable(this.TABLE, leagueId).then((user) => {
-                resolve(user);
+            DBManager.getItemFromTable(this.TABLE, leagueId).then((league) => {
+                resolve(league);
+                console.log(resolve(league))
             });
 
         });

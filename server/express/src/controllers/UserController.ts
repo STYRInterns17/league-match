@@ -57,7 +57,7 @@ export class UserController {
         //DBManager search through users, find matching email
         //If password === password, return true;
         //else return false;
-        
+
         DBManager.getItemFromTable(this.TABLE, 0);
 
         return true;

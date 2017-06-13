@@ -5,10 +5,9 @@ const {CollectionView, Composite, TextView, ImageView} = require('tabris');
 const IMAGE_PATH = 'assets/';
 export class Leaderboard{
 
+
     public createLeaderBoard(users: Array): tabris.CollectionView{
         let people = users.map(([name, mmr, image]) => ({name, mmr, image: IMAGE_PATH + image }));
-        localStorage.setItem('userId', '0');
-        console.log(localStorage.getItem('userId'));
         function bubbleSortByMMR(a: Array)
         {
             let swapped;
