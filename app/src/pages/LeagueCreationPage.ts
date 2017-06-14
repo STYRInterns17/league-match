@@ -37,13 +37,15 @@ const SCORE_RANGE = [
 
 
 export class LeagueCreationPage extends BasePage{
-    private ownerID: string;
-    constructor(userIdentification: string){
+    private ownerID: number;
+    constructor(userIdentification: number){
         super();
         this.ownerID = userIdentification;
+
+        this.createAdminPage();
     }
 
-    public createAdminPage(){
+    private createAdminPage(){
         this.page.title = 'Create a League';
             new tabris.TextInput({
             top: 20, left: '10%', right: '10%',

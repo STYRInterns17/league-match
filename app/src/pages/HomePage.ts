@@ -42,20 +42,25 @@ export class HomePage extends BasePage {
         this.page.on('disappear', () => drawer.enabled = false ).on('appear', () => drawer.enabled = true );
         //CREATE BUTTONS
 
-        // TODO Added all button links
         //Add admin verification method here:
         let adminButton = new customButton({top: 'prev() 30', centerX: 0}, 'Administrator').on('tap', () => {
-            this.page.parent().append(new AdminPage('test', 'test').createAdminPage());
+            // The '+' signifies that the string is actually a number
+            this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).createAdminPage());
         });
         adminButton.appendTo(drawer);
 
-        let profileButton = new customButton({top: 'prev() 30', centerX: 0}, 'Profile').on('tap', () => console.log('Profile Button Tapped'));
+        let profileButton = new customButton({top: 'prev() 30', centerX: 0}, 'Profile').on('tap', () => {
+            // TODO What is the profile page?
+            //this.page.parent().append(new Profil('test', 'test').createAdminPage());
+        });
         profileButton.appendTo(drawer);
 
         let notificationButton = new customButton({top: 'prev() 30', centerX: 0}, 'Notifications');
         notificationButton.appendTo(drawer);
 
-        let leagueButton = new customButton({top: 'prev() 30', centerX: 0}, 'Leagues').on('tap', () => this.navigationView.append(new LeaguePage(this.navigationView).page));
+        let leagueButton = new customButton({top: 'prev() 30', centerX: 0}, 'Leagues').on('tap', () => {
+            this.page.parent().append(new LeaguePage().page);
+        });
         leagueButton.appendTo(drawer);
 
 

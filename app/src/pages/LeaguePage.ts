@@ -14,10 +14,9 @@ export class LeaguePage extends BasePage {
     private leagues: League[];
     public navigationView: tabris.NavigationView;
 
-    constructor(navView: tabris.NavigationView) {
+    constructor() {
         super();
         this.leagues = [];
-        this.navigationView = navView;
 
         this.leagueLoop().then(value => {
             console.log('Here' + userObj.leagues.length);
@@ -54,7 +53,9 @@ export class LeaguePage extends BasePage {
         });
 
         comp1.append(collectionView);
-        comp2.append(new customButton({centerY: 0}, '➕ Create a League').on('tap', () => this.navigationView.append(new LeagueCreationPage('test').createAdminPage())));
+        new customButton({centerY: 0}, '➕ Create a League').on('tap', () => {
+            this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('leagueId')).page);
+        }).appendTo(comp2);
 
     }
 
