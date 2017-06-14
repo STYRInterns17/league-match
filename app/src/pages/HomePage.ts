@@ -71,6 +71,7 @@ export class HomePage extends BasePage {
         let signOutButton = new customButton({bottom: 30, centerX: 0, background: '#cb2431'}, 'Sign Out').on('tap', () => {
             localStorage.removeItem('userId');
             localStorage.removeItem('userObj');
+            localStorage.removeItem('lastLeague');
             this.page.parent().append(new LoginPage().page);
             this.page.dispose();
         });
@@ -80,6 +81,7 @@ export class HomePage extends BasePage {
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
             localStorage.setItem('userObj', JSON.stringify(response));
             this.user = JSON.parse(localStorage.getItem('userObj'));
+            console.log('Here' + localStorage.getItem('userObj'));
             //this part stays in HomePage///////////////////////////////////////
             let leaderBoard = new Leaderboard(this.page);
             let collectionViewLeader = leaderBoard.createLeaderBoard();

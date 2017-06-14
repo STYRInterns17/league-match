@@ -12,8 +12,6 @@ let userObj = JSON.parse(localStorage.getItem('userObj'));
 
 export class LeaguePage extends BasePage {
     private leagues: League[];
-    public navigationView: tabris.NavigationView;
-
     constructor() {
         super();
         this.leagues = [];

@@ -15,9 +15,9 @@ export class Leaderboard{
     public createLeaderBoard(): tabris.CollectionView{
         let people = [];
         if(userObj.leagues.length > 0){
-            this.page.title = 'Its empty in here :('
-        }else{
             this.page.title = 'This is a test';
+        }else{
+            this.page.title = 'Its empty in here :(';
         }
         function bubbleSortByMMR(a: Array)
         {
