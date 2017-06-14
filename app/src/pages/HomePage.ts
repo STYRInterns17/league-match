@@ -18,15 +18,12 @@ export class HomePage extends BasePage {
     public userLeagueIds: Array = [];
     constructor() {
         super();
-        this.navigationView = new tabris.NavigationView({
-            left: 0, top: 0, right: 0, bottom: 0
-        }).appendTo(tabris.ui.contentView);
+        this.createComponents();
 
     }
 
     public createComponents(): void {
 
-        this.page.appendTo(this.navigationView);
         this.page.background = '#37474f';
 
         //CREATE TEXT COMP
@@ -85,6 +82,3 @@ export class HomePage extends BasePage {
     }
 
 }
-
-let homePage = new HomePage();
-homePage.createComponents();

@@ -14,24 +14,24 @@ class Main {
         this.navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0
         }).appendTo(tabris.ui.contentView);
-        console.log('Creating login page');
-        // TODO If cashe has auto login, go to leaderboard
-        // otherwise open sign in page
 
-        new HomePage().page.appendTo(this.navigationView);
-
-        new LoginPage().page.appendTo(this.navigationView);
+        // Use this line to clear your userId in cashe
+        // localStorage.removeItem('userId');
+        if (localStorage.getItem('userId') === null) {
+            new LoginPage().page.appendTo(this.navigationView);
+        } else {
+            new HomePage().page.appendTo(this.navigationView);
+        }
 
 
         //This is where you would create the drawer
 
         /*let drawer = tabris.ui.drawer;
 
-        drawer.enabled = true;*/
+         drawer.enabled = true;*/
 
     }
 }
-
 
 
 new Main();

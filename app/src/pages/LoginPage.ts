@@ -18,18 +18,15 @@ export class LoginPage extends BasePage{
     private userEmail;
     private userPassword;
 
-    constructor(){ super(); }
+    constructor(){
+        super();
+
+        this.createComponents();
+    }
 
     public createComponents(): void {
 
-        console.log('TEST');
-        
-        let navigationView = new tabris.NavigationView({
-            left: 0, top: 0, right: 0, bottom: 0,
-            background: '#fffafd',
-        }).appendTo(tabris.ui.contentView);
 
-        this.page.appendTo(navigationView);
         this.page.background = '#37474f';
 
         new tabris.TextView({
@@ -268,5 +265,3 @@ export class LoginPage extends BasePage{
      Move page accordingly
      */
 }
-let loginPage = new LoginPage();
-loginPage.createComponents();
