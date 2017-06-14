@@ -108,33 +108,29 @@ export class UserController {
         })
     }
 
-    public static validate(email: string, password: string): Promise<boolean> {
+    public static validate(email: string, password: string): Promise<User> {
         //DBManager search through users, find matching email
         //If password === password, return true;
         //else return false;
-
         return new Promise((resolve, reject) => {
             MapManager.doesItemExist('emails', email).then(value => {
                 if (value) {
                     MapManager.getItemId('emails', email).then(id => {
                         console.log("Id: " + id.id);
-                        this.getPreferences(id.id).then(pref => {
-                            console.log(pref.password);
-                            if (password === pref.password) {
+                        this.get(id.id).then(user => {
+                            if (password === user.pref.password) {
                                 console.log("Password match found!");
-                                resolve(true);
-                            }
-                            else {
+                                resolve(user);
+                            } else {
                                 console.log("Password match NOT found!");
-                                resolve(false);
+                                reject();
                             }
                         })
                     }).catch(reason => {
-                        resolve(false);
+                        reject();
                     });
                 }
                 else{
-                    console.log('2');
                     resolve(false);
                 }
             })
