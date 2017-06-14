@@ -55,7 +55,7 @@ export class HomePage extends BasePage {
         let notificationButton = new customButton({top: 'prev() 30', centerX: 0}, 'Notifications');
         notificationButton.appendTo(drawer);
 
-        let leagueButton = new customButton({top: 'prev() 30', centerX: 0}, 'Leagues').on('tap', () => this.navigationView.append(new LeaguePage(this.navigationView).createLeaguePage()));
+        let leagueButton = new customButton({top: 'prev() 30', centerX: 0}, 'Leagues').on('tap', () => this.navigationView.append(new LeaguePage(this.navigationView).page));
         leagueButton.appendTo(drawer);
 
 
