@@ -7,6 +7,7 @@ import {BasePage} from './BasePage';
 import {ServiceLayer} from "../ServiceLayer";
 import {ColorScheme} from "../ColorScheme";
 import {customButton} from "../customButton";
+import {Match} from "../../../common/Match";
 
 export class LogMatchPage extends BasePage {
     private TEXTINPUT_HEIGHT: number = 60;
@@ -18,6 +19,9 @@ export class LogMatchPage extends BasePage {
 
     leftPlayerContainer: tabris.Composite;
     rightPlayerContainer: tabris.Composite;
+
+    leftScoreInput: tabris.TextInput;
+    rightScoreInput: tabris.TextInput;
 
     playerCounter: number = 0;
 
@@ -78,7 +82,7 @@ export class LogMatchPage extends BasePage {
             background:ColorScheme.WigetBackground,
             cornerRadius: 5
         }).appendTo(this.marginBox);
-        new tabris.TextInput({
+        this.leftScoreInput = new tabris.TextInput({
             left: 0, right: 0, top: 0, bottom: 0,
             message: 'Score',
             background: ColorScheme.Secondary
@@ -91,7 +95,7 @@ export class LogMatchPage extends BasePage {
 
             cornerRadius: 5
         }).appendTo(this.marginBox);
-        new tabris.TextInput({
+        this.rightScoreInput = new tabris.TextInput({
             left: 0, right: 0, top: 0, bottom: 0,
             message: 'Score',
             background: ColorScheme.Secondary
@@ -102,7 +106,7 @@ export class LogMatchPage extends BasePage {
             width: 300, height: this.TEXTINPUT_HEIGHT, centerX: 0, top: [rightScoreBox, 30],
             background: ColorScheme.Secondary
         }, 'Submit').on('tap', target => {
-            console.log(this.isInputFieldsFull());
+            this.submitMatch();
         }).appendTo(this.marginBox);
     }
 
@@ -230,6 +234,64 @@ export class LogMatchPage extends BasePage {
     }
 
     private submitMatch(): void {
-        
+        let leftPlayers = this.leftPlayerContainer.children();
+        let rightPlayers = this.rightPlayerContainer.children();
+
+
+
+        // Check if players were input
+        if (this.playerCounter === 2 && leftPlayers[0].text === ''&& rightPlayers[0].text === '') {
+            window.plugins.toast.showLongCenter('Please add players to the match');
+            return;
+        }
+
+        // Check for empty player fields
+        for(let i = 0; i < this.playerCounter / 2; i++) {
+            // XOR Operator
+            if(!(leftPlayers[i].text === '' && rightPlayers[i].text === '') && (leftPlayers[i].text === '' || rightPlayers[i].text === '')) {
+                window.plugins.toast.showLongCenter('Please fill in all empty player fields');
+                return;
+            }
+        }
+
+        // Check for half of last fields
+        if(leftPlayers[leftPlayers.length - 1].text === '' && rightPlayers[rightPlayers.length - 1].text !== '') {
+            window.plugins.toast.showLongCenter('Please finish Player ' + (this.playerCounter - 1));
+            return;
+        }
+
+        if(leftPlayers[leftPlayers.length - 1].text !== '' && rightPlayers[rightPlayers.length - 1].text === '') {
+            window.plugins.toast.showLongCenter('Please finish Player ' + this.playerCounter);
+            return;
+        }
+
+        // Check for invalid score fields
+        if(isNaN(this.leftScoreInput.text)) {
+            window.plugins.toast.showLongCenter("Please fill out the left team's score");
+            return;
+        }
+
+        if(isNaN(this.rightScoreInput.text)) {
+            window.plugins.toast.showLongCenter("Please fill out the right team's score");
+            return;
+        }
+
+
+
+        // If we have gotten here our input fields must be valid
+        let leftTeam = [];
+        let rightTeam = [];
+
+        for(let i = 0; i < this.playerCounter / 2; i++) {
+            leftTeam.push(leftPlayers[i].text);
+            rightTeam.push(rightPlayers[i].text);
+        }
+
+        let match = new Match(leftTeam, rightTeam, this.leftScoreInput.text, this.rightScoreInput.text);
+        /*ServiceLayer.httpPostAsync('/league/match', match, response => {
+            window.plugins.toast.showLongCenter(response.message);
+        });*/
+        //window.plugins.toast.showLongCenter('Got through');
+
     }
 }
