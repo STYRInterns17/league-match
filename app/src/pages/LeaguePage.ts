@@ -17,11 +17,14 @@ export class LeaguePage extends BasePage {
     constructor() {
         super();
         this.leagues = [];
-
-        this.leagueLoop().then(value => {
-            console.log('Here' + userObj.leagues.length);
+        if(userObj.leagues.length>0) {
+            this.leagueLoop().then(value => {
+                console.log('Here' + userObj.leagues.length);
+                this.createLeaguePage();
+            })
+        }else{
             this.createLeaguePage();
-        })
+        }
     }
 
     public createLeaguePage(): void {
@@ -54,7 +57,7 @@ export class LeaguePage extends BasePage {
 
         comp1.append(collectionView);
         new customButton({centerY: 0}, '➕ Create a League').on('tap', () => {
-            this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('leagueId')).page);
+            this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
         }).appendTo(comp2);
 
     }

@@ -1,14 +1,24 @@
+import {Page} from "tabris";
+import {User} from "../../common/User";
 /**
  * Created by STYRLabs2 on 6/6/2017.
  */
 const {CollectionView, Composite, TextView, ImageView} = require('tabris');
 const IMAGE_PATH = 'assets/';
-
+const userObj: User = JSON.parse(localStorage.getItem('userObj'));
 export class Leaderboard{
+    page: Page;
+    constructor(page: Page){
+        this.page = page
+    }
 
-    public createLeaderBoard(users: Array): tabris.CollectionView{
-
-        let people = users.map(([name, mmr, image]) => ({name, mmr, image: IMAGE_PATH + image }));
+    public createLeaderBoard(): tabris.CollectionView{
+        let people = [];
+        if(userObj.leagues.length > 0){
+            this.page.title = 'Its empty in here :('
+        }else{
+            this.page.title = 'This is a test';
+        }
         function bubbleSortByMMR(a: Array)
         {
             let swapped;
@@ -28,8 +38,8 @@ export class Leaderboard{
         bubbleSortByMMR(people);
 
         let collectionView = new CollectionView({
-            left: 0, top: 40, right: 0, bottom: 0,
-            itemCount: people.length,
+            left: 40, top: 40, right: 40, bottom: 40,
+            itemCount: people.length, background: '#f78',
             cellHeight: 135,
             createCell: () => {
                 let cell = new Composite();

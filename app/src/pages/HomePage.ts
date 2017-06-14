@@ -10,10 +10,11 @@ import {AdminPage} from './AdminPage';
 import {LeaguePage} from "./LeaguePage";
 import {ServiceLayer} from "../ServiceLayer";
 import {User} from "../../../common/User";
+import {LoginPage} from "./LoginPage";
 //tesdkjsdjkfhskdfgjfgjfgjfgjfgj
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
-    public userId: string;
+    public userId: number;
     public user: User;
     public userLeagueIds: Array = [];
     constructor() {
@@ -24,17 +25,18 @@ export class HomePage extends BasePage {
 
     public createComponents(): void {
 
+
         this.page.background = '#37474f';
 
-        //CREATE TEXT COMP
-        let textComp = new tabris.Composite({
-            centerX: 0
-        }).appendTo(this.page);
-        textComp.append(new tabris.TextView({
-            text: 'Leaderboards of (League Name here)',
-            font: 'bold 20px',
-            textColor: '#fff'
-        }));
+        // //CREATE TEXT COMP
+        // let textComp = new tabris.Composite({
+        //     centerX: 0
+        // }).appendTo(this.page);
+        // textComp.append(new tabris.TextView({
+        //     text: 'Leaderboards of (League Name here)',
+        //     font: 'bold 20px',
+        //     textColor: '#fff'
+        // }));
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
         drawer.enabled = true;
@@ -45,7 +47,7 @@ export class HomePage extends BasePage {
         //Add admin verification method here:
         let adminButton = new customButton({top: 'prev() 30', centerX: 0}, 'Administrator').on('tap', () => {
             // The '+' signifies that the string is actually a number
-            this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).createAdminPage());
+            this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
         });
         adminButton.appendTo(drawer);
 
@@ -63,23 +65,21 @@ export class HomePage extends BasePage {
         });
         leagueButton.appendTo(drawer);
 
+        let signOutButton = new customButton({bottom: 30, centerX: 0, background: '#cb2431'}, 'Sign Out').on('tap', () => {
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userObj');
+            this.page.parent().append(new LoginPage().page);
+            this.page.dispose();
+        });
+        signOutButton.appendTo(drawer);
 
-
-
-        this.userId = localStorage.getItem('userId');
+        this.userId = parseInt(localStorage.getItem('userId'));
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
             localStorage.setItem('userObj', JSON.stringify(response));
             this.user = JSON.parse(localStorage.getItem('userObj'));
-
-            //
-            for(let i = 0; i<this.user.leagues.length; i++){
-                this.userLeagueIds.push(this.user.leagues[i])
-            }
-            localStorage.setItem('userLeagueId', this.userLeagueIds.toString());
-
             //this part stays in HomePage///////////////////////////////////////
-            let leaderBoard = new Leaderboard();
-            let collectionViewLeader = leaderBoard.createLeaderBoard([['Michael', 1200, 'avatar1.png'],['Nick', 4, 'avatar1.png'],['Curt', 1200, 'avatar1.png'],['Sal', 9000, 'avatar1.png'], ['Santa', 1200, 'avatar1.png'], ['Rudolph', 1400, 'avatar1.png'], ['Gus', 900, 'avatar1.png'], ['Octocat', 400, 'avatar2.png']]);
+            let leaderBoard = new Leaderboard(this.page);
+            let collectionViewLeader = leaderBoard.createLeaderBoard();
             this.page.append(collectionViewLeader);
             //////////////////////////////////////////////////////
         });
