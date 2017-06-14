@@ -2,8 +2,8 @@
  * Created by STYR-Curt on 6/6/2017.
  */
 export class Match {
-    public team1Names: number[];
-    public team2Names: number[];
+    public team1Names: string[];
+    public team2Names: string[];
     public team1Score: number;
     public team2Score: number;
 
