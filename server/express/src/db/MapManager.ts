@@ -83,6 +83,7 @@ export class MapManager {
             this.getItemId(map, itemName).then(value => {
                 resolve(true);
             }).catch(reason => {
+                console.log(reason);
                 resolve(false);
             });
         });

@@ -1,4 +1,3 @@
-
 export class ServiceLayer {
 
     private static URL: string = 'http://192.168.100.186:3000';
@@ -12,15 +11,15 @@ export class ServiceLayer {
         });
 
 
-        fetch(fetchRequest).then((res)=>{
+        fetch(fetchRequest).then((res) => {
             //res.json() returns a promise of a parsed json object
             return res.json();
-        }).then((resObj)=>{
+        }).then((resObj) => {
             //Once the object is resolved run the callback with the received object as the parameter
             console.log(resObj);
             callback(resObj);
             console.log('Get Success');
-        }).catch((ex)=>{
+        }).catch((ex) => {
             console.log('Get Request Error');
             console.error(ex)
         });
@@ -28,23 +27,25 @@ export class ServiceLayer {
 
 
     public static httpPostAsync(route: string, data: any, callback: (response: Response) => void) {
-
         let fetchRequest: Request = new Request(this.URL + route, {
             method: 'POST',
             headers: {
-                "Content-type": "application/json"
+                "Content-type": "application/json",
+                "Accept": "application/json",
             },
             body: JSON.stringify(data),
         });
 
         console.log(JSON.stringify(data));
+        console.log('OMGUpdate4');
 
-        fetch(fetchRequest).then((res)=>{
+        fetch(fetchRequest).then((res) => {
+            console.log('a');
             return res.json();
-        }).then((json)=>{
+        }).then((json) => {
             callback(json);
             console.log('Post Success');
-        }).catch((ex)=>{
+        }).catch((ex) => {
             console.log('Post Request Error');
             console.error(ex)
         });
@@ -58,14 +59,14 @@ export class ServiceLayer {
             body: null,
         });
 
-        fetch(fetchRequest).then((res)=>{
+        fetch(fetchRequest).then((res) => {
             callback(res);
 
             return res.json();
-        }).then((json)=>{
+        }).then((json) => {
             console.log('Delete Success');
             console.log(json);
-        }).catch((ex)=>{
+        }).catch((ex) => {
             console.log('Delete Request Error');
             console.error(ex)
         });

@@ -11,7 +11,6 @@ import {DBManager} from "./db/DBManager";
 import {json} from "body-parser";
 import {MapManager} from "./db/MapManager";
 
-console.log('heemeh');
 // Creates and configures an ExpressJS web server.
 class App {
 
@@ -90,12 +89,19 @@ class App {
 
         //Validate User Login
         router.post('/user/validate', (req,res) => {
-            let email: string = req.body.email;
-            let password: string = req.body.password;
+            let email: string = req.body.userEmail;
+            let password: string = req.body.userPassword;
+
+            console.log(JSON.stringify(req.body));
+
             UserController.validate(email, password).then(value => {
+                console.log("Password Match Result: " + value);
                 res.json({success: value});
+            }).catch(reason => {
+                res.json({success: false});
             });
         });
+
 
         // Get User by email
         router.get('/user/id', (req,res) => {
