@@ -11,7 +11,8 @@ import {UserPreferences} from "../../../common/UserPreferences";
 import {UserController} from "../../../server/express/src/controllers/UserController";
 import {User} from "../../../common/User";
 
-
+// TODO Store UserId in cashe on sign in
+//localStorage.setItem('userId', id);
 export class LoginPage extends BasePage{
 
     private userEmail;

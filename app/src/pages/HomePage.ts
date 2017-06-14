@@ -45,8 +45,11 @@ export class HomePage extends BasePage {
         this.page.on('disappear', () => drawer.enabled = false ).on('appear', () => drawer.enabled = true );
         //CREATE BUTTONS
 
+        // TODO Added all button links
         //Add admin verification method here:
-        let adminButton = new customButton({top: 'prev() 30', centerX: 0}, 'Administrator').on('tap', () => this.navigationView.append(new AdminPage('test', 'test').createAdminPage()));
+        let adminButton = new customButton({top: 'prev() 30', centerX: 0}, 'Administrator').on('tap', () => {
+            this.page.parent().append(new AdminPage('test', 'test').createAdminPage());
+        });
         adminButton.appendTo(drawer);
 
         let profileButton = new customButton({top: 'prev() 30', centerX: 0}, 'Profile').on('tap', () => console.log('Profile Button Tapped'));
@@ -59,9 +62,8 @@ export class HomePage extends BasePage {
         leagueButton.appendTo(drawer);
 
 
-        //delete this line when the userId is set by login
-        localStorage.setItem('userId', '0');
-        //
+
+
         this.userId = localStorage.getItem('userId');
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
             localStorage.setItem('userObj', JSON.stringify(response));
