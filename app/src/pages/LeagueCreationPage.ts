@@ -8,6 +8,7 @@ import {customButton} from '../customButton';
 import {InvitePage} from "./InvitePage";
 import {ServiceLayer} from "../ServiceLayer";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
+import {User} from "../../../common/User";
 
 const HIGH_SCORE = [
     {
@@ -44,12 +45,14 @@ export class LeagueCreationPage extends BasePage{
 
     public createAdminPage(){
         this.page.title = 'Create a League';
-        new tabris.TextInput({
+            new tabris.TextInput({
             top: 20, left: '10%', right: '10%',
             message: 'Title of League',
             enterKeyType: 'send',
             autoCorrect: true
-        }).appendTo(this.page);
+        }).appendTo(this.page).on('textChanged', ({value}) => {
+            LeagueInfo.leaguePref.title = value;
+        });
         let switchComp = new Composite({
             top: 'prev() 40',
             left: 0,
@@ -80,8 +83,10 @@ export class LeagueCreationPage extends BasePage{
             right: '10%',
             itemCount: SCORE_RANGE.length,
             itemText: (index) => SCORE_RANGE[index].name,
-            selectionIndex: 1
-        }).appendTo(scoreComp);
+            selectionIndex: 0
+        }).appendTo(scoreComp).on('selectionIndexChanged', ({value}) =>{
+            LeagueInfo.leaguePref.scoreRange = value;
+        });
 
         let highestScore = new Composite({
             top: 'prev() 40',
@@ -96,13 +101,16 @@ export class LeagueCreationPage extends BasePage{
             right: '10%',
             itemCount: HIGH_SCORE.length,
             itemText: (index) => HIGH_SCORE[index].name,
-            selectionIndex: 1
-        }).appendTo(highestScore);
+            selectionIndex: 0
+        }).appendTo(highestScore).on('selectionIndexChanged', ({value}) =>{
+            LeagueInfo.leaguePref.highestScore = value;
+        });
 
+        let userObj: User = JSON.parse(localStorage.getItem('userObj'));
         let LeagueInfo = {
             //place userId of current logged in user here
-            ownerId: 10,
-            leaguePref: new LeaguePreferences(true, 'Test League', 'Arizona')
+            ownerId: userObj.id,
+            leaguePref: new LeaguePreferences(true, 'My League', 'Arizona', 0 , 0)
         };
 
         let inviteButton = new customButton({
@@ -110,8 +118,18 @@ export class LeagueCreationPage extends BasePage{
             left: '10%',
             right: '10%',
         }, 'Invite...').on('tap', () =>
-            /*this.page.parent().append(new InvitePage().createInvitePage())*/
-            ServiceLayer.httpPostAsync('/league', LeagueInfo, (response: Response) => {} ));
+
+            ServiceLayer.httpPostAsync('/league', LeagueInfo, (response) => {
+                userObj.leagues.push(response.id);
+                //store new userObj
+                localStorage.setItem('userObj', JSON.stringify(userObj));
+                ServiceLayer.httpPostAsync('/user/update', userObj ,(response) =>{
+                    this.page.parent().append(new InvitePage().createInvitePage());
+
+                    this.page.dispose();
+                });
+
+            } ));
 
         inviteButton.appendTo(this.page);
         return this.page;

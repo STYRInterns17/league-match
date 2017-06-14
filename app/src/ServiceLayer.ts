@@ -1,6 +1,6 @@
 export class ServiceLayer {
 
-    private static URL: string = 'http://192.168.100.186:3000';
+    private static URL: string = 'http://192.168.100.185:3000';
 
 
     public static httpGetAsync(route: string, query: string, callback: (response: any) => void) {

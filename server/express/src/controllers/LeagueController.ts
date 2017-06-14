@@ -9,11 +9,22 @@ export class LeagueController {
 
     private static TABLE = 'Leagues';
 
-    public static create(ownerId: number, pref: LeaguePreferences): boolean {
+    public static create(ownerId: number, pref: LeaguePreferences): Promise<number> {
         //DBManager add League to db
-        DBManager.appendItemToTable(this.TABLE, new League(ownerId, pref));
-        //Return success y/n
-        return true;
+        // DBManager.appendItemToTable(this.TABLE, new League(ownerId, pref)).then((league) => {
+        //     return league.id;
+        // });
+        let p = new Promise((resolve, reject) => {
+            DBManager.appendItemToTable(this.TABLE, new League(ownerId, pref)).then((league) =>{
+                //console.log(league);
+                console.log(league.id);
+                resolve(league.id);
+
+            });
+
+        });
+
+        return p;
     }
 
     public static get(leagueId: number): Promise<League> {

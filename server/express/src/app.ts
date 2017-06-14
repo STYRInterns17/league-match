@@ -70,6 +70,15 @@ class App {
             });
         });
 
+        //UpdateUser
+        router.post('/user/update', (req,res) => {
+            let user: User = req.body;
+            UserController.updateUser(user);
+            res.json({
+                success: true
+            });
+        });
+
         //UpdateUserSettings
         router.post('/user/pref', (req,res) => {
             let userId: number = req.body.userId;
@@ -130,6 +139,27 @@ class App {
             // TODO Finish This
         });
 
+        router.post('/user/name/update', (req,res) => {
+            let userId: number = req.body.userId;
+            let newName: string = req.body.userName;
+
+            UserController.updateUserName(userId, newName).then(user => {
+                res.json(user);
+            }).catch(reason => {
+                res.json({message: reason})
+            })
+        });
+
+        router.get('/user/name', (req,res) => {
+            let userName: string = req.query.userName;
+
+            UserController.getUserByName(userName).then(userId => {
+                res.json(userId);
+            }).catch(reason => {
+                res.json({message: reason});
+            })
+        })
+
 
         //GetLeague
         router.get('/league', (req,res) => {
@@ -159,10 +189,13 @@ class App {
 
         //CreateNewLeague
         router.post('/league', (req, res) => {
-            let ownerId = req.body.userId;
+            let ownerId = req.body.ownerId;
             let leaguePref = req.body.leaguePref;
+            let foo = LeagueController.create(ownerId, leaguePref).then(value => {
+                console.log(value);
+                res.json({id: value});
+            });
 
-            res.json(LeagueController.create(ownerId, leaguePref));
         });
 
         //Delete League
