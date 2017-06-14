@@ -10,6 +10,7 @@ import {AdminPage} from './AdminPage';
 import {LeaguePage} from "./LeaguePage";
 import {ServiceLayer} from "../ServiceLayer";
 import {User} from "../../../common/User";
+import {NotificationPage} from "./NotificationPage";
 //tesdkjsdjkfhskdfgjfgjfgjfgjfgj
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
@@ -55,7 +56,9 @@ export class HomePage extends BasePage {
         });
         profileButton.appendTo(drawer);
 
-        let notificationButton = new customButton({top: 'prev() 30', centerX: 0}, 'Notifications');
+        let notificationButton = new customButton({top: 'prev() 30', centerX: 0}, 'Notifications').on('tap', () => {
+            this.page.parent().append(new NotificationPage().page);
+        });
         notificationButton.appendTo(drawer);
 
         let leagueButton = new customButton({top: 'prev() 30', centerX: 0}, 'Leagues').on('tap', () => {
