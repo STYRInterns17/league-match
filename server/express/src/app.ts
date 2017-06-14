@@ -11,7 +11,6 @@ import {DBManager} from "./db/DBManager";
 import {json} from "body-parser";
 import {MapManager} from "./db/MapManager";
 
-console.log('heemeh');
 // Creates and configures an ExpressJS web server.
 class App {
 
@@ -99,12 +98,19 @@ class App {
 
         //Validate User Login
         router.post('/user/validate', (req,res) => {
-            let email: string = req.body.email;
-            let password: string = req.body.password;
+            let email: string = req.body.userEmail;
+            let password: string = req.body.userPassword;
+
+            console.log(JSON.stringify(req.body));
+
             UserController.validate(email, password).then(value => {
+                console.log("Password Match Result: " + value);
                 res.json({success: value});
+            }).catch(reason => {
+                res.json({success: false});
             });
         });
+
 
         // Get User by email
         router.get('/user/id', (req,res) => {
@@ -132,6 +138,27 @@ class App {
 
             // TODO Finish This
         });
+
+        router.post('/user/name/update', (req,res) => {
+            let userId: number = req.body.userId;
+            let newName: string = req.body.userName;
+
+            UserController.updateUserName(userId, newName).then(user => {
+                res.json(user);
+            }).catch(reason => {
+                res.json({message: reason})
+            })
+        });
+
+        router.get('/user/name', (req,res) => {
+            let userName: string = req.query.userName;
+
+            UserController.getUserByName(userName).then(userId => {
+                res.json(userId);
+            }).catch(reason => {
+                res.json({message: reason});
+            })
+        })
 
 
         //GetLeague

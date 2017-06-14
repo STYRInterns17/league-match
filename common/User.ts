@@ -17,13 +17,17 @@ export class User implements  IStorable{
     public email: string;
     // User settings, bio etc
     public pref: UserPreferences;
+    // Used to submit matches and see your friends
+    public name: string;
 
+    // Name should be set after account creation
     constructor(pref: UserPreferences, email: string) {
         this.pref = pref;
         this.joinDate = new Date(); //This will need to be updated to account for time zones
         this.leagues = [];
         this.mmr = [];
         this.email = email;
+        this.name = email;
     }
 
 }

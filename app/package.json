@@ -1,7 +1,7 @@
 {
   "name": "testproject",
   "version": "0.1.0",
-  "main": "dist/app/src/pages/HomePage.js",
+  "main": "dist/app/src/pages/LoginPage.js",
   "private": true,
   "scripts": {
     "test": "tslint 'src/**/*.ts'",
@@ -13,7 +13,7 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
-    "tabris": "^2.0.0-rc2"
+    "tabris": "^2.0.0-rc2-dev.20170614"
   },
   "devDependencies": {
     "@types/body-parser": "^1.16.3",

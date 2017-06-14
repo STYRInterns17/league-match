@@ -12,14 +12,14 @@ export class UserController {
 
     //Create a new user
     public static create(pref: UserPreferences, email: string): boolean {
-
-
         //DBManager add user to db
         DBManager.appendItemToTable(this.TABLE, new User(pref, email)).then(user => {
             // Create a notification list for the new user
             NotificationController.create();
             // Add User email to map
-            MapManager.createItem('emails',user.email, user.id);
+            MapManager.createItem('emails', user.email, user.id);
+            // Add User name to map
+            MapManager.createItem('names', user.name, user.id);
             //Return success y/n
             console.log('true');
             return true;
@@ -43,7 +43,7 @@ export class UserController {
     // id, which user to update.
     public static updateUser(updatedUser: User): boolean {
         //DBManager get user, update user preferences
-            DBManager.updateItem(this.TABLE, updatedUser);
+        DBManager.updateItem(this.TABLE, updatedUser);
         return true;
     }
 
@@ -57,10 +57,57 @@ export class UserController {
         return true;
     }
 
-    public static getPreferences(userid: number): UserPreferences {
+    public static getPreferences(userId: number): Promise<UserPreferences> {
         //DBManager get user
         //return preferences of user, not whole user
-        return new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1);
+        console.log('userId: ' + userId);
+        return new Promise((resolve, reject) => {
+            DBManager.getItemFromTable(this.TABLE, userId).then(user => {
+                console.log(user);
+                resolve(user.pref)
+            })
+        })
+    }
+
+    public static getUserByName(name: string): Promise<number> {
+        // Get UserId by name
+        return new Promise((resolve, reject) => {
+            MapManager.getItemId('names', name).then(map => {
+                resolve(map.id);
+            }).catch(reason => {
+                reject('User does not exist');
+            })
+        })
+    }
+
+    public static updateUserName(userId: number, newName: string): Promise<User> {
+        return new Promise((resolve, reject) => {
+            MapManager.doesItemExist('names', newName).then(doesExist => {
+                if (doesExist) {
+                    reject(newName + ' is already in use');
+                } else {
+                    UserController.get(userId).then(user => {
+
+                        MapManager.changeItemKey('names', user.name, newName).then(value => {
+                            console.log('1');
+                            console.log(value);
+                            if (value) {
+                                // These promises are not changed to save computation time, trade off is they are not checked
+                                // for successful write
+                                user.name = newName;
+                                UserController.updateUser(user);
+                                resolve(User);
+                            } else {
+                                reject('Could not change UserName');
+                            }
+                        })
+                    })
+
+                }
+            });
+        })
+
+
     }
 
     public static validate(email: string, password: string): Promise<boolean> {
@@ -69,24 +116,31 @@ export class UserController {
         //else return false;
 
         return new Promise((resolve, reject) => {
-            if(MapManager.doesItemExist('emails', email)){
-
-                MapManager.getItemId('emails', email).then(id => {
-                    if(password === this.getPreferences(id).password){
-                        resolve(true);
-                    }
-                    else
-                    { resolve(false); }
-                })
-
-
-            }
-            else
-            { resolve(false); }
+            MapManager.doesItemExist('emails', email).then(value => {
+                if (value) {
+                    MapManager.getItemId('emails', email).then(id => {
+                        console.log("Id: " + id.id);
+                        this.getPreferences(id.id).then(pref => {
+                            if (password === pref.password) {
+                                console.log("Password match found!");
+                                resolve(true);
+                            }
+                            else {
+                                console.log("Password match NOT found!");
+                                resolve(false);
+                            }
+                        })
+                    }).catch(reason => {
+                        return false;
+                    });
+                }
+                else{
+                    console.log('2');
+                    resolve(false);
+                }
+            })
         })
-
-        //DBManager.getItemFromTable(this.TABLE, 0);
-    }
+}
 
     public static getAssociations(userId: number, mask: string): number[] {
         //DBManager get all leagues this users is part of

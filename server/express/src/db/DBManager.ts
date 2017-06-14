@@ -38,7 +38,7 @@ export class DBManager {
     private static PAGESIZE: number = 100;
     private static PATH: string = 'data/';
 
-    private static TABLES: string[] = ['Users', 'Leagues', 'Activity', 'Notifications'];
+    private static TABLES: string[] = ['Users', 'Leagues', 'Activity', 'Notifications', 'MMRHistory'];
 
     private static fs = require('fs');
 
@@ -248,7 +248,7 @@ export class DBManager {
 
     private static getTableMetaData(table: string): Promise<TableMetaData> {
         let p = new Promise((resolve, reject) => {
-            console.log(this.PATH + table + '/' + 'meta.json');
+
             // Get current meta data
             this.fs.readFile(this.PATH + table + '/' + 'meta.json', (err, data) => {
                 let tableMetaData: TableMetaData;
@@ -257,11 +257,8 @@ export class DBManager {
                     reject(err);
                     return;
                 }
-                console.log('HEREj');
-                console.log(data);
                 tableMetaData = JSON.parse(data);
-                console.log('Got parsed');
-                console.log(tableMetaData);
+
                 resolve(tableMetaData);
             });
 
