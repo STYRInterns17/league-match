@@ -6,51 +6,80 @@ import {customButton} from '../customButton';
 import * as tabris from 'tabris';
 import {LeagueCreationPage} from "./LeagueCreationPage";
 import {ServiceLayer} from "../ServiceLayer";
+import {League} from "../../../common/League";
 
-export class LeaguePage extends BasePage{
+let userObj = JSON.parse(localStorage.getItem('userObj'));
+
+export class LeaguePage extends BasePage {
+    private leagues: League[];
     public navigationView: tabris.NavigationView;
-    constructor(navView: tabris.NavigationView){
+
+    constructor(navView: tabris.NavigationView) {
         super();
+        this.leagues = [];
         this.navigationView = navView;
+
+        this.leagueLoop().then(value => {
+            console.log('Here' + userObj.leagues.length);
+            this.createLeaguePage();
+        })
     }
-    public createLeaguePage(){
-        let titles: Array<string>;
+
+    public createLeaguePage(): void {
+
         let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0}).appendTo(this.page);
         let comp2 = new tabris.Composite({top: comp1, bottom: 0, left: 0, right: 0}).appendTo(this.page);
         this.page.title = 'Leagues';
-        let userObj = JSON.parse(localStorage.getItem('userObj'));
 
-        for(let i = 0; i<userObj.leagues.length; i++) {
-            ServiceLayer.httpGetAsync('/league', 'leagueId=' + userObj.leagues[i].toString(), (response) => {
-                titles.push(response.pref.title);
-            });
-        }
 
         let collectionView = new tabris.CollectionView({
             left: 0, top: 0, right: 0, bottom: 0,
-            itemCount: userObj.leagues.length,
+            itemCount: this.leagues.length,
             cellHeight: 100,
             refreshEnabled: true,
             createCell: () => {
-            let cell = new tabris.Composite();
+                let cell = new tabris.Composite();
 
-            new tabris.Button({
-                top: 16, left: '10%', right: '10%', height: 80
-            }).appendTo(cell);
-            return cell;
-        },
+                new tabris.Button({
+                    top: 16, left: '10%', right: '10%', height: 80
+                }).appendTo(cell);
+                return cell;
+            },
             updateCell: (cell, index) => {
-            //let person = people[index];
-            cell.apply({
-                Button: {text: 'TEST!!dfhdf'}
-            });
-        }
-        }).on('refresh', () => console.log('IM REFRESHING!'));
+                let title = this.leagues[index].pref.title;
+                cell.apply({
+                    Button: {text: title}
+                });
+            }
+        });
 
         comp1.append(collectionView);
-        comp2.append(new customButton({centerY: 0}, '➕ Create a League' ).on('tap', () => this.navigationView.append(new LeagueCreationPage('test').createAdminPage())));
+        comp2.append(new customButton({centerY: 0}, '➕ Create a League').on('tap', () => this.navigationView.append(new LeagueCreationPage('test').createAdminPage())));
 
-        return this.page;
     }
 
+    private getLeagues(i): Promise<League> {
+             let p = new Promise((resolve, reject) => {
+                 ServiceLayer.httpGetAsync('/league', 'leagueId=' + userObj.leagues[i].toString(), (response) => {
+                      resolve(response);
+                 });
+             });
+        return p;
+    }
+
+ private leagueLoop(): Promise<any>{
+    return new Promise((resolve, reject) => {
+        for(let i = 0;i<userObj.leagues.length; i++){
+        this.getLeagues(i).then((League) => {
+            this.leagues.push(League);
+            if(i == userObj.leagues.length -1){
+                resolve();
+            }
+
+        }).catch((err) => {
+            console.log(err);
+        });
+        }
+    });
+};
 }
