@@ -25,10 +25,10 @@ export class NotificationController {
     }
 
     //Send Notification to a User
-    public static sendNotificationToUser(message: string, userId: number, submitterName: string, submitterLeague: string): boolean {
+    public static sendNotificationToUser(message: string, userId: number, submitterName: string, submitterLeague: string, type: string): boolean {
         //Write to notification table at userId
         this.getNotifications(userId).then(notificationList => {
-           let notification = new Notification(message, submitterName, submitterLeague);
+           let notification = new Notification(message, submitterName, submitterLeague, type);
            notificationList.list.push(notification);
            DBManager.updateItem(this.TABLE, notificationList);
         });

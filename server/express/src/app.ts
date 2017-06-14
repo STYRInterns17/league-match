@@ -252,10 +252,11 @@ class App {
         router.post('/notification/user', (req, res) => {
             let userId = req.body.userId;
             let message = req.body.message;
+            let type = req.body.type;
             let submitterName = req.body.submitterName;
             let submitterLeague = req.body.submitterLeague;
 
-            res.json(NotificationController.sendNotificationToUser(message,userId,submitterName,submitterLeague));
+            res.json(NotificationController.sendNotificationToUser(message,userId,submitterName,submitterLeague,type));
         });
 
         //Send Notification To Entire League aka BroadCast
