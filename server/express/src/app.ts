@@ -11,7 +11,6 @@ import {DBManager} from "./db/DBManager";
 import {json} from "body-parser";
 import {MapManager} from "./db/MapManager";
 
-console.log('heemeh');
 // Creates and configures an ExpressJS web server.
 class App {
 
@@ -132,6 +131,27 @@ class App {
 
             // TODO Finish This
         });
+
+        router.post('/user/name/update', (req,res) => {
+            let userId: number = req.body.userId;
+            let newName: string = req.body.userName;
+
+            UserController.updateUserName(userId, newName).then(user => {
+                res.json(user);
+            }).catch(reason => {
+                res.json({message: reason})
+            })
+        });
+
+        router.get('/user/name', (req,res) => {
+            let userName: string = req.query.userName;
+
+            UserController.getUserByName(userName).then(userId => {
+                res.json(userId);
+            }).catch(reason => {
+                res.json({message: reason});
+            })
+        })
 
 
         //GetLeague

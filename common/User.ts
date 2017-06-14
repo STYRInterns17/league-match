@@ -27,7 +27,7 @@ export class User implements  IStorable{
         this.leagues = [];
         this.mmr = [];
         this.email = email;
-        this.name = '';
+        this.name = email;
     }
 
 }

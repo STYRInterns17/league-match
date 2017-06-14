@@ -19,7 +19,9 @@ export class UserController {
             // Create a notification list for the new user
             NotificationController.create();
             // Add User email to map
-            MapManager.createItem('emails',user.email, user.id);
+            MapManager.createItem('emails', user.email, user.id);
+            // Add User name to map
+            MapManager.createItem('names', user.name, user.id);
             //Return success y/n
             console.log('true');
             return true;
@@ -43,7 +45,7 @@ export class UserController {
     // id, which user to update.
     public static updateUser(updatedUser: User): boolean {
         //DBManager get user, update user preferences
-            DBManager.updateItem(this.TABLE, updatedUser);
+        DBManager.updateItem(this.TABLE, updatedUser);
         return true;
     }
 
@@ -63,26 +65,69 @@ export class UserController {
         return new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1);
     }
 
+    public static getUserByName(name: string): Promise<number> {
+        // Get UserId by name
+        return new Promise((resolve, reject) => {
+            MapManager.getItemId('names', name).then(map => {
+                resolve(map.id);
+            }).catch(reason => {
+                reject('User does not exist');
+            })
+        })
+    }
+
+    public static updateUserName(userId: number, newName: string): Promise<User> {
+        return new Promise((resolve, reject) => {
+            MapManager.doesItemExist('names', newName).then(doesExist => {
+                if (doesExist) {
+                    reject(newName + ' is already in use');
+                } else {
+                    UserController.get(userId).then(user => {
+
+                        MapManager.changeItemKey('names', user.name, newName).then(value => {
+                            console.log('1');
+                            console.log(value);
+                            if (value) {
+                                // These promises are not changed to save computation time, trade off is they are not checked
+                                // for successful write
+                                user.name = newName;
+                                UserController.updateUser(user);
+                                resolve(User);
+                            } else {
+                                reject('Could not change UserName');
+                            }
+                        })
+                    })
+
+                }
+            });
+        })
+
+
+    }
+
     public static validate(email: string, password: string): Promise<boolean> {
         //DBManager search through users, find matching email
         //If password === password, return true;
         //else return false;
 
         return new Promise((resolve, reject) => {
-            if(MapManager.doesItemExist('emails', email)){
+            if (MapManager.doesItemExist('emails', email)) {
 
                 MapManager.getItemId('emails', email).then(id => {
-                    if(password === this.getPreferences(id).password){
+                    if (password === this.getPreferences(id).password) {
                         resolve(true);
                     }
-                    else
-                    { resolve(false); }
+                    else {
+                        resolve(false);
+                    }
                 })
 
 
             }
-            else
-            { resolve(false); }
+            else {
+                resolve(false);
+            }
         })
 
         //DBManager.getItemFromTable(this.TABLE, 0);

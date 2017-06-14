@@ -7,7 +7,7 @@ export class MapManager {
     private static fs = require('fs');
     private static PATH = 'maps/';
 
-    private static MAPS = ['emails'];
+    private static MAPS = ['emails', 'names'];
 
     public static init() {
         //Check if directory exists
@@ -107,6 +107,7 @@ export class MapManager {
                 this.createItem(map, newItemName, idObj.id);
                 resolve(true);
             }).catch(reason => {
+                console.log(reason);
                 resolve(false);
             });
         });
