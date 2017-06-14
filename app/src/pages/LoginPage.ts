@@ -10,6 +10,7 @@ import {ServiceLayer} from "../ServiceLayer";
 import {UserPreferences} from "../../../common/UserPreferences";
 import {UserController} from "../../../server/express/src/controllers/UserController";
 import {User} from "../../../common/User";
+import {HomePage} from "./HomePage";
 
 // TODO Store UserId in cashe on sign in
 //localStorage.setItem('userId', id);
@@ -65,7 +66,10 @@ export class LoginPage extends BasePage{
 
             ServiceLayer.httpPostAsync('/user/validate', userValidation, (response) => {
                 if(response.success){
+                    localStorage.setItem('userId', '1');
                     window.plugins.toast.showShortCenter('Success!');
+                    new HomePage().page.appendTo(this.page.parent());
+                    this.page.dispose();
                 }
                 else {
                     window.plugins.toast.showShortCenter('Login Invalid');
@@ -86,7 +90,7 @@ export class LoginPage extends BasePage{
             let signUpPage = new tabris.Page({
                 title: 'Create an Account!',
                 background: '#b8d2ff'
-            }).appendTo(navigationView);
+            }).appendTo(this.page.parent());
 
             let usernameSignUp = new tabris.TextInput({
                 layoutData: {left: 25, right: 25, top: '30%', height: 50},

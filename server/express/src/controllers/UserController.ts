@@ -63,8 +63,8 @@ export class UserController {
         console.log('userId: ' + userId);
         return new Promise((resolve, reject) => {
             DBManager.getItemFromTable(this.TABLE, userId).then(user => {
-                console.log(user);
-                resolve(user.pref)
+                console.log('the user' + user);
+                resolve(user.pref);
             })
         })
     }
@@ -106,8 +106,6 @@ export class UserController {
                 }
             });
         })
-
-
     }
 
     public static validate(email: string, password: string): Promise<boolean> {
@@ -121,6 +119,7 @@ export class UserController {
                     MapManager.getItemId('emails', email).then(id => {
                         console.log("Id: " + id.id);
                         this.getPreferences(id.id).then(pref => {
+                            console.log(pref.password);
                             if (password === pref.password) {
                                 console.log("Password match found!");
                                 resolve(true);
@@ -131,7 +130,7 @@ export class UserController {
                             }
                         })
                     }).catch(reason => {
-                        return false;
+                        resolve(false);
                     });
                 }
                 else{
