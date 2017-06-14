@@ -51,8 +51,6 @@ export  class MatchController {
             team1AverageMMR = team1AverageMMR / team1.length;
             team2AverageMMR = team2AverageMMR / team2.length;
 
-
-
         });
 
         //Update all players MMR
@@ -74,5 +72,19 @@ export  class MatchController {
     }
 
 
-    public static add
+    public static getMMROffset(winningPlayerMMR: number, losingPlayerMMR: number): {winnerOffset:number, loserOffset:number} {
+        let difference: number = losingPlayerMMR - winningPlayerMMR;
+        let winnerOffset: number;
+        let loserOffset: number;
+        if(winningPlayerMMR > losingPlayerMMR) {
+            winnerOffset = Math.floor(11/difference);
+            loserOffset = -Math.floor(11/difference);
+        } else {
+            // The 11 will create a variety of numbers so players will feel as if their score is precise
+            winnerOffset = Math.floor(difference/11 + 1);
+            loserOffset = -Math.floor(difference/11 + 1);
+        }
+
+        return {winnerOffset,loserOffset}
+    }
 }
