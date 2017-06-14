@@ -11,8 +11,8 @@ export class LeaguePreferences {
     //2 - -inf to 0
     public scoreRange: number;
     //0,1
-    //0 - wins
-    //1 - loses
+    //0 - high score wins
+    //1 - high score loses
     public highestScore: number;
     constructor(matchesApprovedByAdmin: boolean, title: string, timeZone: any, scoreRange: number, highestScore: number) {
         this.matchesApprovedByAdmin = matchesApprovedByAdmin;

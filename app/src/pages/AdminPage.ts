@@ -8,15 +8,17 @@ import {Composite} from "tabris";
 
 export class AdminPage extends BasePage{
     //League ID will be used when communicating with the DB
-    private leagueID: string;
-    private userID: string;
-    constructor(leagueIdentification: string, userIdentification: string){
+    private leagueID: number;
+    private userID: number;
+    constructor(leagueIdentification: number, userIdentification: number){
         super();
         this.leagueID = leagueIdentification;
         this.userID = userIdentification;
+
+        this.createAdminPage();
     }
 
-    public createAdminPage(){
+    private createAdminPage(){
         this.page.title = 'Administration Panel';
         new tabris.TextInput({
             top: 20, left: '10%', right: '10%',
