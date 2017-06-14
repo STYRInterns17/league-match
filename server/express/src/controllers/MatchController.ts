@@ -5,9 +5,10 @@ import {User} from "../../../../common/User";
 /**
  * Created by STYR-Curt on 6/14/2017.
  */
-export  class MatchController {
+export class MatchController {
 
     private static TABLE = 'MMRHistory'
+
     public static getMatches(id: number, startDate: Date, endDate: Date): Match[] {
         //DBManager get league
 
@@ -18,50 +19,104 @@ export  class MatchController {
 
     // TODO What if duplicate users?
 
-    public static logMatch(leaugeId: number, match: Match): boolean {
-        let team1:User[];
-        let team2:User[];
+    public static logMatch(leaugeId: number, match: Match): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let team1: User[];
+            let team2: User[];
 
-        //DBManager get league by Id
-        LeagueController.get(leaugeId).then(league => {
-            // Push users in match to respective arrays
-            for(let i = 0; i < match.team1Names.length; i++) {
-                UserController.getUserByName(match.team1Names[i]).then(userId => {
-                    UserController.get(userId).then(user => {
-                        team1.push(user);
+            //DBManager get league by Id
+            LeagueController.get(leaugeId).then(league => {
+
+                let getUserPromises: Promise<User>[] = [];
+                // Push users in match to respective arrays
+                for (let i = 0; i < match.team1Names.length; i++) {
+                    UserController.getUserByName(match.team1Names[i]).then(userId => {
+                        getUserPromises.push(UserController.get(userId).then(user => {
+                            team1.push(user);
+                            return new Promise((resolve, reject) => resolve(user));
+                        }));
                     });
+
+                    UserController.getUserByName(match.team2Names[i]).then(userId => {
+                        getUserPromises.push(UserController.get(userId).then(user => {
+                            team2.push(user);
+                            return new Promise((resolve, reject) => resolve(user));
+                        }));
+                    });
+                }
+                // Once all Users have been retrieved from database
+                Promise.all(getUserPromises).then(value => {
+                    console.log(value);
+                    let team1AverageMMR: number = 0;
+                    let team2AverageMMR: number = 0;
+
+                    for (let i = 0; i < team1.length; i++) {
+                        team1AverageMMR += team1[i].mmr[team1[i].leagues.indexOf(leaugeId)];
+                        team2AverageMMR += team2[i].mmr[team2[i].leagues.indexOf(leaugeId)];
+                    }
+
+                    // Average MMRs are now calculated
+                    team1AverageMMR = team1AverageMMR / team1.length;
+                    team2AverageMMR = team2AverageMMR / team2.length;
+
+                    // If MMROffsets is not changed it was a tie
+                    let MMROffsets = {winnerOffset: 0, loserOffset: 0};
+                    let team1wins: boolean;
+
+                    // If high score wins
+                    if (league.pref.highestScore === 0) {
+                        if (match.team1Score > match.team2Score) {
+                            MMROffsets = this.getMMROffset(team1AverageMMR, team2AverageMMR);
+                            team1wins = true;
+                        } else if(match.team1Score < match.team2Score) {
+                            MMROffsets = this.getMMROffset(team2AverageMMR, team1AverageMMR);
+                            team1wins = false;
+                        }
+                    }
+                    // If lower score wins
+                    else if (league.pref.highestScore === 1) {
+                        if (match.team1Score > match.team2Score) {
+                            MMROffsets = this.getMMROffset(team2AverageMMR, team1AverageMMR);
+                            team1wins = false;
+                        } else if(match.team1Score < match.team2Score) {
+                            MMROffsets = this.getMMROffset(team1AverageMMR, team2AverageMMR);
+                            team1wins = true;
+                        }
+                    } else {
+                        reject('Invalid league.pref.highestScore');
+                    }
+
+                    // Update the MMR of all User Objects
+                    for(let i = 0; i < team1.length; i++) {
+                        if(team1wins) {
+                            team1[i].mmr[team1[i].leagues.indexOf(leaugeId)] += MMROffsets.winnerOffset;
+                            team2[i].mmr[team2[i].leagues.indexOf(leaugeId)] += MMROffsets.loserOffset;
+                        } else {
+                            team1[i].mmr[team1[i].leagues.indexOf(leaugeId)] += MMROffsets.loserOffset;
+                            team2[i].mmr[team2[i].leagues.indexOf(leaugeId)] += MMROffsets.winnerOffset;
+                        }
+                        // Write User back to server
+                        UserController.updateUser(team1[i]);
+                        UserController.updateUser(team2[i]);
+                    }
+
+
+
                 });
 
-                UserController.getUserByName(match.team2Names[i]).then(userId => {
-                    UserController.get(userId).then(user => {
-                        team2.push(user);
-                    });
-                });
-            }
 
-            let team1AverageMMR: number = 0;
-            let team2AverageMMR: number = 0;
+            });
 
-            for(let i = 0; i < team1.length; i++) {
-                team1AverageMMR += team1[i].mmr[team1[i].leagues.indexOf(leaugeId)];
-                team2AverageMMR += team2[i].mmr[team2[i].leagues.indexOf(leaugeId)];
-            }
 
-            // Average MMRs are now calculated
-            team1AverageMMR = team1AverageMMR / team1.length;
-            team2AverageMMR = team2AverageMMR / team2.length;
+            //Update all players MMR
 
+            //Update all players activity history
+
+            //Add match to match history
         });
 
-        //Update all players MMR
-
-        //Update all players activity history
-
-        //Add match to match history
-
-
-        return true;
     }
+
 
     public static postMatchUnapproved(leaugeId: number, submitterId: number, match: Match): boolean {
         //DBManager get league by Id
@@ -72,19 +127,37 @@ export  class MatchController {
     }
 
 
-    public static getMMROffset(winningPlayerMMR: number, losingPlayerMMR: number): {winnerOffset:number, loserOffset:number} {
+    public static getMMROffset(winningPlayerMMR: number, losingPlayerMMR: number): { winnerOffset: number, loserOffset: number } {
+
+        // On average a player should gain 25 or lose 25 from a match
+
+
         let difference: number = losingPlayerMMR - winningPlayerMMR;
-        let winnerOffset: number;
-        let loserOffset: number;
-        if(winningPlayerMMR > losingPlayerMMR) {
-            winnerOffset = Math.floor(11/difference);
-            loserOffset = -Math.floor(11/difference);
+        let winnerOffset: number = 25;
+        let loserOffset: number = -25;
+
+
+        if (winningPlayerMMR > losingPlayerMMR) {
+            winnerOffset += Math.floor(difference / 20);
+            loserOffset += -Math.floor(difference / 20);
         } else {
-            // The 11 will create a variety of numbers so players will feel as if their score is precise
-            winnerOffset = Math.floor(difference/11 + 1);
-            loserOffset = -Math.floor(difference/11 + 1);
+            winnerOffset += Math.floor(difference / 20);
+            loserOffset += -Math.floor(difference / 20);
         }
 
-        return {winnerOffset,loserOffset}
+        if (winnerOffset < 1) {
+            winnerOffset = 1;
+        }
+        if (loserOffset > -1) {
+            loserOffset = -1
+        }
+        if (winnerOffset > 75) {
+            winnerOffset = 75;
+        }
+        if (loserOffset < -75) {
+            loserOffset = -75;
+        }
+
+        return {winnerOffset, loserOffset}
     }
 }
