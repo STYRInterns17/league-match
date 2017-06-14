@@ -62,8 +62,19 @@ class App {
         //CreateNewUser, SignUp
         router.post('/user', (req,res) =>{
             let userPref: UserPreferences = req.body.userPref;
+            let userEmail: string = req.body.userEmail;
+            console.log(req.body.userEmail);
             console.log(req.body.userPref);
-            UserController.create(userPref);
+            UserController.create(userPref,userEmail);
+            res.json({
+                success: true
+            });
+        });
+
+        //UpdateUser
+        router.post('/user/update', (req,res) => {
+            let user: User = req.body;
+            UserController.updateUser(user);
             res.json({
                 success: true
             });
@@ -73,9 +84,7 @@ class App {
         router.post('/user/pref', (req,res) => {
             let userId: number = req.body.userId;
             let userPref: UserPreferences = req.body.userPref;
-
             UserController.updatePreferences(userId, userPref);
-
             res.json({
                 success: true
             });
@@ -84,15 +93,17 @@ class App {
         //GetUserSettings
         router.get('/user/pref', (req,res) => {
             let userId: number = req.query.userId;
-            res.json(UserController.getPreferences(userId));
 
+            res.json(UserController.getPreferences(userId));
         });
 
         //Validate User Login
         router.post('/user/validate', (req,res) => {
             let email: string = req.body.email;
             let password: string = req.body.password;
-            res.json(UserController.validate(email, password));
+            UserController.validate(email, password).then(value => {
+                res.json({success: value});
+            });
         });
 
         // Get User by email
@@ -151,10 +162,13 @@ class App {
 
         //CreateNewLeague
         router.post('/league', (req, res) => {
-            let ownerId = req.body.userId;
+            let ownerId = req.body.ownerId;
             let leaguePref = req.body.leaguePref;
+            let foo = LeagueController.create(ownerId, leaguePref).then(value => {
+                console.log(value);
+                res.json({id: value});
+            });
 
-            res.json(LeagueController.create(ownerId, leaguePref));
         });
 
         //Delete League

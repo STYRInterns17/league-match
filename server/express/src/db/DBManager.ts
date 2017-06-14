@@ -161,84 +161,6 @@ export class DBManager {
                 }
             }
 
-            // interface IDictionary
-            // {
-            //     add(key: string, value: any): void;
-            //     remove(key: string): void;
-            //     containsKey(key: string): Boolean;
-            //     keys(): string[];
-            //     values(): any[];
-            // }
-            //
-            // class Dictionary {
-            //     _keys: string[];
-            //     _values: any[];
-            //
-            //     constructor(init: { key: string; value: any;}[]){
-            //
-            //         for (let i = 0; i < init.length; i++){
-            //             this[init[i].key] = init[i].value;
-            //             this._keys.push(init[i].key);
-            //             this._values.push(init[i].value);
-            //         }
-            //     }
-            //
-            //     add(key: string, value: any){
-            //         this[key] = value;
-            //         this._keys.push(key);
-            //         this._values.push(value);
-            //     }
-            //
-            //     remove(key: string){
-            //         let index = this._keys.indexOf(key, 0);
-            //         this._keys.splice(index, 1);
-            //         this._values.splice(index, 1);
-            //
-            //         delete this[key];
-            //     }
-            //
-            //     keys(): string[] {
-            //         return this._keys;
-            //     }
-            //
-            //     values(): any[] {
-            //         return this._values;
-            //     }
-            //
-            //     containsKey(key: string){
-            //         if (typeof this[key] === "undefined") {
-            //             return false;
-            //         } return true;
-            //     }
-            //
-            //     toLookup(): IDictionary {
-            //         return this;
-            //     }
-            // }
-            //
-            // interface userEmail {
-            //     email: string;
-            //
-            // }
-            //
-            // interface userEmailDictionary extends IDictionary {
-            //      [index: string]: userEmail;
-            //      values(): string;
-            // }
-            //
-            // class EmailDictionary extends Dictionary{
-            //     constructor(init: { key: string; value: userEmail;}[]){
-            //         super(init);
-            //     }
-            //
-            //     values(): userEmail[]{
-            //         return this._values;
-            //     }
-            //
-            //     toLookup(): userEmailDictionary{
-            //         return this;
-            //     }
-            // }
 
             resolve(this.emailHashMap(table, itemId));
 
@@ -258,7 +180,7 @@ export class DBManager {
 
     }
 
-    public static appendItemToTable(table: string, item: IStorable): Promise<User> {
+    public static appendItemToTable(table: string, item: IStorable): Promise<any> {
         return new Promise((resolve, reject) => {
             this.incrementTableItemsInLastPage(table).then((metaData: TableMetaData) => {
                 this.getPage(table, metaData.pageCount).then((pageData: IStorable[]) => {
@@ -279,7 +201,6 @@ export class DBManager {
     //[User at id index] = User
     //Write back page
     public static updateItem(table: string, item: IStorable): void {
-
         this.getPage(table, this.getPageNumOfId(item.id)).then((pageData: IStorable[]) => {
             pageData[this.getItemIndexOfId(item.id)] = item;
             this.writeToPage(table, this.getPageNumOfId(item.id), pageData);

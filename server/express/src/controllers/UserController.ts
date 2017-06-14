@@ -11,13 +11,15 @@ export class UserController {
     private static TABLE = 'Users';
 
     //Create a new user
-    public static create(pref: UserPreferences): boolean {
+    public static create(pref: UserPreferences, email: string): boolean {
+
+
         //DBManager add user to db
-        DBManager.appendItemToTable(this.TABLE, new User(pref)).then(user => {
+        DBManager.appendItemToTable(this.TABLE, new User(pref, email)).then(user => {
             // Create a notification list for the new user
             NotificationController.create();
             // Add User email to map
-            MapManager.createItem('emails',user.pref.email, user.id);
+            MapManager.createItem('emails',user.email, user.id);
             //Return success y/n
             console.log('true');
             return true;
@@ -38,6 +40,13 @@ export class UserController {
         return p;
     }
 
+    // id, which user to update.
+    public static updateUser(updatedUser: User): boolean {
+        //DBManager get user, update user preferences
+            DBManager.updateItem(this.TABLE, updatedUser);
+        return true;
+    }
+
     // id, which user to update. newPref, the new preferences
     public static updatePreferences(userId: number, newPref: UserPreferences): boolean {
         //DBManager get user, update user preferences
@@ -54,20 +63,27 @@ export class UserController {
         return new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1);
     }
 
-    public static validate(email: string, password: string, itemId: string): boolean {
+    public static validate(email: string, password: string): Promise<boolean> {
         //DBManager search through users, find matching email
         //If password === password, return true;
         //else return false;
 
-        if(MapManager.doesItemExist('emails', email)){
-            if(password === userValidation.getPreferences(itemId).password){
-                return true;
+        return new Promise((resolve, reject) => {
+            if(MapManager.doesItemExist('emails', email)){
+
+                MapManager.getItemId('emails', email).then(id => {
+                    if(password === this.getPreferences(id).password){
+                        resolve(true);
+                    }
+                    else
+                    { resolve(false); }
+                })
+
+
             }
             else
-                { return false; }
-        }
-        else
-            { return false; }
+            { resolve(false); }
+        })
 
         //DBManager.getItemFromTable(this.TABLE, 0);
     }
