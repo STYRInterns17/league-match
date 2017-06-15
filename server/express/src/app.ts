@@ -13,6 +13,7 @@ import {MapManager} from "./db/MapManager";
 import {MatchController} from "./controllers/MatchController";
 import {Match} from "../../../common/Match";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
+import {isUndefined} from "util";
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -59,7 +60,13 @@ class App {
             console.log('Getting user: ' + userId);
             UserController.get(userId).then((user) => {
                 console.log(user);
-                res.json(user);
+                if(isUndefined(user)) {
+                    console.log('Cashe Invalid UserId: ' + userId +' does not exist');
+                    res.json({message: 'Cashe Invalid UserId: ' + userId +' does not exist'});
+                } else {
+                    res.json(user);
+                }
+
             });
         });
 
@@ -216,7 +223,7 @@ class App {
             let match = req.body.match;
 
             MatchController.logMatch(leagueId, match).then(value => {
-                res.json();
+                res.json({message: value});
             }).catch(reason => {
                 res.json({message: reason});
             });

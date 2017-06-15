@@ -19,6 +19,7 @@ export class HomePage extends BasePage {
     public userId: number;
     public user: User;
     public userLeagueIds: Array = [];
+
     constructor() {
         super();
         this.createComponents();
@@ -35,7 +36,7 @@ export class HomePage extends BasePage {
         let drawer = tabris.ui.drawer;
         drawer.enabled = true;
         drawer.background = '#37474f';
-        this.page.on('disappear', () => drawer.enabled = false ).on('appear', () => drawer.enabled = true );
+        this.page.on('disappear', () => drawer.enabled = false).on('appear', () => drawer.enabled = true);
         //CREATE BUTTONS
 
         //Add admin verification method here:
@@ -66,7 +67,11 @@ export class HomePage extends BasePage {
         });
         leagueButton.appendTo(drawer);
 
-        let signOutButton = new customButton({bottom: 30, centerX: 0, background: '#cb2431'}, 'Sign Out').on('tap', () => {
+        let signOutButton = new customButton({
+            bottom: 30,
+            centerX: 0,
+            background: '#cb2431'
+        }, 'Sign Out').on('tap', () => {
             localStorage.clear();
             tabris.app.reload();
         });
@@ -75,15 +80,26 @@ export class HomePage extends BasePage {
         this.userId = parseInt(localStorage.getItem('userId'));
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
             //get the current user logged in
-            localStorage.setItem('userObj', JSON.stringify(response));
-            this.user = JSON.parse(localStorage.getItem('userObj'));
-            //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
-            if(this.user.leagues[0] != null) {
-                localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
+            if (response.message !== null) {
+                console.log('Invalid UserId');
+                localStorage.clear();
+                this.page.parent().append(new LoginPage().page);
+                this.page.dispose();
+
+            } else {
+                localStorage.setItem('userObj', JSON.stringify(response));
+                this.user = JSON.parse(localStorage.getItem('userObj'));
+                //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
+                if (this.user.leagues[0] != null) {
+                    localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
+                }
+
+                // build leaderBoar
+                //
+                let collectionViewLeader = new Leaderboard(this.page);
             }
-            // build leaderBoar
-            //
-            let collectionViewLeader = new Leaderboard(this.page);
+
+
 
             //////////////////////////////////////////////////////
         });
