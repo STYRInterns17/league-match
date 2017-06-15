@@ -1,3 +1,4 @@
+import {ApprovalType} from "./ApprovalType";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
@@ -7,9 +8,9 @@ export class Notification {
     public submitterLeague: string;
     public index: number;
     public read: boolean;
-    public type: string;
+    public type: ApprovalType;
 
-    constructor(msg: string, submitterUser: string, submitterLeague: string, type: string) {
+    constructor(msg: string, submitterUser: string, submitterLeague: string, type: ApprovalType) {
         this.message = msg;
         this.submitterUser = submitterUser;
         this.submitterLeague = submitterLeague;

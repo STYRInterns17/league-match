@@ -6,6 +6,7 @@ import {ColorScheme} from "../ColorScheme";
 import {Notification} from "../../../common/Notification";
 import {customButton} from "../customButton";
 import {ServiceLayer} from "../ServiceLayer";
+import {ApprovalType} from "../../../common/ApprovalType";
 
 // This class is unused now
 export class NotificationComposite extends tabris.Composite {
@@ -17,7 +18,7 @@ export class NotificationComposite extends tabris.Composite {
     public yesApprove: customButton;
     public noApprove: customButton;
 
-    public type: string;
+    public type: ApprovalType;
 
     private approvalContainer: tabris.Composite;
 
@@ -74,22 +75,23 @@ export class NotificationComposite extends tabris.Composite {
 
         this.body.text = notification.message;
         this.footer.text = '<i>-' + notification.submitterUser + '@' + notification.submitterLeague + '</i>';
-        if(notification.type === 'approval') {
+        switch (notification.type) {
+            case ApprovalType.InviteApproval:
+                this.yesApprove = new customButton({
+                    left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.Secondary
+                }, '✔').changeBorderColor(ColorScheme.Accent).changeTextColor('#4CAF50').appendTo(this.approvalContainer);
 
-
-
-            // Added check or X buttons
-            this.yesApprove = new customButton({
-                left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.Secondary
-            }, '✔').changeBorderColor(ColorScheme.Accent).changeTextColor('#4CAF50').appendTo(this.approvalContainer);
-
-            this.noApprove = new customButton({
-                left: 'prev() 1', right: 1, top: 0, bottom: 1, background: ColorScheme.Secondary
-            }, '✖').changeBorderColor(ColorScheme.Accent).changeTextColor('#D50000').appendTo(this.approvalContainer);
-
-        } else if(notification.type === 'basic') {
-            // No need for extra buttons
+                this.noApprove = new customButton({
+                    left: 'prev() 1', right: 1, top: 0, bottom: 1, background: ColorScheme.Secondary
+                }, '✖').changeBorderColor(ColorScheme.Accent).changeTextColor('#D50000').appendTo(this.approvalContainer);
+                break;
+            case ApprovalType.MatchApproval:
+                break;
+            case ApprovalType.Message:
+                // No need to add extra buttons
+                break;
         }
+
 
         this.type = notification.type;
 
