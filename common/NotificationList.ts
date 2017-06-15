@@ -8,7 +8,6 @@ export class NotificationList implements IStorable {
     public list: Notification[];
     constructor() {
         this.list = [];
-        this.list.push(new Notification('Welcome to AmLeagues!', 'AmLeagues', 'AmLeagues the League'));
     }
 
 }
