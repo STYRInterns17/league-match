@@ -92,7 +92,7 @@ export class NotificationComposite extends tabris.Composite {
                 break;
         }
 
-
+        this.db_id = notification.index;
         this.type = notification.type;
 
         return this;

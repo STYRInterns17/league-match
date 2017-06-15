@@ -15,6 +15,7 @@ import {Match} from "../../../common/Match";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
 import {isUndefined} from "util";
 import {ApprovalType} from "../../../common/ApprovalType";
+import {ApprovalData} from "../../../common/ApprovalData";
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -38,7 +39,7 @@ class App {
             type: ApprovalType.InviteApproval,
             submitterName: 'Billy',
             submitterLeague: 'That league',
-            
+            approvalData: new ApprovalData(0)
         }));
 
         // console.log(JSON.stringify({leagueId: 0, match: new Match(['curt'],['sal'], 10, 20)}))
@@ -253,8 +254,12 @@ class App {
         router.post('/notification/user/dismiss', (req, res) => {
             let userId = req.body.userId;
             let notificationId = req.body.notificationId;
+            if(isUndefined(notificationId)) {
+                res.json({message: 'Notification not found'});
+            }else {
+                res.json(NotificationController.dismissNotification(userId, notificationId));
+            }
 
-            res.json(NotificationController.dismissNotification(userId, notificationId));
         });
 
         // Read all Notifications

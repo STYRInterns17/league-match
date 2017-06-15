@@ -55,19 +55,23 @@ export class NotificationPage extends BasePage {
                 case ApprovalType.InviteApproval:
                     this.notificationButtons[i].yesApprove.on('tap', (event) => {
                         // Add this User to league that the invite was sent from
-                        console.log('yes was tapped');
-                        this.dismiss(event.target.index);
+                        let notificationComposite = event.target.parent().parent().parent();
+
+                        this.dismiss(notificationComposite.db_id);
+                        notificationComposite.dispose();
                     });
                     this.notificationButtons[i].noApprove.on('tap', (event) => {
                         // Dismiss the notification
-                        console.log('no was tapped');
-                        this.dismiss(event.target.index);
+                        let notificationComposite = event.target.parent().parent().parent();
+
+                        this.dismiss(notificationComposite.db_id);
+                        notificationComposite.dispose();
                     });
                     break;
                 case ApprovalType.MatchApproval:
                     break;
                 case ApprovalType.Message:
-                    // Nothing special eneds to be done on message
+                    // Nothing special ends to be done on message
                     break;
                 default:
                     break;
@@ -153,8 +157,9 @@ export class NotificationPage extends BasePage {
             // No need to do anything in callback
         });
 
-        for(let i = index; i < this.notifications.length; i++) {
-
+        // Shift all the indexes when removing from d1
+        for(let i = index; i < this.notificationButtons.length; i++) {
+            this.notificationButtons[i].db_id--;
         }
     }
 
