@@ -19,34 +19,50 @@ export class MatchController {
 
     // TODO What if duplicate users?
 
-    public static logMatch(leaugeId: number, match: Match): Promise<any> {
+    public static logMatch(leaugeId: number, match: Match): Promise<string> {
         return new Promise((resolve, reject) => {
-            let team1: User[];
-            let team2: User[];
 
             //DBManager get league by Id
             LeagueController.get(leaugeId).then(league => {
 
-                let getUserPromises: Promise<User>[] = [];
+                let getUserPromises: Promise<{user: User, team: number}>[] = [];
                 // Push users in match to respective arrays
                 for (let i = 0; i < match.team1Names.length; i++) {
-                    UserController.getUserByName(match.team1Names[i]).then(userId => {
-                        getUserPromises.push(UserController.get(userId).then(user => {
-                            team1.push(user);
-                            return new Promise((resolve, reject) => resolve(user));
-                        }));
-                    });
 
-                    UserController.getUserByName(match.team2Names[i]).then(userId => {
-                        getUserPromises.push(UserController.get(userId).then(user => {
-                            team2.push(user);
-                            return new Promise((resolve, reject) => resolve(user));
-                        }));
-                    });
+                    // Team 1
+                    getUserPromises.push(UserController.getUserByName(match.team1Names[i]).then(userId => {
+                        return UserController.get(userId);
+                    }).then(user => {
+                        return {user:user,team:1};
+                    }));
+
+                    // Team 2
+                    getUserPromises.push(UserController.getUserByName(match.team2Names[i]).then(userId => {
+                        return UserController.get(userId);
+                    }).then(user => {
+                        return {user: user, team:2};
+                    }));
+
+
                 }
+
+
                 // Once all Users have been retrieved from database
                 Promise.all(getUserPromises).then(value => {
-                    console.log(value);
+                    let team1: User[] = [];
+                    let team2: User[] = [];
+
+
+                    for(let i = 0; i < value.length; i++) {
+
+                        if(value[i].team === 1) {
+                            team1.push(value[i].user)
+                        } else if(value[i].team === 2) {
+                            team2.push(value[i].user)
+                        }
+
+                    }
+
                     let team1AverageMMR: number = 0;
                     let team2AverageMMR: number = 0;
 
@@ -95,24 +111,17 @@ export class MatchController {
                             team1[i].mmr[team1[i].leagues.indexOf(leaugeId)] += MMROffsets.loserOffset;
                             team2[i].mmr[team2[i].leagues.indexOf(leaugeId)] += MMROffsets.winnerOffset;
                         }
+
                         // Write User back to server
                         UserController.updateUser(team1[i]);
                         UserController.updateUser(team2[i]);
                     }
 
-
-
+                    resolve('Match logged successfully');
                 });
-
-
+            }).catch(reason => {
+                reject(reason);
             });
-
-
-            //Update all players MMR
-
-            //Update all players activity history
-
-            //Add match to match history
         });
 
     }

@@ -5,6 +5,8 @@
 import * as tabris from 'tabris';
 
 export class customButton extends tabris.Composite{
+
+    private message: tabris.TextView;
     constructor(config: tabris.CompositeProperties, text: string){
         super(config);
 
@@ -24,12 +26,22 @@ export class customButton extends tabris.Composite{
 
         this.background = '#ffffff';
 
-        new tabris.TextView({
+        this.message = new tabris.TextView({
             centerX: 0,
             centerY: 0,
             text: text,
             font: 'bold 20px'
         }).appendTo(inner);
+    }
+
+    public changeBorderColor(borderColor: string): customButton{
+        this.background = borderColor;
+        return this;
+    }
+
+    public changeTextColor(textColor: string): customButton{
+        this.message.textColor = textColor;
+        return this;
     }
 
     on(type: string, listener: (event: any) => void, context?: Object): this {

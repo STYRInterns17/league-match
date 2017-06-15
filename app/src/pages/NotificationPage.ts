@@ -9,27 +9,27 @@ import {ServiceLayer} from "../ServiceLayer";
 import {NotificationComposite} from "../components/NotificationComposite";
 import {TextView} from "tabris";
 import {ColorScheme} from "../ColorScheme";
+import {customButton} from "../customButton";
 
 export class NotificationPage extends BasePage {
     private notifications: Notification[];
-    private notificationView: tabris.CollectionView;
+    private notificationButtons: NotificationComposite[];
+    private notificationView: tabris.ScrollView;
 
     constructor() {
         super();
         this.page.title = 'Notifications';
         this.notifications = [];
+        this.notificationButtons = [];
+
         this.getNotifications().then((notifications) => {
             this.notifications = notifications;
-
             this.createComponents();
         }).catch((err) => {
             console.log(err);
         });
 
 
-        this.page.on('disappear', () => {
-            //Mark all active reminders as read
-        })
     }
 
     public createComponents(): void {
@@ -39,50 +39,21 @@ export class NotificationPage extends BasePage {
             background: ColorScheme.Background
         }).appendTo(this.page);
 
-
-        this.notificationView = new tabris.CollectionView({
-            left: 0, right: 0, top: 0, bottom: 0,
-            itemCount: this.notifications.length,
-            cellHeight: 80,
-            createCell: () => {
-                let cell = new tabris.Composite({
-                    top: 0, left: 0, right: 0, bottom: 0, background: ColorScheme.Secondary
-                }).on('panHorizontal', event => this.handlePan(event));
-
-                let border = new tabris.Composite({
-                    top: 0, left: 2, right: 2, bottom: 2
-                }).appendTo(cell);
-
-                new TextView({
-                    top: 0, left: 0, right: 0, bottom: 0, background: ColorScheme.WigetBackground,
-                    lineSpacing: 1.3, alignment: 'center',
-                    font: '14px monospace',
-                    markupEnabled: true,
-                    textColor: ColorScheme.Background,
-                    maxLines: 3
-                }).appendTo(border);
-
-
-                return cell;
-            },
-            updateCell: (cell, index) => {
-                let notification = this.notifications[index];
-                console.log(cell.children()[0]);
-                cell.apply({
-                    TextView: {
-                        text: notification.message + '\n' + '<i>   -' + notification.submitterUser + '@' + notification.submitterLeague + '</i>'
-                    }
-                });
-
-
-            }
-        }).on('refresh', function (event) {
-            this.getNotifications().then((notifications) => {
-                this.notifications = notifications;
-                console.log(event);
-                //Still need to stop the refresh spinner
-            });
+        this.notificationView = new tabris.ScrollView({
+            left: 0, right: 0, top: 0, bottom: 0
         }).appendTo(notificationContainer);
+
+        for(let i = 0; i < this.notifications.length; i++) {
+            this.notificationButtons.push(new NotificationComposite({left: 0, right: 0, height: 80, top:'prev() 2'}).on('panHorizontal', event => {
+                this.handlePan(event);
+            }).appendTo(this.notificationView).update(this.notifications[i]));
+            this.notificationButtons[i].yesApprove.on('tap', () => {
+                console.log('yes was tapped');
+            });
+            this.notificationButtons[i].noApprove.on('tap', () => {
+                console.log('no was tapped');
+            });
+        }
     }
 
 
@@ -95,16 +66,6 @@ export class NotificationPage extends BasePage {
         });
 
         return p;
-    }
-
-    private dismissNotification(index: number) {
-
-        ServiceLayer.httpPostAsync('/notification/user/dismiss', {
-            userId: localStorage.getItem('myId'),
-            notificationId: index
-        }, (response) => {
-            // No need to do anything in callback
-        });
     }
 
 
@@ -125,7 +86,12 @@ export class NotificationPage extends BasePage {
         // Otherwise, detect a dismiss only if flinged in the same direction.
         let dismiss = beyondCenter ? sameDirection || !fling : sameDirection && fling;
         if (dismiss) {
-            this.animateDismiss(event);
+            if(event.target.type !== 'approval') {
+                this.animateDismiss(event);
+            } else {
+                this.animateCancel(event);
+            }
+
         } else {
             this.animateCancel(event);
         }
@@ -139,18 +105,32 @@ export class NotificationPage extends BasePage {
             duration: 200,
             easing: 'ease-out'
         }).then(() => {
-            let index = this.notifications.indexOf(target.item);
-            this.notifications.splice(index, 1);
-            this.notificationView.remove(index);
-            this.dismissNotification(index);
+                this.dismiss(target.index);
+                target.dispose();
         });
+
     }
 
-    animateCancel({target}) {
+    public dismiss(index:number): void {
+        // Dispose of this element
+        // Notify server that it has been disposed of
+        ServiceLayer.httpPostAsync('/notification/user/dismiss', {
+            userId: localStorage.getItem('userId'),
+            notificationId: index
+        }, (response) => {
+            // No need to do anything in callback
+        });
+
+        for(let i = index; i < this.notifications.length; i++) {
+
+        }
+    }
+
+    private animateCancel({target}) {
         target.animate({transform: {translationX: 0}}, {duration: 200, easing: 'ease-out'});
     }
 
-    sign(number) {
+    private sign(number) {
         return number ? number < 0 ? -1 : 1 : 0;
     }
 
