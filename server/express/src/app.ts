@@ -32,14 +32,6 @@ class App {
         const server = http.createServer(this.express);
         server.listen(3000);
         console.log('We are now listening on 3000');
-        console.log(JSON.stringify({
-            userId: 5,
-            message: 'You have been invited to our league!',
-            type: ApprovalType.InviteApproval,
-            submitterName: 'Billy',
-            submitterLeague: 'That league',
-            
-        }));
 
         // console.log(JSON.stringify({leagueId: 0, match: new Match(['curt'],['sal'], 10, 20)}))
         // console.log(JSON.stringify({ownerId: 0, leaguePref: new LeaguePreferences(false, 'first league', 'arizona', 0, 0)}))
