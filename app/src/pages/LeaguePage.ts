@@ -7,36 +7,42 @@ import * as tabris from 'tabris';
 import {LeagueCreationPage} from "./LeagueCreationPage";
 import {ServiceLayer} from "../ServiceLayer";
 import {League} from "../../../common/League";
+import {User} from "../../../common/User";
 
-let userObj = JSON.parse(localStorage.getItem('userObj'));
+
 
 export class LeaguePage extends BasePage {
     private leagues: League[];
+    private userObj: User;
     constructor() {
         super();
+        this.userObj = JSON.parse(localStorage.getItem('userObj'));
         this.leagues = [];
-        if(userObj.leagues != null) {
-            this.leagueLoop().then(value => {
-                console.log('Here' + userObj.leagues.length);
-                this.createLeaguePage();
-            })
+
+        if(!Array.isArray(this.userObj.leagues) || !this.userObj.leagues.length) {
+            this.page.title = 'You are not in any leagues';
+            this.createLeaguePage(0);
         }else{
-            this.createLeaguePage();
+            this.leagueLoop().then(value => {
+                this.createLeaguePage(this.userObj.leagues.length);
+            });
+            this.page.title = 'League Page';
         }
     }
 
-    public createLeaguePage(): void {
+    private createLeaguePage(leagueLength: number): void {
 
         let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0}).appendTo(this.page);
         let comp2 = new tabris.Composite({top: comp1, bottom: 0, left: 0, right: 0}).appendTo(this.page);
-        this.page.title = 'Leagues';
+
 
 
         let collectionView = new tabris.CollectionView({
             left: 0, top: 0, right: 0, bottom: 0,
-            itemCount: this.leagues.length,
+            itemCount: leagueLength,
             cellHeight: 100,
-            refreshEnabled: true,
+            //TODO let user refresh league page
+            refreshEnabled: false,
             createCell: () => {
                 let cell = new tabris.Composite();
 
@@ -54,7 +60,7 @@ export class LeaguePage extends BasePage {
         });
 
         comp1.append(collectionView);
-        new customButton({centerY: 0}, '➕ Create a League').on('tap', () => {
+        new customButton({centerY: 0, centerX: 0}, '➕ Create a League').on('tap', () => {
             this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
         }).appendTo(comp2);
 
@@ -62,7 +68,7 @@ export class LeaguePage extends BasePage {
 
     private getLeagues(i): Promise<League> {
              let p = new Promise((resolve, reject) => {
-                 ServiceLayer.httpGetAsync('/league', 'leagueId=' + userObj.leagues[i].toString(), (response) => {
+                 ServiceLayer.httpGetAsync('/league', 'leagueId=' + this.userObj.leagues[i].toString(), (response) => {
                       resolve(response);
                  });
              });
@@ -71,10 +77,10 @@ export class LeaguePage extends BasePage {
 
  private leagueLoop(): Promise<any>{
     return new Promise((resolve, reject) => {
-        for(let i = 0;i<userObj.leagues.length; i++){
+        for(let i = 0;i<this.userObj.leagues.length; i++){
         this.getLeagues(i).then((League) => {
             this.leagues.push(League);
-            if(i == userObj.leagues.length -1){
+            if(i == this.userObj.leagues.length -1){
                 resolve();
             }
 

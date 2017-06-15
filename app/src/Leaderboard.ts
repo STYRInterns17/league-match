@@ -25,15 +25,17 @@ export class Leaderboard{
 
                 if (memberIds.length > 0) {
                     this.leagueLoop(memberIds).then(() => {
-                        console.log('3 creating leaderboard with actual members');
+                        console.log('1 creating leaderboard with actual members');
                         this.createLeaderBoard().appendTo(this.page);
                     });
                 } else {
-                    console.log('4 creating leaderboard with only admin');
+                    console.log('2 creating leaderboard with only admin');
                     this.createLeaderBoard().appendTo(this.page);
                 }
 
             });
+        }else{
+            this.page.title = 'Its empty in here :(';
         }
     }
 
@@ -86,9 +88,6 @@ export class Leaderboard{
                 }
             }).on('select', ({index}) => console.log('selected', people[index].name));
             return collectionView;
-        }else{
-            //user is in no leagues
-            this.page.title = 'Its empty in here :(';
         }
     }
 

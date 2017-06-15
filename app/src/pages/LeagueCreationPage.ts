@@ -126,9 +126,10 @@ export class LeagueCreationPage extends BasePage{
                 //store new userObj
                 localStorage.setItem('userObj', JSON.stringify(userObj));
                 ServiceLayer.httpPostAsync('/user/update', userObj ,(response) =>{
-                    this.page.parent().append(new InvitePage().createInvitePage());
+                    this.page.parent().append(new InvitePage().createInvitePage().on('disappear', () => {
+                        this.page.dispose();
+                    }));
 
-                    this.page.dispose();
                 });
 
             } ));
