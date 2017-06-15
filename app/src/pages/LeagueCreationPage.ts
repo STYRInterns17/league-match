@@ -121,18 +121,10 @@ export class LeagueCreationPage extends BasePage{
             right: '10%',
         }, 'Invite...').on('tap', () =>
 
-            ServiceLayer.httpPostAsync('/league', LeagueInfo, (response) => {
-                userObj.leagues.push(response.id);
-                //store new userObj
-                localStorage.setItem('userObj', JSON.stringify(userObj));
-                ServiceLayer.httpPostAsync('/user/update', userObj ,(response) =>{
-                    this.page.parent().append(new InvitePage().createInvitePage().on('disappear', () => {
-                        this.page.dispose();
-                    }));
-
-                });
-
-            } ));
+            this.page.parent().append(new InvitePage().createInvitePage(LeagueInfo).on('disappear', () => {
+                this.page.dispose();
+            }))
+        );
 
         inviteButton.appendTo(this.page);
         return this.page;
