@@ -103,9 +103,9 @@ class App {
 
             console.log(JSON.stringify(req.body));
 
-            UserController.validate(email, password).then(value => {
-                console.log("Password Match Result: " + value);
-                res.json({success: value});
+            UserController.validate(email, password).then(user => {
+                console.log("Password Match Result: " + user.pref.password);
+                res.json({success: true, user: user});
             }).catch(reason => {
                 res.json({success: false});
             });

@@ -11,6 +11,7 @@ import {UserPreferences} from "../../../common/UserPreferences";
 import {UserController} from "../../../server/express/src/controllers/UserController";
 import {User} from "../../../common/User";
 import {HomePage} from "./HomePage";
+import {DBManager} from "../../../server/express/src/db/DBManager";
 
 // TODO Store UserId in cashe on sign in
 //localStorage.setItem('userId', id);
@@ -65,14 +66,11 @@ export class LoginPage extends BasePage {
 
             ServiceLayer.httpPostAsync('/user/validate', userValidation, (response) => {
                 if (response.success) {
-
-                    //console.log("User id that is being passed to local: " + userValidation.userEmail.getItem());
-                    //localStorage.setItem('userId', userValidation.userEmail.getItem());
+                    localStorage.setItem('userId', response.user.id);
                     window.plugins.toast.showShortCenter('Success!');
                     new HomePage().page.appendTo(this.page.parent());
                     this.page.dispose();
-                }
-                else {
+                } else {
                     window.plugins.toast.showShortCenter('Login Invalid');
                 }
             });
