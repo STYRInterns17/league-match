@@ -6,6 +6,9 @@ import {customButton} from "../customButton";
 import {ServiceLayer} from "../ServiceLayer";
 import {User} from "../../../common/User";
 import {stripComments} from "tslint/lib/utils";
+import {Notification} from "../../../common/Notification";
+import {ApprovalType} from "../../../common/ApprovalType";
+import {ApprovalData} from "../../../common/ApprovalData";
 /**
  * Created by STYRLabs2 on 6/7/2017.
  */
@@ -84,23 +87,22 @@ export class InvitePage extends BasePage{
         }, 'Finish').appendTo(comp2).on('tap', ()=>{
             ServiceLayer.httpPostAsync('/league', leagueInfo, (response) => {
                 this.userObj.leagues.push(response.id);
+                let leagueId: number = response.id;
                 //store new userObj
                 localStorage.removeItem('userObj');
                 localStorage.setItem('userObj', JSON.stringify(this.userObj));
                 ServiceLayer.httpPostAsync('/user/update', this.userObj ,(response) =>{
                     console.log('user leagues array updated');
                     for(let i =0; i<idArray.length; i++){
-                        let notification = {
-                            message: "Invite to " + leagueInfo.leaguePref.title,
-                            userId: idArray[i],
-                            type: 'League Invite',
-
-
-                        };
+                        let notification = new Notification('Invite to ' + leagueInfo.leaguePref.title,
+                            this.userObj.email,
+                            leagueInfo.leaguePref.title,
+                            ApprovalType.InviteApproval,
+                            new ApprovalData(leagueId));
                         ServiceLayer.httpPostAsync('/notification/user', notification, () =>{
-
+                            this.page.dispose();
+                            console.log('Invite sent')
                         });
-                        this.page.dispose();
                     }
                 });
             })
