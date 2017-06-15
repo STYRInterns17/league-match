@@ -10,8 +10,8 @@ export class NotificationController {
 
     public static create () {
         // Create an new notification array for a new user
-        let notificationList:NotificationList = new NotificationList;
-        let welcomeNotification = new Notification('Welcome to AmLeagues!', 'AmLeagues', 'AmLeagues the League');
+        let notificationList:NotificationList = new NotificationList();
+        let welcomeNotification = new Notification('Welcome to AmLeagues!', 'AmLeagues', 'AmLeagues the League', 'approval');
         notificationList.list.push(welcomeNotification);
         DBManager.appendItemToTable(this.TABLE, notificationList);
     }
@@ -42,6 +42,10 @@ export class NotificationController {
         //Return DBManager get pendingNotifications at in Notification Table at userId
         let p = new Promise((resolve, reject) => {
             DBManager.getItemFromTable(this.TABLE, userId).then((notificationList) => {
+                // Update indexes of notifications so that they can be properly dimissed
+                for(let i = 0; i < notificationList.list.length; i++) {
+                    notificationList.list[i].index = i;
+                }
                 resolve(notificationList);
             });
         });
