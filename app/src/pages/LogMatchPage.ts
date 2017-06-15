@@ -288,10 +288,9 @@ export class LogMatchPage extends BasePage {
         }
 
         let match = new Match(leftTeam, rightTeam, this.leftScoreInput.text, this.rightScoreInput.text);
-        /*ServiceLayer.httpPostAsync('/league/match', match, response => {
+        ServiceLayer.httpPostAsync('/match/approved', {match: match, leagueId: +localStorage.getItem('currentLeagueId')}, response => {
             window.plugins.toast.showLongCenter(response.message);
-        });*/
-        //window.plugins.toast.showLongCenter('Got through');
+        });
 
     }
 }

@@ -1,6 +1,6 @@
 export class ServiceLayer {
 
-    private static URL: string = 'http://192.168.100.185:3000';
+    private static URL: string = 'http://192.168.100.184:3000';
 
 
     public static httpGetAsync(route: string, query: string, callback: (response: any) => void) {
@@ -16,7 +16,6 @@ export class ServiceLayer {
             return res.json();
         }).then((resObj) => {
             //Once the object is resolved run the callback with the received object as the parameter
-            console.log(resObj);
             callback(resObj);
             console.log('Get Success');
         }).catch((ex) => {
@@ -35,12 +34,9 @@ export class ServiceLayer {
             },
             body: JSON.stringify(data),
         });
-
-        console.log(JSON.stringify(data));
-        console.log('OMGUpdate4');
+        
 
         fetch(fetchRequest).then((res) => {
-            console.log('a');
             return res.json();
         }).then((json) => {
             callback(json);
@@ -65,7 +61,6 @@ export class ServiceLayer {
             return res.json();
         }).then((json) => {
             console.log('Delete Success');
-            console.log(json);
         }).catch((ex) => {
             console.log('Delete Request Error');
             console.error(ex)
