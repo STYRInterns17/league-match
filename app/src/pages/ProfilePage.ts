@@ -18,10 +18,6 @@ export class ProfilePage extends BasePage{
     private createProfilePage(){
         this.page.title = 'Profile Page';
 
-        ServiceLayer.httpGetAsync('/user', this.userId, (response => {
-
-        }));
-
         let profilePic = new tabris.Composite({
             layoutData: {left: 0, right: 0, bottom: '60%', top: 0},
             background: '#0bfffa'
