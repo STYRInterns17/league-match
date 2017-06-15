@@ -6,6 +6,7 @@ import {ColorScheme} from "../ColorScheme";
 import {Notification} from "../../../common/Notification";
 import {customButton} from "../customButton";
 import {ServiceLayer} from "../ServiceLayer";
+import {ApprovalType} from "../../../common/ApprovalType";
 
 // This class is unused now
 export class NotificationComposite extends tabris.Composite {
@@ -17,14 +18,13 @@ export class NotificationComposite extends tabris.Composite {
     public yesApprove: customButton;
     public noApprove: customButton;
 
-    public type: string;
+    public type: ApprovalType;
 
     private approvalContainer: tabris.Composite;
 
 
     constructor(config: tabris.CompositeProperties) {
         super(config);
-        console.log('1');
         this.background = ColorScheme.Secondary;
 
 
@@ -39,7 +39,7 @@ export class NotificationComposite extends tabris.Composite {
 
 
 
-        console.log('2');
+
 
         let bodyContainer = new tabris.Composite({
             top:0, left: 0, right: 0, bottom: footerContainer
@@ -57,7 +57,7 @@ export class NotificationComposite extends tabris.Composite {
             textColor: ColorScheme.Background,
             maxLines: 3
         }).appendTo(bodyContainer);
-        console.log('3');
+
         this.footer = new tabris.TextView({
             top: 0, left: 0, right: 0, bottom: 0,
             lineSpacing: 1.3, alignment: 'center',
@@ -66,33 +66,33 @@ export class NotificationComposite extends tabris.Composite {
             textColor: ColorScheme.Background,
             maxLines: 3
         }).appendTo(footerContainer);
-        console.log('4');
+
 
     }
 
 
     public update(notification: Notification): NotificationComposite {
-        console.log('6');
+
         this.body.text = notification.message;
         this.footer.text = '<i>-' + notification.submitterUser + '@' + notification.submitterLeague + '</i>';
-        if(notification.type === 'approval') {
+        switch (notification.type) {
+            case ApprovalType.InviteApproval:
+                this.yesApprove = new customButton({
+                    left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.Secondary
+                }, '✔').changeBorderColor(ColorScheme.Accent).changeTextColor('#4CAF50').appendTo(this.approvalContainer);
 
-
-
-            // Added check or X buttons
-            console.log('Adding approval buttons');
-            this.yesApprove = new customButton({
-                left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.Secondary
-            }, '✔').changeBorderColor(ColorScheme.Accent).changeTextColor('#4CAF50').appendTo(this.approvalContainer);
-
-            this.noApprove = new customButton({
-                left: 'prev() 1', right: 1, top: 0, bottom: 1, background: ColorScheme.Secondary
-            }, '✖').changeBorderColor(ColorScheme.Accent).changeTextColor('#D50000').appendTo(this.approvalContainer);
-
-        } else if(notification.type === 'basic') {
-            // No need for extra buttons
+                this.noApprove = new customButton({
+                    left: 'prev() 1', right: 1, top: 0, bottom: 1, background: ColorScheme.Secondary
+                }, '✖').changeBorderColor(ColorScheme.Accent).changeTextColor('#D50000').appendTo(this.approvalContainer);
+                break;
+            case ApprovalType.MatchApproval:
+                break;
+            case ApprovalType.Message:
+                // No need to add extra buttons
+                break;
         }
 
+        this.db_id = notification.index;
         this.type = notification.type;
 
         return this;

@@ -10,6 +10,7 @@ import {NotificationComposite} from "../components/NotificationComposite";
 import {TextView} from "tabris";
 import {ColorScheme} from "../ColorScheme";
 import {customButton} from "../customButton";
+import {ApprovalType} from "../../../common/ApprovalType";
 
 export class NotificationPage extends BasePage {
     private notifications: Notification[];
@@ -34,6 +35,7 @@ export class NotificationPage extends BasePage {
 
     public createComponents(): void {
         this.page.background = ColorScheme.Background;
+
         let notificationContainer = new tabris.Composite({
             left: 20, right: 20, top: 0, bottom: 0,
             background: ColorScheme.Background
@@ -47,12 +49,34 @@ export class NotificationPage extends BasePage {
             this.notificationButtons.push(new NotificationComposite({left: 0, right: 0, height: 80, top:'prev() 2'}).on('panHorizontal', event => {
                 this.handlePan(event);
             }).appendTo(this.notificationView).update(this.notifications[i]));
-            this.notificationButtons[i].yesApprove.on('tap', () => {
-                console.log('yes was tapped');
-            });
-            this.notificationButtons[i].noApprove.on('tap', () => {
-                console.log('no was tapped');
-            });
+
+            // Set button listeners for notification
+            switch(this.notificationButtons[i].type) {
+                case ApprovalType.InviteApproval:
+                    this.notificationButtons[i].yesApprove.on('tap', (event) => {
+                        // Add this User to league that the invite was sent from
+                        let notificationComposite = event.target.parent().parent().parent();
+
+                        this.dismiss(notificationComposite.db_id);
+                        notificationComposite.dispose();
+                    });
+                    this.notificationButtons[i].noApprove.on('tap', (event) => {
+                        // Dismiss the notification
+                        let notificationComposite = event.target.parent().parent().parent();
+
+                        this.dismiss(notificationComposite.db_id);
+                        notificationComposite.dispose();
+                    });
+                    break;
+                case ApprovalType.MatchApproval:
+                    break;
+                case ApprovalType.Message:
+                    // Nothing special ends to be done on message
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 
@@ -86,10 +110,22 @@ export class NotificationPage extends BasePage {
         // Otherwise, detect a dismiss only if flinged in the same direction.
         let dismiss = beyondCenter ? sameDirection || !fling : sameDirection && fling;
         if (dismiss) {
-            if(event.target.type !== 'approval') {
-                this.animateDismiss(event);
-            } else {
-                this.animateCancel(event);
+            switch(event.target.type) {
+                case ApprovalType.InviteApproval:
+                    // Approval notifications can not be dismissed by swipe
+                    this.animateCancel(event);
+                    break;
+                case ApprovalType.MatchApproval:
+                    // Approval notifications can not be dismissed by swipe
+                    this.animateCancel(event);
+                    break;
+                case ApprovalType.Message:
+                    this.animateDismiss(event);
+                    break;
+
+                default:
+                    this.animateDismiss(event);
+                    break;
             }
 
         } else {
@@ -121,8 +157,9 @@ export class NotificationPage extends BasePage {
             // No need to do anything in callback
         });
 
-        for(let i = index; i < this.notifications.length; i++) {
-
+        // Shift all the indexes when removing from d1
+        for(let i = index; i < this.notificationButtons.length; i++) {
+            this.notificationButtons[i].db_id--;
         }
     }
 

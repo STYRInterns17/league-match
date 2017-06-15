@@ -7,15 +7,18 @@ import {ServiceLayer} from "./ServiceLayer";
  */
 const {CollectionView, Composite, TextView, ImageView} = require('tabris');
 const IMAGE_PATH = 'assets/';
-const userObj: User = JSON.parse(localStorage.getItem('userObj'));
+
 
 
 export class Leaderboard{
     page: Page;
     users: Array<User> = [];
     league: League;
+    private userObj: User;
+
     constructor(page: Page){
-        this.users.push(userObj);
+        this.userObj = JSON.parse(localStorage.getItem('userObj'));
+        this.users.push(this.userObj);
         this.page = page;
         if(localStorage.getItem('currentLeagueId') != null) {
             this.getLeague().then(value => {
@@ -35,7 +38,7 @@ export class Leaderboard{
 
             });
         }else{
-            this.page.title = 'Its empty in here :(';
+            this.page.title = 'Use the side bar to join a league!';
         }
     }
 
@@ -56,9 +59,8 @@ export class Leaderboard{
             } while (swapped);
         }
 
-
         //The user is in at least one league
-        if(userObj.leagues.length>0){
+        if(this.userObj.leagues.length>0){
             //let memberIds: Array<number> = league.adminIds.concat(league.playerIds);
             this.page.title = this.league.pref.title;
 

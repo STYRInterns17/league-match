@@ -13,6 +13,7 @@ import {User} from "../../../common/User";
 import {NotificationPage} from "./NotificationPage";
 import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
+import {LogMatchPage} from "./LogMatchPage";
 
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
@@ -48,7 +49,7 @@ export class HomePage extends BasePage {
             // TODO What is the profile page?
             //this.page.parent().append(new profile('test', 'test').createAdminPage());
             this.page.parent().append(new ProfilePage().page);
-            console.log(localStorage.getItem('userId'));
+
         });
         profileButton.appendTo(drawer);
 
@@ -64,6 +65,14 @@ export class HomePage extends BasePage {
             this.page.parent().append(leaguePage);
         });
         leagueButton.appendTo(drawer);
+
+        let logMatchButton = new customButton({top: 'prev() 30', centerX: 0}, 'Log A Match').on('tap', () => {
+            let logmatchPage = new LogMatchPage().page.on('disappear', () => {
+                logmatchPage.dispose();
+            });
+            this.page.parent().append(logmatchPage);
+        });
+        logMatchButton.appendTo(drawer);
 
         let signOutButton = new customButton({
             bottom: 30,
@@ -94,7 +103,6 @@ export class HomePage extends BasePage {
 
                 let collectionViewLeader = new Leaderboard(this.page);
             }
-
         });
 
     }

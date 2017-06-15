@@ -17,7 +17,6 @@ export class LeagueController {
         let p = new Promise((resolve, reject) => {
             DBManager.appendItemToTable(this.TABLE, new League(ownerId, pref)).then((league) =>{
                 //console.log(league);
-                console.log(league.id);
                 resolve(league.id);
 
             });
@@ -32,7 +31,6 @@ export class LeagueController {
         let p = new Promise((resolve, reject) => {
             DBManager.getItemFromTable(this.TABLE, leagueId).then((league) => {
                 resolve(league);
-                console.log(resolve(league))
             });
 
         });

@@ -41,7 +41,7 @@ export class MapManager {
 
     public static createMap(name: string) {
         // Mkdir with MapName
-        console.log('Trying to make table');
+        console.log('Trying to make map');
         this.fs.mkdir(this.PATH + name + '/', (err2) => {
             if (err2) {
                 return console.error(err2);
@@ -56,7 +56,6 @@ export class MapManager {
                 if (err) {
                     reject('Item may not exist in ' + map);
                 } else {
-                    console.log('found');
                     resolve(JSON.parse(data));
                 }
             });

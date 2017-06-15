@@ -21,7 +21,6 @@ export class UserController {
             // Add User name to map
             MapManager.createItem('names', user.name, user.id);
             //Return success y/n
-            console.log('true');
             return true;
         }).catch(reason => {
             return false;
@@ -60,10 +59,8 @@ export class UserController {
     public static getPreferences(userId: number): Promise<UserPreferences> {
         //DBManager get user
         //return preferences of user, not whole user
-        console.log('userId: ' + userId);
         return new Promise((resolve, reject) => {
             DBManager.getItemFromTable(this.TABLE, userId).then(user => {
-                console.log('the user' + user);
                 resolve(user.pref);
             })
         })
@@ -89,8 +86,6 @@ export class UserController {
                     UserController.get(userId).then(user => {
 
                         MapManager.changeItemKey('names', user.name, newName).then(value => {
-                            console.log('1');
-                            console.log(value);
                             if (value) {
                                 // These promises are not changed to save computation time, trade off is they are not checked
                                 // for successful write
@@ -116,13 +111,10 @@ export class UserController {
             MapManager.doesItemExist('emails', email).then(value => {
                 if (value) {
                     MapManager.getItemId('emails', email).then(id => {
-                        console.log("Id: " + id.id);
                         this.get(id.id).then(user => {
                             if (password === user.pref.password) {
-                                console.log("Password match found!");
                                 resolve(user);
                             } else {
-                                console.log("Password match NOT found!");
                                 reject();
                             }
                         })
@@ -131,7 +123,7 @@ export class UserController {
                     });
                 }
                 else{
-                    resolve(false);
+                    reject();
                 }
             })
         })
