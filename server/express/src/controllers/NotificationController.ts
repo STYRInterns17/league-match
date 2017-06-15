@@ -1,6 +1,8 @@
 import {DBManager} from "../db/DBManager";
 import {Notification} from "../../../../common/Notification"
 import {NotificationList} from "../../../../common/NotificationList";
+import {ApprovalType} from "../../../../common/ApprovalType";
+import {ApprovalData} from "../../../../common/ApprovalData";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
@@ -11,7 +13,7 @@ export class NotificationController {
     public static create () {
         // Create an new notification array for a new user
         let notificationList:NotificationList = new NotificationList();
-        let welcomeNotification = new Notification('Welcome to AmLeagues!', 'AmLeagues', 'AmLeagues the League', 'approval');
+        let welcomeNotification = new Notification('Welcome to AmLeagues!', 'AmLeagues', 'AmLeagues the League', ApprovalType.Message, new ApprovalData(null));
         notificationList.list.push(welcomeNotification);
         DBManager.appendItemToTable(this.TABLE, notificationList);
     }
@@ -25,10 +27,10 @@ export class NotificationController {
     }
 
     //Send Notification to a User
-    public static sendNotificationToUser(message: string, userId: number, submitterName: string, submitterLeague: string, type: string): boolean {
+    public static sendNotificationToUser(message: string, userId: number, submitterName: string, submitterLeague: string, type: ApprovalType, data: ApprovalData): boolean {
         //Write to notification table at userId
         this.getNotifications(userId).then(notificationList => {
-           let notification = new Notification(message, submitterName, submitterLeague, type);
+           let notification = new Notification(message, submitterName, submitterLeague, type, data);
            notificationList.list.push(notification);
            DBManager.updateItem(this.TABLE, notificationList);
         });

@@ -14,6 +14,7 @@ import {MatchController} from "./controllers/MatchController";
 import {Match} from "../../../common/Match";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
 import {isUndefined} from "util";
+import {ApprovalType} from "../../../common/ApprovalType";
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -31,6 +32,15 @@ class App {
         const server = http.createServer(this.express);
         server.listen(3000);
         console.log('We are now listening on 3000');
+        console.log(JSON.stringify({
+            userId: 5,
+            message: 'You have been invited to our league!',
+            type: ApprovalType.InviteApproval,
+            submitterName: 'Billy',
+            submitterLeague: 'That league',
+            
+        }));
+
         // console.log(JSON.stringify({leagueId: 0, match: new Match(['curt'],['sal'], 10, 20)}))
         // console.log(JSON.stringify({ownerId: 0, leaguePref: new LeaguePreferences(false, 'first league', 'arizona', 0, 0)}))
         //console.log(JSON.stringify({userPref: new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1), userId: 1}));
@@ -43,8 +53,6 @@ class App {
     }
 
 
-
-
     // Configure API endpoints.
     private routes(): void {
         /* This is just to get up and running, and to make sure what we've got is
@@ -53,34 +61,33 @@ class App {
         let router = express.Router();
 
 
-
         //GetUser
-        router.get('/user', (req,res) => {
-            let userId:number = req.query.userId;
+        router.get('/user', (req, res) => {
+            let userId: number = req.query.userId;
             console.log('Getting user: ' + userId);
             UserController.get(userId).then((user) => {
 
-                if(isUndefined(user)) {
-                    res.json({message: 'Cashe Invalid UserId: ' + userId +' does not exist'});
+                if (isUndefined(user)) {
+                    res.json({message: 'Cashe Invalid UserId: ' + userId + ' does not exist'});
                 } else {
-                    res.json({message: 'success', user:user});
+                    res.json({message: 'success', user: user});
                 }
 
             });
         });
 
         //CreateNewUser, SignUp
-        router.post('/user', (req,res) =>{
+        router.post('/user', (req, res) => {
             let userPref: UserPreferences = req.body.userPref;
             let userEmail: string = req.body.userEmail;
-            UserController.create(userPref,userEmail);
+            UserController.create(userPref, userEmail);
             res.json({
                 success: true
             });
         });
 
         //UpdateUser
-        router.post('/user/update', (req,res) => {
+        router.post('/user/update', (req, res) => {
             let user: User = req.body;
             UserController.updateUser(user);
             res.json({
@@ -89,7 +96,7 @@ class App {
         });
 
         //UpdateUserSettings
-        router.post('/user/pref', (req,res) => {
+        router.post('/user/pref', (req, res) => {
             let userId: number = req.body.userId;
             let userPref: UserPreferences = req.body.userPref;
             UserController.updatePreferences(userId, userPref);
@@ -99,14 +106,14 @@ class App {
         });
 
         //GetUserSettings
-        router.get('/user/pref', (req,res) => {
+        router.get('/user/pref', (req, res) => {
             let userId: number = req.query.userId;
 
             res.json(UserController.getPreferences(userId));
         });
 
         //Validate User Login
-        router.post('/user/validate', (req,res) => {
+        router.post('/user/validate', (req, res) => {
             let email: string = req.body.userEmail;
             let password: string = req.body.userPassword;
 
@@ -119,7 +126,7 @@ class App {
 
 
         // Get User by email
-        router.get('/user/id', (req,res) => {
+        router.get('/user/id', (req, res) => {
             let email: string = req.query.email;
             MapManager.getItemId('emails', email).then(id => {
                 res.json(id);
@@ -129,7 +136,7 @@ class App {
         });
 
         // Does User email exist
-        router.get('/user/email', (req,res) => {
+        router.get('/user/email', (req, res) => {
             let email: string = req.query.email;
 
             // TODO move into UserController
@@ -138,14 +145,14 @@ class App {
             });
         });
 
-        router.post('/user/email/update', (req,res) => {
+        router.post('/user/email/update', (req, res) => {
             let oldEmail: string = req.body.oldEmail;
             let newEmail: string = req.body.newEmail;
 
             // TODO Finish This
         });
 
-        router.post('/user/name/update', (req,res) => {
+        router.post('/user/name/update', (req, res) => {
             let userId: number = req.body.userId;
             let newName: string = req.body.userName;
 
@@ -156,7 +163,7 @@ class App {
             })
         });
 
-        router.get('/user/name', (req,res) => {
+        router.get('/user/name', (req, res) => {
             let userName: string = req.query.userName;
 
             UserController.getUserByName(userName).then(userId => {
@@ -168,7 +175,7 @@ class App {
 
 
         //GetLeague
-        router.get('/league', (req,res) => {
+        router.get('/league', (req, res) => {
             let leagueId: number = req.query.leagueId;
 
             LeagueController.get(leagueId).then(value => {
@@ -178,19 +185,19 @@ class App {
 
 
         //GetLeagueUserIds
-        router.get('/league/users', (req,res) => {
+        router.get('/league/users', (req, res) => {
             let leagueId: number = req.query.leagueId;
 
             res.json(LeagueController.getUsers(leagueId));
         });
 
         //GetLeagueMatchHistory
-        router.get('/league/match/history', (req,res) => {
+        router.get('/league/match/history', (req, res) => {
             let leagueId: number = req.query.leagueId;
             let startDate: Date = req.query.startDate;
             let endDate: Date = req.query.endDate;
 
-            res.json(LeagueController.getMatches(leagueId,startDate,endDate));
+            res.json(LeagueController.getMatches(leagueId, startDate, endDate));
         });
 
         //CreateNewLeague
@@ -235,7 +242,7 @@ class App {
 
         //Get Notifications
         router.get('/notification/user', (req, res) => {
-            let userId:number = req.query.userId;
+            let userId: number = req.query.userId;
 
             NotificationController.getNotifications(userId).then((notificationList) => {
                 res.json(notificationList.list);
@@ -251,7 +258,7 @@ class App {
         });
 
         // Read all Notifications
-        router.post('/notication/user/read', (req,res) => {
+        router.post('/notication/user/read', (req, res) => {
             let userId = req.body.userId;
 
             res.json(NotificationController.readAllNotifications(userId));
@@ -264,8 +271,9 @@ class App {
             let type = req.body.type;
             let submitterName = req.body.submitterName;
             let submitterLeague = req.body.submitterLeague;
+            let data = req.body.approvalData;
 
-            res.json(NotificationController.sendNotificationToUser(message,userId,submitterName,submitterLeague,type));
+            res.json(NotificationController.sendNotificationToUser(message, userId, submitterName, submitterLeague, type, data));
         });
 
         //Send Notification To Entire League aka BroadCast
@@ -274,24 +282,24 @@ class App {
             let message = req.body.message;
             let submitterId = req.body.sumbmitterId;
 
-            res.json(NotificationController.sendNotificationToLeague(message,leagueId,submitterId));
+            res.json(NotificationController.sendNotificationToLeague(message, leagueId, submitterId));
         });
 
         //Get User Activity History
-        router.get('/activity/user', (req,res) => {
-           let userId = req.body.userId;
-           let startDate = req.body.startDate;
-           let endDate = req.body.endDate;
+        router.get('/activity/user', (req, res) => {
+            let userId = req.body.userId;
+            let startDate = req.body.startDate;
+            let endDate = req.body.endDate;
 
-           res.json(ActivityController.getHistory(userId, startDate,endDate));
+            res.json(ActivityController.getHistory(userId, startDate, endDate));
         });
 
         //Append to User activity History
-        router.post('/activity/user', (req,res) => {
+        router.post('/activity/user', (req, res) => {
             let userId = req.body.userId;
             let activityValue = req.body.activityValue;
 
-            res.json(ActivityController.appendHistory(userId,activityValue));
+            res.json(ActivityController.appendHistory(userId, activityValue));
         });
 
         this.express.use('/', router);
