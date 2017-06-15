@@ -13,7 +13,7 @@ import {User} from "../../../common/User";
 import {NotificationPage} from "./NotificationPage";
 import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
-//tesdkjsdjkfhskdfgjfgjfgjfgjfgj
+
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
     public userId: number;
@@ -28,9 +28,7 @@ export class HomePage extends BasePage {
 
     public createComponents(): void {
 
-
         this.page.background = '#37474f';
-
 
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
@@ -94,14 +92,9 @@ export class HomePage extends BasePage {
                     localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
                 }
 
-                // build leaderBoar
-                //
                 let collectionViewLeader = new Leaderboard(this.page);
             }
 
-
-
-            //////////////////////////////////////////////////////
         });
 
     }

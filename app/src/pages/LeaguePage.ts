@@ -10,7 +10,6 @@ import {League} from "../../../common/League";
 import {User} from "../../../common/User";
 
 
-
 export class LeaguePage extends BasePage {
     private leagues: League[];
     private userObj: User;

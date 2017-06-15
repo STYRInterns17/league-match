@@ -52,8 +52,6 @@ class App {
          * API endpoints */
         let router = express.Router();
 
-
-
         //GetUser
         router.get('/user', (req,res) => {
             let userId:number = req.query.userId;
