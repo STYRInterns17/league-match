@@ -57,7 +57,10 @@ export class HomePage extends BasePage {
         notificationButton.appendTo(drawer);
 
         let leagueButton = new customButton({top: 'prev() 30', centerX: 0}, 'Leagues').on('tap', () => {
-            this.page.parent().append(new LeaguePage().page);
+            let leaguePage = new LeaguePage().page.on('disappear', () => {
+                leaguePage.dispose();
+            });
+            this.page.parent().append(leaguePage);
         });
         leagueButton.appendTo(drawer);
 
@@ -73,8 +76,7 @@ export class HomePage extends BasePage {
             localStorage.setItem('userObj', JSON.stringify(response));
             this.user = JSON.parse(localStorage.getItem('userObj'));
             //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
-            if(this.user.leagues != null) {
-                console.log('Setting current league Id');
+            if(this.user.leagues[0] != null) {
                 localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
             }
             // build leaderBoar
