@@ -10,6 +10,9 @@ import {ActivityController} from "./controllers/ActivityController";
 import {DBManager} from "./db/DBManager";
 import {json} from "body-parser";
 import {MapManager} from "./db/MapManager";
+import {MatchController} from "./controllers/MatchController";
+import {Match} from "../../../common/Match";
+import {LeaguePreferences} from "../../../common/LeaguePreferences";
 
 // Creates and configures an ExpressJS web server.
 class App {
@@ -27,6 +30,8 @@ class App {
         const server = http.createServer(this.express);
         server.listen(3000);
         console.log('We are now listening on 3000');
+        // console.log(JSON.stringify({leagueId: 0, match: new Match(['curt'],['sal'], 10, 20)}))
+        // console.log(JSON.stringify({ownerId: 0, leaguePref: new LeaguePreferences(false, 'first league', 'arizona', 0, 0)}))
         //console.log(JSON.stringify({userPref: new UserPreferences('curt@styr.com', 'passcode', 'I like to fly kites', 1), userId: 1}));
     }
 
@@ -206,16 +211,21 @@ class App {
         });
 
         //Post Match Approved
-        router.post('/league/match', (req, res) => {
+        router.post('/match/approved', (req, res) => {
             let leagueId = req.body.leagueId;
             let match = req.body.match;
 
-            res.json(LeagueController.postMatch(leagueId, match));
+            MatchController.logMatch(leagueId, match).then(value => {
+                res.json();
+            }).catch(reason => {
+                res.json({message: reason});
+            });
+
         });
 
 
         //Post Match UnApproved
-        router.post('/league/match', (req, res) => {
+        router.post('/match', (req, res) => {
             let leagueId = req.body.leagueId;
             let submitterId = req.body.userId;
             let match = req.body.match;
@@ -228,7 +238,6 @@ class App {
             let userId:number = req.query.userId;
 
             NotificationController.getNotifications(userId).then((notificationList) => {
-                console.log(notificationList.list);
                 res.json(notificationList.list);
             });
         });
