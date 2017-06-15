@@ -29,9 +29,7 @@ export class HomePage extends BasePage {
 
     public createComponents(): void {
 
-
         this.page.background = '#37474f';
-
 
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
@@ -103,8 +101,6 @@ export class HomePage extends BasePage {
                     localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
                 }
 
-                // build leaderBoar
-                //
                 let collectionViewLeader = new Leaderboard(this.page);
             }
         });

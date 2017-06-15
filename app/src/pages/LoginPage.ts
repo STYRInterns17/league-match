@@ -69,6 +69,8 @@ export class LoginPage extends BasePage {
                     localStorage.setItem('userId', response.user.id);
                     window.plugins.toast.showShortCenter('Success!');
                     new HomePage().page.appendTo(this.page.parent());
+                    //this.page.parent().append(new HomePage().page);
+                    //this.page.parent().append(new HomePage().page);
                     this.page.dispose();
                 } else {
                     window.plugins.toast.showShortCenter('Login Invalid');
@@ -124,7 +126,7 @@ export class LoginPage extends BasePage {
                 else {
                     let userPref = {
                         userEmail: usernameSignUp.text,
-                        userPref: new UserPreferences(usernamePasswordSignUp.text, "Tell us about yourself!", 0)
+                        userPref: new UserPreferences(usernamePasswordSignUp.text, "Tell us about yourself!", 0, usernameSignUp.text)
                     };
 
                     ServiceLayer.httpPostAsync('/user', userPref, (response: Response) => {

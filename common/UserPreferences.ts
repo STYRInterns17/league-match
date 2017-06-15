@@ -5,9 +5,11 @@ export class UserPreferences {
     public password: string;
     public bio: string;
     public avatarId: number;
-    constructor(password: string, bio: string, avatarId: number) {
+    public name: string;
+    constructor(password: string, bio: string, avatarId: number, name: string) {
         this.password = password;
         this.bio = bio;
         this.avatarId = avatarId;
+        this.name = name;
     }
 }

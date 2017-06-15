@@ -123,7 +123,7 @@ export class UserController {
                     });
                 }
                 else{
-                    resolve(false);
+                    reject();
                 }
             })
         })
