@@ -7,6 +7,7 @@ import {Notification} from "../../../common/Notification";
 import {customButton} from "../customButton";
 import {ServiceLayer} from "../ServiceLayer";
 import {ApprovalType} from "../../../common/ApprovalType";
+import {ApprovalData} from "../../../common/ApprovalData";
 
 // This class is unused now
 export class NotificationComposite extends tabris.Composite {
@@ -18,6 +19,7 @@ export class NotificationComposite extends tabris.Composite {
     public yesApprove: customButton;
     public noApprove: customButton;
 
+    public approvalData: ApprovalData;
     public type: ApprovalType;
 
     private approvalContainer: tabris.Composite;
@@ -72,11 +74,11 @@ export class NotificationComposite extends tabris.Composite {
 
 
     public update(notification: Notification): NotificationComposite {
-
         this.body.text = notification.message;
         this.footer.text = '<i>-' + notification.submitterUser + '@' + notification.submitterLeague + '</i>';
         switch (notification.type) {
             case ApprovalType.InviteApproval:
+                this.approvalData = notification.data;
                 this.yesApprove = new customButton({
                     left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.Secondary
                 }, '✔').changeBorderColor(ColorScheme.Accent).changeTextColor('#4CAF50').appendTo(this.approvalContainer);
@@ -84,6 +86,7 @@ export class NotificationComposite extends tabris.Composite {
                 this.noApprove = new customButton({
                     left: 'prev() 1', right: 1, top: 0, bottom: 1, background: ColorScheme.Secondary
                 }, '✖').changeBorderColor(ColorScheme.Accent).changeTextColor('#D50000').appendTo(this.approvalContainer);
+                console.log('d');
                 break;
             case ApprovalType.MatchApproval:
                 break;
@@ -93,6 +96,7 @@ export class NotificationComposite extends tabris.Composite {
         }
 
         this.db_id = notification.index;
+
         this.type = notification.type;
 
         return this;

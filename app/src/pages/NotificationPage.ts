@@ -46,16 +46,24 @@ export class NotificationPage extends BasePage {
         }).appendTo(notificationContainer);
 
         for(let i = 0; i < this.notifications.length; i++) {
+
             this.notificationButtons.push(new NotificationComposite({left: 0, right: 0, height: 80, top:'prev() 2'}).on('panHorizontal', event => {
                 this.handlePan(event);
             }).appendTo(this.notificationView).update(this.notifications[i]));
 
+
+
             // Set button listeners for notification
             switch(this.notificationButtons[i].type) {
+
                 case ApprovalType.InviteApproval:
+
+
                     this.notificationButtons[i].yesApprove.on('tap', (event) => {
                         // Add this User to league that the invite was sent from
                         let notificationComposite = event.target.parent().parent().parent();
+
+                        this.joinLeague(notificationComposite.approvalData.leagueId);
 
                         this.dismiss(notificationComposite.db_id);
                         notificationComposite.dispose();
@@ -69,6 +77,7 @@ export class NotificationPage extends BasePage {
                     });
                     break;
                 case ApprovalType.MatchApproval:
+
                     break;
                 case ApprovalType.Message:
                     // Nothing special ends to be done on message
@@ -161,6 +170,18 @@ export class NotificationPage extends BasePage {
         for(let i = index; i < this.notificationButtons.length; i++) {
             this.notificationButtons[i].db_id--;
         }
+    }
+
+    private joinLeague(leagueId: number) {
+
+        let joinLeagueRequest = {leagueId: leagueId,userId: localStorage.getItem('userId')};
+
+        ServiceLayer.httpPostAsync('/league/addUser', joinLeagueRequest, (response => {
+            window.plugins.toast.showShortCenter('Joined new league!');
+            localStorage.setItem('currentLeagueId', leagueId.toString());
+        }));
+
+
     }
 
     private animateCancel({target}) {
