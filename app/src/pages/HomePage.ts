@@ -29,15 +29,7 @@ export class HomePage extends BasePage {
 
         this.page.background = '#37474f';
 
-        // //CREATE TEXT COMP
-        // let textComp = new tabris.Composite({
-        //     centerX: 0
-        // }).appendTo(this.page);
-        // textComp.append(new tabris.TextView({
-        //     text: 'Leaderboards of (League Name here)',
-        //     font: 'bold 20px',
-        //     textColor: '#fff'
-        // }));
+
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
         drawer.enabled = true;
@@ -83,6 +75,7 @@ export class HomePage extends BasePage {
             localStorage.setItem('userObj', JSON.stringify(response));
             this.user = JSON.parse(localStorage.getItem('userObj'));
             //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
+            if(this.user.leagues[0] != null)
             localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
             //build leaderBoard
 
