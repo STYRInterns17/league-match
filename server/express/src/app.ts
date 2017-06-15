@@ -158,7 +158,7 @@ class App {
             }).catch(reason => {
                 res.json({message: reason});
             })
-        })
+        });
 
 
         //GetLeague

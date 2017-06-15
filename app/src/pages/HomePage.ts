@@ -79,13 +79,15 @@ export class HomePage extends BasePage {
 
         this.userId = parseInt(localStorage.getItem('userId'));
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
+            //get the current user logged in
             localStorage.setItem('userObj', JSON.stringify(response));
             this.user = JSON.parse(localStorage.getItem('userObj'));
-            console.log('Here' + localStorage.getItem('userObj'));
-            //this part stays in HomePage///////////////////////////////////////
-            let leaderBoard = new Leaderboard(this.page);
-            let collectionViewLeader = leaderBoard.createLeaderBoard();
-            this.page.append(collectionViewLeader);
+            //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
+            localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
+            //build leaderBoard
+
+            let collectionViewLeader = new Leaderboard(this.page);
+
             //////////////////////////////////////////////////////
         });
 
