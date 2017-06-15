@@ -24,7 +24,6 @@ export class NotificationComposite extends tabris.Composite {
 
     constructor(config: tabris.CompositeProperties) {
         super(config);
-        console.log('1');
         this.background = ColorScheme.Secondary;
 
 
@@ -39,7 +38,7 @@ export class NotificationComposite extends tabris.Composite {
 
 
 
-        console.log('2');
+
 
         let bodyContainer = new tabris.Composite({
             top:0, left: 0, right: 0, bottom: footerContainer
@@ -57,7 +56,7 @@ export class NotificationComposite extends tabris.Composite {
             textColor: ColorScheme.Background,
             maxLines: 3
         }).appendTo(bodyContainer);
-        console.log('3');
+
         this.footer = new tabris.TextView({
             top: 0, left: 0, right: 0, bottom: 0,
             lineSpacing: 1.3, alignment: 'center',
@@ -66,13 +65,13 @@ export class NotificationComposite extends tabris.Composite {
             textColor: ColorScheme.Background,
             maxLines: 3
         }).appendTo(footerContainer);
-        console.log('4');
+
 
     }
 
 
     public update(notification: Notification): NotificationComposite {
-        console.log('6');
+
         this.body.text = notification.message;
         this.footer.text = '<i>-' + notification.submitterUser + '@' + notification.submitterLeague + '</i>';
         if(notification.type === 'approval') {
@@ -80,7 +79,6 @@ export class NotificationComposite extends tabris.Composite {
 
 
             // Added check or X buttons
-            console.log('Adding approval buttons');
             this.yesApprove = new customButton({
                 left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.Secondary
             }, '✔').changeBorderColor(ColorScheme.Accent).changeTextColor('#4CAF50').appendTo(this.approvalContainer);

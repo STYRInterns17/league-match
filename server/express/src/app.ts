@@ -59,9 +59,8 @@ class App {
             let userId:number = req.query.userId;
             console.log('Getting user: ' + userId);
             UserController.get(userId).then((user) => {
-                console.log(user);
+
                 if(isUndefined(user)) {
-                    console.log('Cashe Invalid UserId: ' + userId +' does not exist');
                     res.json({message: 'Cashe Invalid UserId: ' + userId +' does not exist'});
                 } else {
                     res.json({message: 'success', user:user});
@@ -74,8 +73,6 @@ class App {
         router.post('/user', (req,res) =>{
             let userPref: UserPreferences = req.body.userPref;
             let userEmail: string = req.body.userEmail;
-            console.log(req.body.userEmail);
-            console.log(req.body.userPref);
             UserController.create(userPref,userEmail);
             res.json({
                 success: true
@@ -113,10 +110,7 @@ class App {
             let email: string = req.body.userEmail;
             let password: string = req.body.userPassword;
 
-            console.log(JSON.stringify(req.body));
-
             UserController.validate(email, password).then(user => {
-                console.log("Password Match Result: " + user.pref.password);
                 res.json({success: true, user: user});
             }).catch(reason => {
                 res.json({success: false});
@@ -203,8 +197,7 @@ class App {
         router.post('/league', (req, res) => {
             let ownerId = req.body.ownerId;
             let leaguePref = req.body.leaguePref;
-            let foo = LeagueController.create(ownerId, leaguePref).then(value => {
-                console.log(value);
+            LeagueController.create(ownerId, leaguePref).then(value => {
                 res.json({id: value});
             });
 

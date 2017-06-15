@@ -3,5 +3,5 @@
  */
 export class Approval {
     public leagueId: number;
-    
+
 }

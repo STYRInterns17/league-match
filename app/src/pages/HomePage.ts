@@ -14,7 +14,7 @@ import {NotificationPage} from "./NotificationPage";
 import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
 import {LogMatchPage} from "./LogMatchPage";
-//tesdkjsdjkfhskdfgjfgjfgjfgjfgj
+
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
     public userId: number;
@@ -51,7 +51,7 @@ export class HomePage extends BasePage {
             // TODO What is the profile page?
             //this.page.parent().append(new profile('test', 'test').createAdminPage());
             this.page.parent().append(new ProfilePage().page);
-            console.log(localStorage.getItem('userId'));
+
         });
         profileButton.appendTo(drawer);
 
@@ -107,10 +107,6 @@ export class HomePage extends BasePage {
                 //
                 let collectionViewLeader = new Leaderboard(this.page);
             }
-
-
-
-            //////////////////////////////////////////////////////
         });
 
     }
