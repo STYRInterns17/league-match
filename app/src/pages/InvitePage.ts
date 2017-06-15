@@ -93,16 +93,22 @@ export class InvitePage extends BasePage{
                 localStorage.setItem('userObj', JSON.stringify(this.userObj));
                 ServiceLayer.httpPostAsync('/user/update', this.userObj ,(response) =>{
                     console.log('user leagues array updated');
-                    for(let i =0; i<idArray.length; i++){
-                        let notification = new Notification('Invite to ' + leagueInfo.leaguePref.title,
-                            this.userObj.email,
-                            leagueInfo.leaguePref.title,
-                            ApprovalType.InviteApproval,
-                            new ApprovalData(leagueId));
-                        ServiceLayer.httpPostAsync('/notification/user', notification, () =>{
-                            this.page.dispose();
-                            console.log('Invite sent')
-                        });
+                    if(idArray.length>0){
+                        for(let i =0; i<idArray.length; i++){
+                            let notification = {userId: idArray[i],
+                            message: 'Invite to ' + leagueInfo.leaguePref.title,
+                                type: ApprovalType.InviteApproval,
+                                submitterName: this.userObj.email,
+                            submitterLeague: leagueInfo.leaguePref.title,
+                            approvalData: new ApprovalData(leagueId)
+                            };
+                            ServiceLayer.httpPostAsync('/notification/user', notification, () =>{
+                                this.page.dispose();
+                                console.log('Invite sent')
+                            });
+                        }
+                    }else{
+                        this.page.dispose();
                     }
                 });
             })
