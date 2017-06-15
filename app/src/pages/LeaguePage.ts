@@ -15,7 +15,7 @@ export class LeaguePage extends BasePage {
     constructor() {
         super();
         this.leagues = [];
-        if(userObj.leagues.length>0) {
+        if(userObj.leagues != null) {
             this.leagueLoop().then(value => {
                 console.log('Here' + userObj.leagues.length);
                 this.createLeaguePage();
