@@ -80,14 +80,14 @@ export class HomePage extends BasePage {
         this.userId = parseInt(localStorage.getItem('userId'));
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
             //get the current user logged in
-            if (response.message !== null) {
+            if (response.message !== 'success') {
                 console.log('Invalid UserId');
                 localStorage.clear();
                 this.page.parent().append(new LoginPage().page);
                 this.page.dispose();
 
             } else {
-                localStorage.setItem('userObj', JSON.stringify(response));
+                localStorage.setItem('userObj', JSON.stringify(response.user));
                 this.user = JSON.parse(localStorage.getItem('userObj'));
                 //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
                 if (this.user.leagues[0] != null) {

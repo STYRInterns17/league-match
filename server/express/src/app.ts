@@ -64,7 +64,7 @@ class App {
                     console.log('Cashe Invalid UserId: ' + userId +' does not exist');
                     res.json({message: 'Cashe Invalid UserId: ' + userId +' does not exist'});
                 } else {
-                    res.json(user);
+                    res.json({message: 'success', user:user});
                 }
 
             });
