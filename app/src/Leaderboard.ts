@@ -17,24 +17,24 @@ export class Leaderboard{
     constructor(page: Page){
         this.users.push(userObj);
         this.page = page;
-        console.log('1' + this.users);
-        this.getLeague().then(value => {
-            this.league = value;
-            console.log('2' + this.users);
-            let memberIds: Array<number> = [];
-            memberIds = memberIds.concat(value.adminIds).concat(value.playerIds);
+        if(localStorage.getItem('currentLeagueId') != null) {
+            this.getLeague().then(value => {
+                this.league = value;
+                let memberIds: Array<number> = [];
+                memberIds = memberIds.concat(value.adminIds).concat(value.playerIds);
 
-            if(memberIds.length>0){
-                this.leagueLoop(memberIds).then(() =>{
-                    console.log('3' + this.users);
+                if (memberIds.length > 0) {
+                    this.leagueLoop(memberIds).then(() => {
+                        console.log('3 creating leaderboard with actual members');
+                        this.createLeaderBoard().appendTo(this.page);
+                    });
+                } else {
+                    console.log('4 creating leaderboard with only admin');
                     this.createLeaderBoard().appendTo(this.page);
-                });
-            }else{
-                console.log('4 creating leaderboard with only admin');
-                this.createLeaderBoard().appendTo(this.page);
-            }
+                }
 
-        });
+            });
+        }
     }
 
     private createLeaderBoard(): tabris.CollectionView{
@@ -54,14 +54,11 @@ export class Leaderboard{
             } while (swapped);
         }
 
-        console.log('Here' + this.users.length);
 
         //The user is in at least one league
         if(userObj.leagues.length>0){
             //let memberIds: Array<number> = league.adminIds.concat(league.playerIds);
             this.page.title = this.league.pref.title;
-
-            console.log('Here' + this.users.length);
 
             let collectionView = new CollectionView({
                 left: 40, top: 40, right: 40, bottom: 40,

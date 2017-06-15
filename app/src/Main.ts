@@ -16,7 +16,7 @@ class Main {
         }).appendTo(tabris.ui.contentView);
 
         // Use this line to clear your userId in cashe
-        localStorage.removeItem('userId');
+        //localStorage.removeItem('userId');
         if (localStorage.getItem('userId') === null) {
             new LoginPage().page.appendTo(this.navigationView);
         } else {

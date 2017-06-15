@@ -47,6 +47,7 @@ export class HomePage extends BasePage {
         let profileButton = new customButton({top: 'prev() 30', centerX: 0}, 'Profile').on('tap', () => {
             // TODO What is the profile page?
             //this.page.parent().append(new Profil('test', 'test').createAdminPage());
+            console.log(localStorage.getItem('userId'));
         });
         profileButton.appendTo(drawer);
 
@@ -61,11 +62,8 @@ export class HomePage extends BasePage {
         leagueButton.appendTo(drawer);
 
         let signOutButton = new customButton({bottom: 30, centerX: 0, background: '#cb2431'}, 'Sign Out').on('tap', () => {
-            localStorage.removeItem('userId');
-            localStorage.removeItem('userObj');
-            localStorage.removeItem('lastLeague');
-            this.page.parent().append(new LoginPage().page);
-            this.page.dispose();
+            localStorage.clear();
+            tabris.app.reload();
         });
         signOutButton.appendTo(drawer);
 
@@ -75,10 +73,12 @@ export class HomePage extends BasePage {
             localStorage.setItem('userObj', JSON.stringify(response));
             this.user = JSON.parse(localStorage.getItem('userObj'));
             //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
-            if(this.user.leagues[0] != null)
-            localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
-            //build leaderBoard
-
+            if(this.user.leagues != null) {
+                console.log('Setting current league Id');
+                localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
+            }
+            // build leaderBoar
+            //
             let collectionViewLeader = new Leaderboard(this.page);
 
             //////////////////////////////////////////////////////
