@@ -11,6 +11,7 @@ import {LeaguePage} from "./LeaguePage";
 import {ServiceLayer} from "../ServiceLayer";
 import {User} from "../../../common/User";
 import {NotificationPage} from "./NotificationPage";
+import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
 //tesdkjsdjkfhskdfgjfgjfgjfgjfgj
 export class HomePage extends BasePage {
@@ -46,7 +47,8 @@ export class HomePage extends BasePage {
 
         let profileButton = new customButton({top: 'prev() 30', centerX: 0}, 'Profile').on('tap', () => {
             // TODO What is the profile page?
-            //this.page.parent().append(new Profil('test', 'test').createAdminPage());
+            //this.page.parent().append(new profile('test', 'test').createAdminPage());
+            this.page.parent().append(new ProfilePage().page);
             console.log(localStorage.getItem('userId'));
         });
         profileButton.appendTo(drawer);
@@ -73,7 +75,7 @@ export class HomePage extends BasePage {
             localStorage.setItem('userObj', JSON.stringify(response));
             this.user = JSON.parse(localStorage.getItem('userObj'));
             //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
-            if(this.user.leagues != null) {
+            if(this.user.leagues[0] != null) {
                 console.log('Setting current league Id');
                 localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
             }
