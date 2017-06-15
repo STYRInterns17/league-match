@@ -13,6 +13,7 @@ import {User} from "../../../common/User";
 import {NotificationPage} from "./NotificationPage";
 import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
+import {LogMatchPage} from "./LogMatchPage";
 //tesdkjsdjkfhskdfgjfgjfgjfgjfgj
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
@@ -66,6 +67,14 @@ export class HomePage extends BasePage {
             this.page.parent().append(leaguePage);
         });
         leagueButton.appendTo(drawer);
+
+        let logMatchButton = new customButton({top: 'prev() 30', centerX: 0}, 'Log A Match').on('tap', () => {
+            let logmatchPage = new LogMatchPage().page.on('disappear', () => {
+                logmatchPage.dispose();
+            });
+            this.page.parent().append(logmatchPage);
+        });
+        logMatchButton.appendTo(drawer);
 
         let signOutButton = new customButton({
             bottom: 30,
