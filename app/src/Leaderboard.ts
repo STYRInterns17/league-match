@@ -3,7 +3,7 @@ import {User} from "../../common/User";
 import {League} from "../../common/League";
 import {ServiceLayer} from "./ServiceLayer";
 /**
- * Created by STYRLabs2 on 6/6/2017.
+ * Created by Michael on 6/6/2017.
  */
 const {CollectionView, Composite, TextView, ImageView} = require('tabris');
 const IMAGE_PATH = 'assets/';
@@ -71,9 +71,11 @@ export class Leaderboard{
             } while (swapped);
         }
         bubbleSortByMMR(this.users, +localStorage.getItem('currentLeagueId'));
+        
 
         //The user is in at least one league
         if(this.userObj.leagues.length>0){
+
             //let memberIds: Array<number> = league.adminIds.concat(league.playerIds);
             this.page.title = this.league.pref.title;
             let collectionView = new CollectionView({
@@ -97,7 +99,7 @@ export class Leaderboard{
                     let user = this.users[index];
                     cell.apply({
                         ImageView: {image: IMAGE_PATH + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'},
-                        TextView: {text: user.email + '-' + user.mmr[+localStorage.getItem('currentLeagueId')]}
+                        TextView: {text: user.email + '-' + user.mmr[user.leagues.indexOf(+localStorage.getItem('currentLeagueId'))]},
                     });
                 }
             }).on('select', ({index}) => console.log('selected', people[index].name));

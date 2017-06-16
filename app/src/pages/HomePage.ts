@@ -24,6 +24,8 @@ export class HomePage extends BasePage {
     constructor() {
         super();
         this.createComponents();
+        console.log('Page' + this.page);
+        console.log('Page parent' + this.page.parent());
 
     }
 

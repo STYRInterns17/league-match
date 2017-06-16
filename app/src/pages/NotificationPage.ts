@@ -11,6 +11,7 @@ import {TextView} from "tabris";
 import {ColorScheme} from "../ColorScheme";
 import {customButton} from "../customButton";
 import {ApprovalType} from "../../../common/ApprovalType";
+import {User} from "../../../common/User";
 
 export class NotificationPage extends BasePage {
     private notifications: Notification[];
@@ -29,8 +30,6 @@ export class NotificationPage extends BasePage {
         }).catch((err) => {
             console.log(err);
         });
-
-
     }
 
     public createComponents(): void {
@@ -183,6 +182,10 @@ export class NotificationPage extends BasePage {
         ServiceLayer.httpPostAsync('/league/addUser', joinLeagueRequest, (response => {
             window.plugins.toast.showShortCenter('Joined new league!');
             localStorage.setItem('currentLeagueId', leagueId.toString());
+            let userObj: User = JSON.parse(localStorage.getItem('userObj'));
+            userObj.leagues.push(leagueId);
+            localStorage.setItem('userObj', JSON.stringify(userObj));
+
         }));
 
 
