@@ -2,6 +2,7 @@ import {LeaguePreferences} from "../../../../common/LeaguePreferences";
 import {Match} from "../../../../common/Match";
 import {League} from "../../../../common/League";
 import {DBManager} from "../db/DBManager";
+import {UserController} from "./UserController";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
@@ -15,7 +16,9 @@ export class LeagueController {
         //     return league.id;
         // });
         let p = new Promise((resolve, reject) => {
-            DBManager.appendItemToTable(this.TABLE, new League(ownerId, pref)).then((league) =>{
+            let newLeague = new League(ownerId, pref);
+            newLeague.playerIds.push(ownerId);
+            DBManager.appendItemToTable(this.TABLE, newLeague).then((league) =>{
                 //console.log(league);
                 resolve(league.id);
 
@@ -53,11 +56,16 @@ export class LeagueController {
         return true;
     }
 
-    public static addLeaguePlayers(leagueId: number, userId: number): boolean {
+    public static addLeaguePlayers(leagueId: number, userId): boolean {
         //DBManager get league, update league preferences
         this.get(leagueId).then((league: League) => {
-            league.playerIds.push(userId);
+            league.playerIds.push(parseInt(userId));
             DBManager.updateItem(this.TABLE, league);
+        });
+        UserController.get(userId).then((user) =>{
+            user.leagues.push(leagueId);
+            user.mmr.push(5000);
+           UserController.updateUser(user) ;
         });
         return true;
     }

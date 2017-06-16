@@ -18,22 +18,33 @@ export class Leaderboard{
 
     constructor(page: Page){
         this.userObj = JSON.parse(localStorage.getItem('userObj'));
-        this.users.push(this.userObj);
+        //this.users.push(this.userObj);
         this.page = page;
+        this.reloadLeaderBoard();
+
+    }
+
+    public reloadLeaderBoard(): void {
+        console.log('ReloadingLeaderBoard');
+        console.log('Current league Id =', localStorage.getItem('currentLeagueId'));
+        this.page.children().dispose();
         if(localStorage.getItem('currentLeagueId') != null) {
             this.getLeague().then(value => {
                 this.league = value;
                 let memberIds: Array<number> = [];
                 memberIds = memberIds.concat(value.adminIds).concat(value.playerIds);
 
-                if (memberIds.length > 0) {
+                if (memberIds.length > 1) {
                     this.leagueLoop(memberIds).then(() => {
                         console.log('1 creating leaderboard with actual members');
                         this.createLeaderBoard().appendTo(this.page);
                     });
                 } else {
-                    console.log('2 creating leaderboard with only admin');
-                    this.createLeaderBoard().appendTo(this.page);
+                    this.leagueLoop(memberIds).then(() => {
+                        console.log('2 creating leaderboard with only admin');
+                        this.createLeaderBoard().appendTo(this.page);
+                    });
+
                 }
 
             });
@@ -42,14 +53,15 @@ export class Leaderboard{
         }
     }
 
+
     private createLeaderBoard(): tabris.CollectionView{
-        function bubbleSortByMMR(a: Array)
+        function bubbleSortByMMR(a: Array, leagueId: number)
         {
             let swapped;
             do {
                 swapped = false;
                 for (let i = 0; i < a.length - 1; i++) {
-                    if (a[i].mmr < a[i + 1].mmr) {
+                    if (a[i].mmr[leagueId] < a[i + 1].mmr[leagueId]) {
                         let temp = a[i];
                         a[i] = a[i + 1];
                         a[i + 1] = temp;
@@ -58,12 +70,12 @@ export class Leaderboard{
                 }
             } while (swapped);
         }
+        bubbleSortByMMR(this.users, +localStorage.getItem('currentLeagueId'));
 
         //The user is in at least one league
         if(this.userObj.leagues.length>0){
             //let memberIds: Array<number> = league.adminIds.concat(league.playerIds);
             this.page.title = this.league.pref.title;
-
             let collectionView = new CollectionView({
                 left: 40, top: 40, right: 40, bottom: 40,
                 itemCount: this.users.length,
@@ -85,7 +97,7 @@ export class Leaderboard{
                     let user = this.users[index];
                     cell.apply({
                         ImageView: {image: IMAGE_PATH + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'},
-                        TextView: {text: user.name + ' '}
+                        TextView: {text: user.email + '-' + user.mmr[+localStorage.getItem('currentLeagueId')]}
                     });
                 }
             }).on('select', ({index}) => console.log('selected', people[index].name));
@@ -116,7 +128,7 @@ export class Leaderboard{
         return new Promise((resolve, reject) => {
             for(let i = 0;i<memberIds.length; i++){
                 this.getUsers(memberIds[i]).then((User) => {
-                    this.users.push(User);
+                    this.users.push(User.user);
                     if(i == memberIds.length -1){
                         resolve();
                     }

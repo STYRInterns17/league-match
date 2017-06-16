@@ -285,9 +285,15 @@ class App {
         router.post('/notification/league', (req, res) => {
             let leagueId = req.body.leagueId;
             let message = req.body.message;
-            let submitterId = req.body.sumbmitterId;
+            let submitterName = req.body.submitterName;
 
-            res.json(NotificationController.sendNotificationToLeague(message, leagueId, submitterId));
+            NotificationController.sendNotificationToLeague(message, leagueId, submitterName).then(value => {
+                res.json({message: value})
+            }).catch(reason => {
+                console.log('Broadcast failed because...');
+                console.log(reason);
+                res.json({message: reason});
+            })
         });
 
         //Get User Activity History

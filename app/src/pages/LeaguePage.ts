@@ -45,20 +45,55 @@ export class LeaguePage extends BasePage {
             createCell: () => {
                 let cell = new tabris.Composite();
 
-                new tabris.Button({
-                    top: 16, left: '10%', right: '10%', height: 80
+                new tabris.TextView({
+                    top: 16, left: '10%', right: '10%', height: 80, background: '#f75'
                 }).appendTo(cell);
                 return cell;
             },
             updateCell: (cell, index) => {
                 let title = this.leagues[index].pref.title;
                 cell.apply({
-                    Button: {text: title}
+                    TextView: {text: title}
                 });
             }
-        });
+        }).on('select', ({index}) =>{
+            //console.log('selected', index);
+            localStorage.setItem('currentLeagueId', this.userObj.leagues[index].toString());
+        window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title)}).appendTo(comp1);
 
-        comp1.append(collectionView);
+        //console.log(this.userObj.leagues[index]);
+
+
+
+        // new CollectionView({
+        //     left: 0, top: 0, right: 0, bottom: 0,
+        //     itemCount: people.length,
+        //     cellHeight: 256,
+        //     createCell: () => {
+        //         let cell = new Composite();
+        //         new ImageView({
+        //             top: 16, centerX: 0, width: 200, height: 200
+        //         }).appendTo(cell);
+        //         new TextView({
+        //             left: 30, top: 'prev() 16', right: 30,
+        //             alignment: 'center'
+        //         }).appendTo(cell);
+        //         return cell;
+        //     },
+        //     updateCell: (cell, index) => {
+        //         let person = people[index];
+        //         cell.apply({
+        //             ImageView: {image: person.image},
+        //             TextView: {text: person.firstName}
+        //         });
+        //     }
+        // }).on('select', ({index}) => console.log('selected', people[index].firstName))
+        //     .appendTo(ui.contentView);
+
+
+
+
+        //comp1.append(collectionView);
         new customButton({centerY: 0, centerX: 0}, '➕ Create a League').on('tap', () => {
             this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
         }).appendTo(comp2);
