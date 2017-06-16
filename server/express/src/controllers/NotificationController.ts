@@ -3,6 +3,7 @@ import {Notification} from "../../../../common/Notification"
 import {NotificationList} from "../../../../common/NotificationList";
 import {ApprovalType} from "../../../../common/ApprovalType";
 import {ApprovalData} from "../../../../common/ApprovalData";
+import {LeagueController} from "./LeagueController";
 /**
  * Created by STYR-Curt on 6/6/2017.
  */
@@ -18,12 +19,28 @@ export class NotificationController {
         DBManager.appendItemToTable(this.TABLE, notificationList);
     }
     //Send Notification to a League
-    public static sendNotificationToLeague(message: string, leagueId: number, submitterName: string): boolean {
+    public static sendNotificationToLeague(message: string, leagueId: number, submitterName: string): Promise<string> {
         //Get all users in a league
         //Send the same notification to all those users
         //DBManager write to notification table
 
-        return true;
+        return new Promise((resolve, reject) => {
+
+            if(message === '') {
+                reject('Broadcast is was empty');
+            } else if(message.length > 40) {
+                reject('Broadcast too long');
+            }
+
+
+            LeagueController.get(leagueId).then(league => {
+                let players = league.playerIds;
+                for(let i = 0; i < players.length; i++) {
+                    NotificationController.sendNotificationToUser(message, players[i], submitterName, league.pref.title, ApprovalType.Message, new ApprovalData(leagueId));
+                }
+                resolve('Broadcast Sent');
+            })
+        })
     }
 
     //Send Notification to a User

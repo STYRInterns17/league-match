@@ -45,16 +45,20 @@ export class NotificationPage extends BasePage {
             left: 0, right: 0, top: 0, bottom: 0
         }).appendTo(notificationContainer);
 
-        for(let i = 0; i < this.notifications.length; i++) {
+        for (let i = 0; i < this.notifications.length; i++) {
 
-            this.notificationButtons.push(new NotificationComposite({left: 0, right: 0, height: 80, top:'prev() 2'}).on('panHorizontal', event => {
+            this.notificationButtons.push(new NotificationComposite({
+                left: 0,
+                right: 0,
+                height: 80,
+                top: 'prev() 2'
+            }).on('panHorizontal', event => {
                 this.handlePan(event);
             }).appendTo(this.notificationView).update(this.notifications[i]));
 
 
-
             // Set button listeners for notification
-            switch(this.notificationButtons[i].type) {
+            switch (this.notificationButtons[i].type) {
 
                 case ApprovalType.InviteApproval:
 
@@ -119,7 +123,7 @@ export class NotificationPage extends BasePage {
         // Otherwise, detect a dismiss only if flinged in the same direction.
         let dismiss = beyondCenter ? sameDirection || !fling : sameDirection && fling;
         if (dismiss) {
-            switch(event.target.type) {
+            switch (event.target.type) {
                 case ApprovalType.InviteApproval:
                     // Approval notifications can not be dismissed by swipe
                     this.animateCancel(event);
@@ -150,13 +154,14 @@ export class NotificationPage extends BasePage {
             duration: 200,
             easing: 'ease-out'
         }).then(() => {
-                this.dismiss(target.index);
-                target.dispose();
+            // TODO Message not always beind dismissed
+            this.dismiss(target.index);
+            target.dispose();
         });
 
     }
 
-    public dismiss(index:number): void {
+    public dismiss(index: number): void {
         // Dispose of this element
         // Notify server that it has been disposed of
         ServiceLayer.httpPostAsync('/notification/user/dismiss', {
@@ -167,14 +172,14 @@ export class NotificationPage extends BasePage {
         });
 
         // Shift all the indexes when removing from d1
-        for(let i = index; i < this.notificationButtons.length; i++) {
+        for (let i = index; i < this.notificationButtons.length; i++) {
             this.notificationButtons[i].db_id--;
         }
     }
 
     private joinLeague(leagueId: number) {
 
-        let joinLeagueRequest = {leagueId: leagueId,userId: localStorage.getItem('userId')};
+        let joinLeagueRequest = {leagueId: leagueId, userId: localStorage.getItem('userId')};
 
         ServiceLayer.httpPostAsync('/league/addUser', joinLeagueRequest, (response => {
             window.plugins.toast.showShortCenter('Joined new league!');
