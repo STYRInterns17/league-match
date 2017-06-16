@@ -14,10 +14,14 @@ export class LoginPage extends BasePage {
     private userEmail;
     private userPassword;
 
-    constructor() { super(); this.createComponents(); }
+    constructor() {
+        super();
+        this.createComponents();
+    }
 
     public createComponents(): void {
 
+        this.page.title = 'Welcome to League Match';
         this.page.background = '#37474f';
 
         new tabris.TextView({
@@ -55,12 +59,15 @@ export class LoginPage extends BasePage {
             };
 
             ServiceLayer.httpPostAsync('/user/validate', userValidation, (response) => {
+                console.log(response.success);
                 if (response.success) {
                     localStorage.setItem('userId', response.user.id);
                     window.plugins.toast.showShortCenter('Success!');
                     new HomePage().page.appendTo(this.page.parent());
                     this.page.dispose();
-                } else { window.plugins.toast.showShortCenter('Login Invalid'); }
+                } else {
+                    window.plugins.toast.showShortCenter('Login Invalid');
+                }
             });
 
         }).appendTo(this.page);
@@ -81,7 +88,8 @@ export class LoginPage extends BasePage {
 
             let usernameSignUp = new tabris.TextInput({
                 layoutData: {left: 25, right: 25, top: '30%', height: 50},
-                message: 'Email'
+                message: 'Email',
+                keyboard: 'email'
             }).appendTo(signUpPage);
 
             let usernamePasswordSignUp = new tabris.TextInput({
@@ -97,7 +105,9 @@ export class LoginPage extends BasePage {
 
                 let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-                if (!regex.test(usernameSignUp.text)) { window.plugins.toast.showShortCenter('Please enter a valid email'); }
+                if (!regex.test(usernameSignUp.text)) {
+                    window.plugins.toast.showShortCenter('Please enter a valid email');
+                }
                 else {
                     if ((usernamePasswordSignUp.text.length > 6)) {
 
@@ -107,9 +117,17 @@ export class LoginPage extends BasePage {
                         };
 
                         ServiceLayer.httpPostAsync('/user', userPref, (response: Response) => {
+                            if (response.success) {
+                                window.plugins.toast.showShortCenter('Account created successfully, please log in');
+                                signUpPage.dispose();
+                            }
+                            else {
+                                window.plugins.toast.showShortCenter('Please enter a new email');
+                            }
                         });
-                        signUpPage.dispose();
-                    } else { window.plugins.toast.showShortCenter('Your password must have more than 6 characters'); }
+                    } else {
+                        window.plugins.toast.showShortCenter('Your password must have more than 6 characters');
+                    }
                 }
             }).appendTo(signUpPage)
         }).appendTo(this.page);

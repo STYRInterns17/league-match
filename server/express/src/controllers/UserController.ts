@@ -11,20 +11,28 @@ export class UserController {
     private static TABLE = 'Users';
 
     //Create a new user
-    public static create(pref: UserPreferences, email: string): boolean {
-        //DBManager add user to db
-        DBManager.appendItemToTable(this.TABLE, new User(pref, email)).then(user => {
-            // Create a notification list for the new user
-            NotificationController.create();
-            // Add User email to map
-            MapManager.createItem('emails', user.email, user.id);
-            // Add User name to map
-            MapManager.createItem('names', user.name, user.id);
-            //Return success y/n
-            return true;
-        }).catch(reason => {
-            return false;
-        });
+    public static create(pref: UserPreferences, email: string): Promise<UserPreferences> {
+
+        return new Promise((resolve, reject) => {
+            MapManager.doesItemExist('emails', email).then(doesExist => {
+                if (doesExist) {
+                    reject(email + ' is already in use');
+                } else {
+                     //DBManager add user to db
+                     DBManager.appendItemToTable(this.TABLE, new User(pref, email)).then(user => {
+                     // Create a notification list for the new user
+                     NotificationController.create();
+                     // Add User email to map
+                     MapManager.createItem('emails', user.email, user.id);
+                     // Add User name to map
+                     MapManager.createItem('names', user.name, user.id);
+                     //Return success y/n
+                     resolve(user);
+                     }).catch(reason => { reject(reason);});
+                }
+            }).catch(reason => {reject(reason);});
+
+        })
     }
 
     //Get user by Id
@@ -97,7 +105,6 @@ export class UserController {
                             }
                         })
                     })
-
                 }
             });
         })
@@ -114,17 +121,9 @@ export class UserController {
                         this.get(id.id).then(user => {
                             if (password === user.pref.password) {
                                 resolve(user);
-                            } else {
-                                reject();
-                            }
-                        })
-                    }).catch(reason => {
-                        reject();
-                    });
-                }
-                else{
-                    reject();
-                }
+                            } else { reject(); }})
+                    }).catch(reason => { reject(); });
+                } else{ reject(); }
             })
         })
 }

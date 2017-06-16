@@ -13,14 +13,17 @@ import {UserPreferences} from "../../../common/UserPreferences";
  * Created by STYRLabs2 on 6/7/2017.
  */
 
-export class ProfilePage extends BasePage{
+export class ProfilePage extends BasePage {
 
     public userId: number;
     public user: User;
 
-    constructor(){ super(); this.createProfilePage(); }
+    constructor() {
+        super();
+        this.createProfilePage();
+    }
 
-    private createProfilePage(){
+    private createProfilePage() {
 
         let profilePic = new tabris.Composite({
             layoutData: {left: 0, right: 0, bottom: '60%', top: 0},
@@ -78,7 +81,7 @@ export class ProfilePage extends BasePage{
                     userPref: new UserPreferences(this.user.pref.password, bio.text, 0, firstName.text)
                 };
 
-                ServiceLayer.httpPostAsync('/user/pref',userSettings, (response) => {
+                ServiceLayer.httpPostAsync('/user/pref', userSettings, (response) => {
                     this.user.name = firstName.text;
                     this.user.pref.name = firstName.text;
                     this.user.pref.bio = bio.text;
@@ -88,6 +91,7 @@ export class ProfilePage extends BasePage{
                 })
             });
             changeSettings.appendTo(this.page);
-        }); return this.page;
+        });
+        return this.page;
     }
 }

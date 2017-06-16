@@ -91,7 +91,7 @@ export class MapManager {
     public static removeItem(map: string, itemName): Promise<any> {
         return new Promise((resolve, reject) => {
             this.fs.unlink(this.PATH + map + '/' + itemName + '.json', (err) => {
-                if(err) {
+                if (err) {
                     reject(err);
                 } else {
                     resolve();

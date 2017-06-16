@@ -73,9 +73,8 @@ class App {
         router.post('/user', (req, res) => {
             let userPref: UserPreferences = req.body.userPref;
             let userEmail: string = req.body.userEmail;
-            UserController.create(userPref, userEmail);
-            res.json({
-                success: true
+            UserController.create(userPref, userEmail).then(value => { res.json({ success: true });
+            }).catch(reason => { res.json({ success: false });
             });
         });
 
