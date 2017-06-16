@@ -63,7 +63,7 @@ export class LoginPage extends BasePage {
                 if (response.success) {
                     localStorage.setItem('userId', response.user.id);
                     window.plugins.toast.showShortCenter('Success!');
-                    new HomePage().page.appendTo(this.page.parent());
+                    new HomePage(this.page.parent()).page.appendTo(this.page.parent());
                     this.page.dispose();
                 } else {
                     window.plugins.toast.showShortCenter('Login Invalid');

@@ -14,6 +14,7 @@ import {NotificationPage} from "./NotificationPage";
 import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
 import {LogMatchPage} from "./LogMatchPage";
+import {NavigationView} from "tabris";
 
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
@@ -21,13 +22,15 @@ export class HomePage extends BasePage {
     public user: User;
     public userLeagueIds: Array = [];
 
-    constructor() {
+    constructor(navView: NavigationView) {
         super();
         this.createComponents();
         console.log('Page' + this.page);
         console.log('Page parent' + this.page.parent());
-
+            this.navigationView = navView
     }
+
+
 
     public createComponents(): void {
 
@@ -47,15 +50,14 @@ export class HomePage extends BasePage {
         //Add admin verification method here:
         let adminButton = new customButton({top: 'prev() 30', centerX: 0}, 'Administrator').on('tap', () => {
             // The '+' signifies that the string is actually a number
-            this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
+            this.navigationView.append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
         });
         adminButton.appendTo(drawer);
 
         let profileButton = new customButton({top: 'prev() 30', centerX: 0}, 'Profile').on('tap', () => {
             // TODO What is the profile page?
             //this.page.parent().append(new profile('test', 'test').createAdminPage());
-            this.page.parent().append(new ProfilePage().page);
-
+                this.page.parent().append(new ProfilePage().page);
         });
         profileButton.appendTo(drawer);
 
@@ -68,6 +70,8 @@ export class HomePage extends BasePage {
             let leaguePage = new LeaguePage().page.on('disappear', () => {
                 leaguePage.dispose();
             });
+            if(this.page.parent() == null){
+            }
             this.page.parent().append(leaguePage);
         });
         leagueButton.appendTo(drawer);
