@@ -71,7 +71,6 @@ export class Leaderboard{
             } while (swapped);
         }
         bubbleSortByMMR(this.users, +localStorage.getItem('currentLeagueId'));
-        
 
         //The user is in at least one league
         if(this.userObj.leagues.length>0){
@@ -115,7 +114,6 @@ export class Leaderboard{
         });
         return p;
     }
-
 
     private getUsers(i): Promise<User> {
         let p = new Promise((resolve, reject) => {
