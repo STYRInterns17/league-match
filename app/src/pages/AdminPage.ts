@@ -22,7 +22,7 @@ export class AdminPage extends BasePage {
     }
 
     private createAdminPage() {
-        this.page.title = 'Administration Panel';
+        this.page.title = 'Broadcast Panel';
         new tabris.TextInput({
             top: 20, left: '10%', right: '10%',
             message: 'Send a league broadcast',
