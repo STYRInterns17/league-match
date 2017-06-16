@@ -44,9 +44,7 @@ export class Leaderboard{
                         console.log('2 creating leaderboard with only admin');
                         this.createLeaderBoard().appendTo(this.page);
                     });
-
                 }
-
             });
         }else{
             this.page.title = 'Use the side bar to join a league!';
@@ -78,9 +76,9 @@ export class Leaderboard{
             //let memberIds: Array<number> = league.adminIds.concat(league.playerIds);
             this.page.title = this.league.pref.title;
             let collectionView = new CollectionView({
-                left: 40, top: 40, right: 40, bottom: 40,
+                left: 0, top: 0, right: 0, bottom: 0,
                 itemCount: this.users.length,
-                background: '#f78',
+                background: '#37474F',
                 cellHeight: 135,
                 createCell: () => {
                     let cell = new Composite();

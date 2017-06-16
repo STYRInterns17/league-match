@@ -38,7 +38,7 @@ export class ProfilePage extends BasePage {
 
         let profileAttributeSection = new tabris.Composite({
             layoutData: {left: 0, right: 0, bottom: 0, top: '40%'},
-            background: '#5fffba'
+            background: '#37474f'
         }).appendTo(this.page);
 
         let firstName = new tabris.TextInput({

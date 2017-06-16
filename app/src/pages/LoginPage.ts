@@ -22,13 +22,13 @@ export class LoginPage extends BasePage {
     public createComponents(): void {
 
         this.page.title = 'Welcome to League Match';
-        this.page.background = '#37474f';
+        this.page.background = '#B4E0E1';
 
         new tabris.TextView({
             layoutData: {left: 25, top: "20%", right: 25},
             alignment: "center",
             font: "bold 48px",
-            textColor: 'yellow',
+            textColor: '#224687',
             text: "League Match"
         }).appendTo(this.page);
 
@@ -62,7 +62,7 @@ export class LoginPage extends BasePage {
                 console.log(response.success);
                 if (response.success) {
                     localStorage.setItem('userId', response.user.id);
-                    window.plugins.toast.showShortCenter('Success!');
+                    window.plugins.toast.showShortCenter('Welcome');
                     new HomePage(this.page.parent()).page.appendTo(this.page.parent());
                     this.page.dispose();
                 } else {

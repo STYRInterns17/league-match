@@ -31,7 +31,6 @@ export class HomePage extends BasePage {
     }
 
 
-
     public createComponents(): void {
 
         this.page.background = '#37474f';
@@ -50,14 +49,13 @@ export class HomePage extends BasePage {
         //Add admin verification method here:
         let adminButton = new customButton({top: 'prev() 30', centerX: 0}, 'Broadcast').on('tap', () => {
             // The '+' signifies that the string is actually a number
-            this.navigationView.append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
+            this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
         });
         adminButton.appendTo(drawer);
 
         let profileButton = new customButton({top: 'prev() 30', centerX: 0}, 'Profile').on('tap', () => {
-            // TODO What is the profile page?
-            //this.page.parent().append(new profile('test', 'test').createAdminPage());
-                this.page.parent().append(new ProfilePage().page);
+            this.page.parent().append(new ProfilePage().page);
+
         });
         profileButton.appendTo(drawer);
 
