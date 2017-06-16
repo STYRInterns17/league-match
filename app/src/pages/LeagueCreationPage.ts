@@ -109,10 +109,13 @@ export class LeagueCreationPage extends BasePage{
         });
 
         let userObj: User = JSON.parse(localStorage.getItem('userObj'));
+        let arrayId = [];
+        arrayId.push(userObj.id);
         let LeagueInfo = {
             //place userId of current logged in user here
             ownerId: userObj.id,
-            leaguePref: new LeaguePreferences(true, 'My League', 'Arizona', 0 , 0)
+            leaguePref: new LeaguePreferences(true, 'My League', 'Arizona', 0 , 0),
+            playerIds: arrayId
         };
 
         let inviteButton = new customButton({

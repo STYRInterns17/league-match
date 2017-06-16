@@ -174,7 +174,7 @@ export class NotificationPage extends BasePage {
 
     private joinLeague(leagueId: number) {
 
-        let joinLeagueRequest = {leagueId: leagueId,userId: localStorage.getItem('userId')};
+        let joinLeagueRequest = {leagueId: leagueId,userId: parseInt(localStorage.getItem('userId'))};
 
         ServiceLayer.httpPostAsync('/league/addUser', joinLeagueRequest, (response => {
             window.plugins.toast.showShortCenter('Joined new league!');

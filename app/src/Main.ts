@@ -14,7 +14,7 @@ class Main {
         this.navigationView = new tabris.NavigationView({
             left: 0, top: 0, right: 0, bottom: 0
         }).appendTo(tabris.ui.contentView);
-
+        //localStorage.clear();
         if (localStorage.getItem('userId') === null) {
             new LoginPage().page.appendTo(this.navigationView);
         } else {
