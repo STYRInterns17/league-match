@@ -154,8 +154,7 @@ export class NotificationPage extends BasePage {
             duration: 200,
             easing: 'ease-out'
         }).then(() => {
-            // TODO Message not always beind dismissed
-            this.dismiss(target.index);
+            this.dismiss(target.db_id);
             target.dispose();
         });
 
