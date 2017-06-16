@@ -283,8 +283,10 @@ export class LogMatchPage extends BasePage {
         let rightTeam = [];
 
         for(let i = 0; i < this.playerCounter / 2; i++) {
-            leftTeam.push(leftPlayers[i].text);
-            rightTeam.push(rightPlayers[i].text);
+            if(leftPlayers[i].text !== '') {
+                leftTeam.push(leftPlayers[i].text);
+                rightTeam.push(rightPlayers[i].text);
+            }
         }
 
         let match = new Match(leftTeam, rightTeam, this.leftScoreInput.text, this.rightScoreInput.text);
