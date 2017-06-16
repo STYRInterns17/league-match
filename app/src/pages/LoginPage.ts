@@ -120,8 +120,8 @@ export class LoginPage extends BasePage {
                 text: 'Sign in'
             }).on('select', () => {
 
-                if (usernameSignUp.text == "" || usernamePasswordSignUp.text == "" || usernameSignUp.text == null || usernamePasswordSignUp.text == null || usernameSignUp.text.indexOf(' ') >=0 || usernamePasswordSignUp.text.indexOf(' ') >=0) {
-                    window.plugins.toast.showShortCenter('Please fill all fields to continue...');
+                if (usernameSignUp.text == "" || usernamePasswordSignUp.text == "" || usernameSignUp.text == null || usernamePasswordSignUp.text == null || usernameSignUp.text.indexOf(' ') >=0 || usernamePasswordSignUp.text.indexOf(' ') >=0 || (!usernameSignUp.text.includes("@") && !usernameSignUp.text.includes(".") && ! /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(usernameSignUp.text))) {
+                    window.plugins.toast.showShortCenter('Information entered is invalid');
                 }
                 else {
                     let userPref = {
