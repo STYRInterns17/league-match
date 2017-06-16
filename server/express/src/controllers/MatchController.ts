@@ -20,6 +20,7 @@ export class MatchController {
     // TODO What if duplicate users?
 
     public static logMatch(leaugeId: number, match: Match): Promise<string> {
+
         return new Promise((resolve, reject) => {
 
             //DBManager get league by Id
@@ -28,7 +29,6 @@ export class MatchController {
                 let getUserPromises: Promise<{user: User, team: number}>[] = [];
                 // Push users in match to respective arrays
                 for (let i = 0; i < match.team1Names.length; i++) {
-
                     // Team 1
                     getUserPromises.push(UserController.getUserByName(match.team1Names[i]).then(userId => {
                         return UserController.get(userId);
@@ -46,9 +46,11 @@ export class MatchController {
 
                 }
 
-
                 // Once all Users have been retrieved from database
                 Promise.all(getUserPromises).then(value => {
+
+
+
                     let team1: User[] = [];
                     let team2: User[] = [];
 
@@ -115,9 +117,14 @@ export class MatchController {
                         // Write User back to server
                         UserController.updateUser(team1[i]);
                         UserController.updateUser(team2[i]);
+
+
                     }
 
                     resolve('Match logged successfully');
+                }).catch(reason => {
+                    console.log(reason);
+                    reject(reason);
                 });
             }).catch(reason => {
                 reject(reason);
