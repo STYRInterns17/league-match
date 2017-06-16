@@ -53,6 +53,15 @@ export class LeagueController {
         return true;
     }
 
+    public static addLeaguePlayers(leagueId: number, userId: number): boolean {
+        //DBManager get league, update league preferences
+        this.get(leagueId).then((league: League) => {
+            league.playerIds.push(userId);
+            DBManager.updateItem(this.TABLE, league);
+        });
+        return true;
+    }
+
     public static getUsers(id: number): number[] {
         //DBManager get league
 

@@ -184,6 +184,7 @@ class App {
             res.json(LeagueController.getUsers(leagueId));
         });
 
+
         //GetLeagueMatchHistory
         router.get('/league/match/history', (req, res) => {
             let leagueId: number = req.query.leagueId;
@@ -201,6 +202,14 @@ class App {
                 res.json({id: value});
             });
 
+        });
+
+        //add user to League
+        router.post('/league/addUser', (req, res) => {
+            let leagueId = req.body.leagueId;
+            let userId = req.body.userId;
+            LeagueController.addLeaguePlayers(leagueId, userId);
+                res.json({success: true});
         });
 
         //Delete League
