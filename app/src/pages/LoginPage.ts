@@ -5,26 +5,16 @@
 import * as tabris from "tabris";
 import {BasePage} from './BasePage';
 import construct = Reflect.construct;
-//import {Page} from "tabris";
 import {ServiceLayer} from "../ServiceLayer";
 import {UserPreferences} from "../../../common/UserPreferences";
-import {UserController} from "../../../server/express/src/controllers/UserController";
-import {User} from "../../../common/User";
 import {HomePage} from "./HomePage";
-import {DBManager} from "../../../server/express/src/db/DBManager";
 
-// TODO Store UserId in cashe on sign in
-//localStorage.setItem('userId', id);
 export class LoginPage extends BasePage {
 
     private userEmail;
     private userPassword;
 
-    constructor() {
-        super();
-
-        this.createComponents();
-    }
+    constructor() { super(); this.createComponents(); }
 
     public createComponents(): void {
 
@@ -69,12 +59,8 @@ export class LoginPage extends BasePage {
                     localStorage.setItem('userId', response.user.id);
                     window.plugins.toast.showShortCenter('Success!');
                     new HomePage().page.appendTo(this.page.parent());
-                    //this.page.parent().append(new HomePage().page);
-                    //this.page.parent().append(new HomePage().page);
                     this.page.dispose();
-                } else {
-                    window.plugins.toast.showShortCenter('Login Invalid');
-                }
+                } else { window.plugins.toast.showShortCenter('Login Invalid'); }
             });
 
         }).appendTo(this.page);
@@ -96,42 +82,34 @@ export class LoginPage extends BasePage {
             let usernameSignUp = new tabris.TextInput({
                 layoutData: {left: 25, right: 25, top: '30%', height: 50},
                 message: 'Email'
-            }).on('accept', ({text}) => {
-                new tabris.TextView({
-                    layoutData: {top: '70%', right: 0, left: 0},
-                    text: text,
-                    font: 'bold 12px',
-                }).appendTo(signUpPage);
             }).appendTo(signUpPage);
 
             let usernamePasswordSignUp = new tabris.TextInput({
                 layoutData: {left: 25, right: 25, top: 'prev() 20', height: 50},
-                message: 'Password'
-            }).on('accept', ({text}) => {
-                new tabris.TextView({
-                    layoutData: {top: '70%', right: 0, left: 0},
-                    text: text,
-                    font: 'bold 12px'
-                }).appendTo(signUpPage);
+                message: 'Password',
+                type: 'password'
             }).appendTo(signUpPage);
 
             new tabris.Button({
                 layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
-                text: 'Sign in'
+                text: 'Finish'
             }).on('select', () => {
 
-                if (usernameSignUp.text == "" || usernamePasswordSignUp.text == "" || usernameSignUp.text == null || usernamePasswordSignUp.text == null || usernameSignUp.text.indexOf(' ') >=0 || usernamePasswordSignUp.text.indexOf(' ') >=0) {
-                    window.plugins.toast.showShortCenter('Please fill all fields to continue...');
-                }
-                else {
-                    let userPref = {
-                        userEmail: usernameSignUp.text,
-                        userPref: new UserPreferences(usernamePasswordSignUp.text, "Tell us about yourself!", 0, usernameSignUp.text)
-                    };
+                let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-                    ServiceLayer.httpPostAsync('/user', userPref, (response: Response) => {
-                    });
-                    signUpPage.dispose();
+                if (!regex.test(usernameSignUp.text)) { window.plugins.toast.showShortCenter('Please enter a valid email'); }
+                else {
+                    if ((usernamePasswordSignUp.text.length > 6)) {
+
+                        let userPref = {
+                            userEmail: usernameSignUp.text,
+                            userPref: new UserPreferences(usernamePasswordSignUp.text, "Tell us about yourself!", 0, usernameSignUp.text)
+                        };
+
+                        ServiceLayer.httpPostAsync('/user', userPref, (response: Response) => {
+                        });
+                        signUpPage.dispose();
+                    } else { window.plugins.toast.showShortCenter('Your password must have more than 6 characters'); }
                 }
             }).appendTo(signUpPage)
         }).appendTo(this.page);

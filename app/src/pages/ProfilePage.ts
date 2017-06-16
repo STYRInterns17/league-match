@@ -8,9 +8,6 @@ import {ServiceLayer} from "../ServiceLayer";
 import {User} from "../../../common/User";
 import {customButton} from '../customButton';
 import {UserPreferences} from "../../../common/UserPreferences";
-import {LoginPage} from "./LoginPage";
-
-
 
 /**
  * Created by STYRLabs2 on 6/7/2017.
@@ -44,23 +41,11 @@ export class ProfilePage extends BasePage{
         let firstName = new tabris.TextInput({
             layoutData: {top: '45%', centerX: 0},
             message: 'Username                    '
-        }).on('accept', ({text}) => {
-            let firstNameView = new tabris.TextView({
-                layoutData: {top: '40%', left: '20%', right: 0},
-                text: text,
-                font: 'bold 24px'
-            }).appendTo(this.page);
         }).appendTo(this.page);
 
         let bio = new tabris.TextInput({
             layoutData: {top: '55%', centerX: 0},
-            message: 'Bio'
-        }).on('accept', ({text}) => {
-            new tabris.TextView({
-                layoutData: {top: '70%', right: 0, left: 0},
-                text: text,
-                font: 'bold 12px'
-            }).appendTo(this.page);
+            message: 'Tell us about yourself!'
         }).appendTo(this.page);
 
         this.userId = parseInt(localStorage.getItem('userId'));
@@ -81,15 +66,18 @@ export class ProfilePage extends BasePage{
 
             new tabris.TextView(({
                 layoutData: {top: '90%', left: '59%'},
-                text: "Date Joined: " + profileDate.getMonth() + " " + profileDate.getDate() + ", " + profileDate.getFullYear()
+                text: "Date Joined: " + (profileDate.getMonth() + 1) + " " + profileDate.getDate() + ", " + profileDate.getFullYear()
             })).appendTo(profilePic);
 
             let changeSettings = new customButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
+
+                window.plugins.toast.showShortBottom('Your profile has been updated!');
 
                 let userSettings = {
                     userId: this.user.id,
                     userPref: new UserPreferences(this.user.pref.password, bio.text, 0, firstName.text)
                 };
+
                 ServiceLayer.httpPostAsync('/user/pref',userSettings, (response) => {
                     this.user.name = firstName.text;
                     this.user.pref.name = firstName.text;
@@ -100,8 +88,6 @@ export class ProfilePage extends BasePage{
                 })
             });
             changeSettings.appendTo(this.page);
-        });
-
-        return this.page;
+        }); return this.page;
     }
 }
