@@ -60,8 +60,8 @@ export class Leaderboard{
             let swapped;
             do {
                 swapped = false;
-                for (let i = 0; i < a.length - 1; i++) {
-                    if (a[i].mmr[leagueId] < a[i + 1].mmr[leagueId]) {
+                for (let i = 0; i < a.length -1; i++) {
+                    if (a[i].mmr[a[i].leagues.indexOf(leagueId)] < a[i+1].mmr[a[i+1].leagues.indexOf(leagueId)]) {
                         let temp = a[i];
                         a[i] = a[i + 1];
                         a[i + 1] = temp;
