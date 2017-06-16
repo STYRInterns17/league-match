@@ -20,6 +20,14 @@ export class Leaderboard{
         this.userObj = JSON.parse(localStorage.getItem('userObj'));
         this.users.push(this.userObj);
         this.page = page;
+        this.reloadLeaderBoard();
+
+    }
+
+    public reloadLeaderBoard(): void {
+        console.log('ReloadingLeaderBoard');
+        console.log('Current league Id =', localStorage.getItem('currentLeagueId'));
+        this.page.children().dispose();
         if(localStorage.getItem('currentLeagueId') != null) {
             this.getLeague().then(value => {
                 this.league = value;
@@ -41,6 +49,7 @@ export class Leaderboard{
             this.page.title = 'Use the side bar to join a league!';
         }
     }
+
 
     private createLeaderBoard(): tabris.CollectionView{
         function bubbleSortByMMR(a: Array)

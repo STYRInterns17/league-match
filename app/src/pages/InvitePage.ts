@@ -88,6 +88,7 @@ export class InvitePage extends BasePage{
             ServiceLayer.httpPostAsync('/league', leagueInfo, (response) => {
                 this.userObj.leagues.push(response.id);
                 let leagueId: number = response.id;
+                localStorage.setItem('currentLeagueId', response.id);
                 //store new userObj
                 localStorage.removeItem('userObj');
                 localStorage.setItem('userObj', JSON.stringify(this.userObj));

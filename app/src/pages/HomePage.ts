@@ -31,6 +31,10 @@ export class HomePage extends BasePage {
 
         this.page.background = '#37474f';
 
+        this.page.on('appear', () => {
+            this.reloadLeaderBoard(this.page);
+        })
+
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
         drawer.enabled = true;
@@ -101,10 +105,14 @@ export class HomePage extends BasePage {
                     localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
                 }
 
-                let collectionViewLeader = new Leaderboard(this.page);
+                this.reloadLeaderBoard(this.page);
             }
         });
 
+    }
+
+    private reloadLeaderBoard(page: tabris.Page) {
+        new Leaderboard(this.page);
     }
 
 }
