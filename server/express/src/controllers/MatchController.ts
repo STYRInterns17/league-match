@@ -128,6 +128,7 @@ export class MatchController {
                             UserController.updateUser(team2[i]);
                         }, 20);
 
+                        resolve('Match logged successfully');
                     }
 
                 }).catch(reason => {
