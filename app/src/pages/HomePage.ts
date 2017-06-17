@@ -15,6 +15,7 @@ import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
 import {LogMatchPage} from "./LogMatchPage";
 import {NavigationView} from "tabris";
+import {ColorScheme} from "../ColorScheme";
 
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
@@ -28,21 +29,21 @@ export class HomePage extends BasePage {
         console.log('Page' + this.page);
         console.log('Page parent' + this.page.parent());
             this.navigationView = navView
-    }
 
+    }
 
     public createComponents(): void {
 
-        this.page.background = '#37474f';
+        this.page.background = '#B4E0E1';
 
         this.page.on('appear', () => {
             this.reloadLeaderBoard(this.page);
-        })
+        });
 
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
         drawer.enabled = true;
-        drawer.background = '#37474f';
+        drawer.background = ColorScheme.Accent;
         this.page.on('disappear', () => drawer.enabled = false).on('appear', () => drawer.enabled = true);
         //CREATE BUTTONS
 
@@ -59,7 +60,7 @@ export class HomePage extends BasePage {
         });
         profileButton.appendTo(drawer);
 
-        let notificationButton = new customButton({top: 'prev() 30', centerX: 0}, 'Notifications').on('tap', () => {
+        let notificationButton = new customButton({top: 'prev() 30', centerX: 0}, 'Notification').on('tap', () => {
             this.page.parent().append(new NotificationPage().page);
         });
         notificationButton.appendTo(drawer);
@@ -85,7 +86,7 @@ export class HomePage extends BasePage {
         let signOutButton = new customButton({
             bottom: 30,
             centerX: 0,
-            background: '#cb2431'
+            background: ColorScheme.Secondary
         }, 'Sign Out').on('tap', () => {
             localStorage.clear();
             tabris.app.reload();

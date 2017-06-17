@@ -61,7 +61,6 @@ export class NotificationPage extends BasePage {
 
                 case ApprovalType.InviteApproval:
 
-
                     this.notificationButtons[i].yesApprove.on('tap', (event) => {
                         // Add this User to league that the invite was sent from
                         let notificationComposite = event.target.parent().parent().parent();

@@ -8,6 +8,7 @@ import {ServiceLayer} from "../ServiceLayer";
 import {User} from "../../../common/User";
 import {customButton} from '../customButton';
 import {UserPreferences} from "../../../common/UserPreferences";
+import {ColorScheme} from "../ColorScheme";
 
 /**
  * Created by STYRLabs2 on 6/7/2017.
@@ -38,7 +39,7 @@ export class ProfilePage extends BasePage {
 
         let profileAttributeSection = new tabris.Composite({
             layoutData: {left: 0, right: 0, bottom: 0, top: '40%'},
-            background: '#37474f'
+            background: ColorScheme.Primary
         }).appendTo(this.page);
 
         let firstName = new tabris.TextInput({
