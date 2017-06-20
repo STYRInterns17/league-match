@@ -39,8 +39,15 @@ export class DBManager {
     private static PATH: string = 'data/';
 
     private static TABLES: string[] = ['Users', 'Leagues', 'Activity', 'Notifications', 'MMRHistory'];
-
     private static fs = require('fs');
+
+
+    private static tableDataVolatile = []; // [Table[Page[IStorable]]]
+    private static tableMetaDataVolatile = []; // [TableMetaData]
+    private static isWritingToDisk = false;
+
+    private static pendingWrites = [];
+
 
     public static init(): void {
         // Validate that all tables that should exist do exist
@@ -54,9 +61,9 @@ export class DBManager {
             this.fs.mkdir(this.PATH);
             console.log(this.PATH + ' created');
         }
-        ;
 
-        for (var i: number = 0; i < this.TABLES.length; i++) {
+
+        for (let i: number = 0; i < this.TABLES.length; i++) {
 
             try {
                 this.fs.accessSync(this.PATH + this.TABLES[i] + '/');
@@ -69,8 +76,204 @@ export class DBManager {
             }
 
         }
-        console.log('DB Init complete');
 
+        // Set data write loop
+        setInterval(() => {
+            this.isWritingToDisk = true;
+            console.log('Writing to Disk');
+            this.writeTablesToDisk().then(value => {
+                console.log('Done writing to Disk');
+                this.isWritingToDisk = false;
+            })
+        }, 60000);
+
+        // Pull data from disk into memory
+        this.readTablesFromDisk().then(value => {
+            console.log('DB Init complete');
+        });
+
+
+    }
+
+    private static writeTablesToDisk(): Promise<{}> {
+        return new Promise((resolve, reject) => {
+            let dbWrites: Promise<{}>[] = [];
+            console.log(this.tableDataVolatile[this.TABLES.indexOf('Users')][0]);
+            for (let i = 0; i < this.TABLES.length; i++) {
+                let metaData = this.getVolatileTableMetaData(this.TABLES[i]);
+
+                dbWrites.push(this.writeTableMetaData(this.TABLES[i], metaData));
+                for (let pageNum = 0; pageNum <= metaData.pageCount; pageNum++) {
+                    let newPageData = this.getVolatilePage(this.TABLES[i], i);
+                    dbWrites.push(this.writeToPage(this.TABLES[i], i, newPageData));
+                }
+            }
+
+            Promise.all(dbWrites).then(value => {
+                for (let i = 0; i < this.pendingWrites.length; i++) {
+                    this.pendingWrites[i]();
+                }
+                // Remove all pending writes from the array
+                this.pendingWrites.splice(0, this.pendingWrites.length);
+                resolve();
+            }).catch(reason => {
+                reject(reason);
+            })
+        });
+    }
+
+    private static readTablesFromDisk(): Promise<{}> {
+        return new Promise((resolve, reject) => {
+            let dbReadMetaData: Promise<TableMetaData>[] = [];
+            for (let i = 0; i < this.TABLES.length; i++) {
+                dbReadMetaData.push(this.getTableMetaData(this.TABLES[i]));
+            }
+
+            Promise.all(dbReadMetaData).then(metaDatas => {
+                // For each table
+                for (let i = 0; i < metaDatas.length; i++) {
+                    this.overWriteVolatileMetaData(this.TABLES[i], metaDatas[i]);
+                    console.log(metaDatas[i].pageCount);
+                    // For each page in table //  <= because page numbers start at 0
+                    for (let pageNum = 0; pageNum <= metaDatas[i].pageCount; pageNum++) {
+                        this.getPage(this.TABLES[i], pageNum).then(page => {
+                            this.overWriteVolatilePage(this.TABLES[i], pageNum, page);
+                        });
+                    }
+                }
+                console.log(this.tableDataVolatile);
+                resolve();
+            }).catch(reason => {
+                reject(reason);
+            })
+        });
+    }
+
+    private static overWriteVolatilePage(table: string, pageNum: number, page: IStorable[]) {
+        // while there are less uninitlized tables than there should be
+        while (this.tableDataVolatile.length < this.TABLES.length) {
+            this.tableDataVolatile.push([]);
+        }
+
+        // while there are less uninitlized pages than there should be
+        while (this.tableDataVolatile[this.TABLES.indexOf(table)].length <= pageNum) {
+            this.tableDataVolatile[this.TABLES.indexOf(table)].push([]);
+        }
+
+        this.setVolatilePage(table, pageNum, page);
+    }
+
+    private static overWriteVolatileMetaData(table: string, metaData: TableMetaData) {
+        // while there are less uninitlized metadata than there should be
+        while (this.tableMetaDataVolatile.length < this.TABLES.length) {
+            this.tableMetaDataVolatile.push([]);
+        }
+
+        this.setVolatileTableMetaData(table, metaData);
+    }
+
+    private static getVolatileTable(table: string) {
+        return this.tableDataVolatile[this.TABLES.indexOf(table)];
+    }
+
+    private static getVolatilePage(table: string, pageNum: number): IStorable[] {
+        return this.getVolatileTable(table)[pageNum];
+    }
+
+    private static setVolatileTable(table: string, data: IStorable[]) {
+        this.tableDataVolatile[this.TABLES.indexOf(table)] = data;
+    }
+
+    private static setVolatilePage(table: string, pageNum: number, data: IStorable[]) {
+        let oldTable = this.getVolatileTable(table);
+        oldTable[pageNum] = data;
+        this.setVolatileTable(table, oldTable);
+    }
+
+    private static setVolatileItem(table: string, item: IStorable): IStorable {
+        let oldPage = this.getVolatilePage(table, this.getPageNumOfId(item.id));
+        oldPage[this.getItemIndexOfId(item.id)] = item;
+        this.setVolatilePage(table, this.getPageNumOfId(item.id), oldPage);
+        return item;
+    }
+
+    private static getVolatileItem(table: string, itemId: number): IStorable {
+        let page = this.getVolatilePage(table, this.getPageNumOfId(itemId));
+        return page[this.getItemIndexOfId(itemId)];
+    }
+
+    public static appendItemToTable(table: string, item: IStorable): Promise<IStorable> {
+        return new Promise((resolve, reject) => {
+            if (this.isWritingToDisk) {
+                this.pendingWrites.push(() => this.appendItemToTable(table, item))
+            } else {
+                let metaData = this.incrementTableItemsInLastPage(table);
+                let pageData = this.getVolatilePage(table, metaData.pageCount);
+                // - 1 is because if there is one item in the page we need index 0
+                item.id = metaData.pageCount * this.PAGESIZE + metaData.itemsInLastPage - 1;
+                pageData.push(item);
+                this.setVolatilePage(table, metaData.pageCount, pageData);
+            }
+            resolve(item);
+        })
+
+
+    }
+
+    //Get entire page,
+    //[User at id index] = User
+    //Write back page
+    public static updateItem(table: string, item: IStorable): IStorable {
+
+        if (this.isWritingToDisk) {
+            this.pendingWrites.push(() => this.updateItem(table, item))
+        } else {
+            return this.setVolatileItem(table, item);
+        }
+    }
+
+    public static updateItems(table: string, items: IStorable[]) {
+        if (this.isWritingToDisk) {
+            this.pendingWrites.push(() => this.updateItems(table, items))
+        } else {
+
+
+        }
+    }
+
+
+    private static getVolatileTableMetaData(table: string): TableMetaData {
+        return this.tableMetaDataVolatile[this.TABLES.indexOf(table)];
+    }
+
+    private static setVolatileTableMetaData(table: string, metaData: TableMetaData) {
+        this.tableMetaDataVolatile[this.TABLES.indexOf(table)] = metaData;
+    }
+
+    private static incrementTablePageCount(table: string): TableMetaData {
+        let metaData = this.getVolatileTableMetaData(table);
+        // Increment Page Count
+        metaData.pageCount++;
+        this.setVolatileTableMetaData(table, metaData);
+        return metaData;
+    }
+
+    private static incrementTableItemsInLastPage(table: string): TableMetaData {
+
+        let metaData: TableMetaData = this.getVolatileTableMetaData(table);
+        // Increment Page Count
+        if (metaData.itemsInLastPage + 1 > this.PAGESIZE) {
+            // If last page is full, increment total page counter and reset objects in last page counter
+            this.incrementTablePageCount(table);
+            metaData.itemsInLastPage = 1;
+        } else {
+            // If last page is not full, increment objects in last page counter
+            metaData.itemsInLastPage++;
+        }
+
+        this.setVolatileTableMetaData(table, metaData);
+
+        return metaData;
     }
 
 
@@ -92,131 +295,21 @@ export class DBManager {
 
     public static getItemFromTable(table: string, itemId: number): Promise<IStorable> {
         let p = new Promise((resolve, reject) => {
-            resolve(this.getItemFromPage(table, itemId));
+            resolve(this.getVolatileItem(table, itemId));
         });
 
         return p;
     }
 
-    public static emailHashMap(table: string, itemId: number): Promise<IStorable> {
-
-        let p = new Promise((resolve, reject) => {
-
-            class HashMap {
-                constructor() {
-                    //this.buckets = {};
-                }
-
-                buckets = {};
-
-                put(key, value) {
-                    const hashCode = key.hashCode();
-                    let bucket = this.buckets[hashCode];
-                    if (!bucket) {
-                        bucket = new Array();
-                        this.buckets[hashCode] = bucket;
-                    }
-                    for (let i = 0; i < bucket.length; ++i) {
-                        if (bucket[i].key.equals(key)) {
-                            bucket[i].value = value;
-                            return;
-                        }
-                    }
-                    bucket.push({ key, value });
-                }
-
-                get(key) {
-                    const hashCode = key.hashCode();
-                    const bucket = this.buckets[hashCode];
-                    if (!bucket) {
-                        return null;
-                    }
-                    for (let i = 0; i < bucket.length; ++i) {
-                        if (bucket[i].key.equals(key)) {
-                            return bucket[i].value;
-                        }
-                    }
-                }
-
-                keys() {
-                    const keys = new Array();
-                    for (const hashKey in this.buckets) {
-                        const bucket = this.buckets[hashKey];
-                        for (let i = 0; i < bucket.length; ++i) {
-                            keys.push(bucket[i].key);
-                        }
-                    }
-                    return keys;
-                }
-
-                values() {
-                    const values = new Array();
-                    for (const hashKey in this.buckets) {
-                        const bucket = this.buckets[hashKey];
-                        for (let i = 0; i < bucket.length; ++i) {
-                            values.push(bucket[i].value);
-                        }
-                    }
-                    return values;
-                }
-            }
-
-
-            resolve(this.emailHashMap(table, itemId));
-
-        });
-
-        return p;
-    }
-
-    private static getItemFromPage(table: string, itemId: number): Promise<IStorable[]> {
-        let p = new Promise((resolve, reject) => {
-            this.getPage(table, this.getPageNumOfId(itemId)).then((page) => {
-                resolve(page[this.getItemIndexOfId(itemId)]);
-            });
-        });
-
-        return p;
-
-    }
-
-    public static appendItemToTable(table: string, item: IStorable): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.incrementTableItemsInLastPage(table).then((metaData: TableMetaData) => {
-                this.getPage(table, metaData.pageCount).then((pageData: IStorable[]) => {
-                    // - 1 is because if there is one item in the page we need index 0
-                    item.id = metaData.pageCount * this.PAGESIZE + metaData.itemsInLastPage - 1;
-                    pageData.push(item);
-                    this.writeToPage(table, metaData.pageCount, pageData);
-                    resolve(item);
-                });
-            });
-        });
-
-
-    }
-
-    //Get entire page,
-
-    //[User at id index] = User
-    //Write back page
-    public static updateItem(table: string, item: IStorable): void {
-        this.getPage(table, this.getPageNumOfId(item.id)).then((pageData: IStorable[]) => {
-            pageData[this.getItemIndexOfId(item.id)] = item;
-            this.writeToPage(table, this.getPageNumOfId(item.id), pageData);
-        });
-
-    }
 
     //Will replace an item with an empty object just containing its orginal id
     //Once created the id can not be reused but the data can be cleaned up to quicken
     //File read and write times
-    
+
     public static voidItem(table: string, item: IStorable): void {
-        this.getPage(table, this.getPageNumOfId(item.id)).then((pageData: IStorable[]) => {
-            pageData[this.getItemIndexOfId(item.id)] = {id: item.id};
-            this.writeToPage(table, this.getPageNumOfId(item.id), pageData);
-        })
+        let pageData = this.getVolatilePage(table, this.getPageNumOfId(item.id));
+        pageData[this.getItemIndexOfId(item.id)] = {id: item.id};
+        this.setVolatilePage(table, this.getPageNumOfId(item.id), pageData);
     }
 
     private static getPage(table: string, pageNum: number): Promise<IStorable[]> {
@@ -238,13 +331,6 @@ export class DBManager {
         return this.TABLES[tableId];
     }
 
-    private static incrementTablePageCount(table: string) {
-        this.getTableMetaData(table).then((metaData: TableMetaData) => {
-            // Increment Page Count
-            metaData.pageCount++;
-            this.writeTableMetaData(table, metaData);
-        });
-    }
 
     private static getTableMetaData(table: string): Promise<TableMetaData> {
         let p = new Promise((resolve, reject) => {
@@ -267,46 +353,33 @@ export class DBManager {
         return p;
     }
 
-    private static writeTableMetaData(table: string, metaData: TableMetaData): void {
-        // Save updated meta data
-        this.fs.writeFile(this.PATH + table + '/' + 'meta.json', JSON.stringify(metaData), (err) => {
-            if (err) {
-                return console.log(err);
-            }
-        });
-
-    }
-
-    private static incrementTableItemsInLastPage(table: string): Promise<TableMetaData> {
-        let p = new Promise((resolve, reject) => {
-            this.getTableMetaData(table).then((metaData: TableMetaData) => {
-                // Increment Page Count
-                if (metaData.itemsInLastPage + 1 > this.PAGESIZE) {
-                    // If last page is full, increment total page counter and reset objects in last page counter
-                    this.incrementTablePageCount(table);
-                    metaData.itemsInLastPage = 1;
+    private static writeTableMetaData(table: string, metaData: TableMetaData): Promise<TableMetaData> {
+        return new Promise((resolve, reject) => {
+            // Save updated meta data
+            this.fs.writeFile(this.PATH + table + '/' + 'meta.json', JSON.stringify(metaData), (err) => {
+                if (err) {
+                    reject(err);
                 } else {
-                    // If last page is not full, increment objects in last page counter
-                    metaData.itemsInLastPage++;
+                    resolve(metaData);
                 }
-
-                this.writeTableMetaData(table, metaData);
-                resolve(metaData);
             });
-
-        });
-
-        return p;
+        })
 
 
     }
 
-    private static writeToPage(table: string, pageNum: number, data: IStorable[]) {
-        this.fs.writeFile(this.PATH + table + '/' + pageNum + '.json', JSON.stringify(data), (err) => {
-            if (err) {
-                return console.error(err);
-            }
-        });
+
+    private static writeToPage(table: string, pageNum: number, data: IStorable[]): Promise<IStorable[]> {
+        return new Promise((resolve, reject) => {
+            this.fs.writeFile(this.PATH + table + '/' + pageNum + '.json', JSON.stringify(data), (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        })
+
     }
 
     private static getPageNumOfId(itemId: number): number {
@@ -325,8 +398,10 @@ export class DBManager {
         return itemId % this.PAGESIZE;
     }
 
-    public static getNextOpenId(table: string) {
-        let metaData = this.getTableMetaData(table);
 
-    }
 }
+
+
+
+
+
