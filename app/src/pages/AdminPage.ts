@@ -24,6 +24,7 @@ export class AdminPage extends BasePage {
         this.leagueID = leagueIdentification;
         this.userID = userIdentification;
 
+
         this.getLeague().then(league => {
             this.league = league;
             this.createComponents();
@@ -44,6 +45,33 @@ export class AdminPage extends BasePage {
             text: this.league.pref.title
 
         }).appendTo(this.page);
+
+        this.createAdminPage();
+    }
+    private createAdminPage() {
+        this.page.title = 'Broadcast Panel';
+        this.page.background = ColorScheme.Primary;
+
+        let broadcastBackground = new tabris.Composite({
+            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+            background: '#b8d2ff',
+        }).appendTo(this.page);
+
+        new tabris.ImageView({
+            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+            image: 'https://s-media-cache-ak0.pinimg.com/originals/7e/a5/80/7ea5807d81a471478dd7aa5ad13fdca9.jpg',
+            scaleMode: 'fill'
+        }).appendTo(broadcastBackground);
+
+
+        let leaugeTitle = new tabris.TextInput({
+            left: '10%',
+            right: '10%',
+            height: 60,
+            top: 'prev() 20',
+            text: this.league.pref.title,
+            message: 'League Title'
+        }).appendTo(this.page)
 
         new tabris.TextInput({
             top: 'prev() 20', left: '10%', right: '10%', height: 60,

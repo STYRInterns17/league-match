@@ -1,6 +1,6 @@
 import {BasePage} from "./BasePage";
 import * as tabris from 'tabris';
-import {Composite, ScrollView, TextView} from "tabris";
+import {Composite, ImageView, ScrollView, TextView} from "tabris";
 import {League} from "../../../common/League";
 import {customButton} from "../customButton";
 import {ServiceLayer} from "../ServiceLayer";
@@ -9,6 +9,7 @@ import {stripComments} from "tslint/lib/utils";
 import {Notification} from "../../../common/Notification";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {ApprovalData} from "../../../common/ApprovalData";
+import {ColorScheme} from "../ColorScheme";
 /**
  * Created by STYRLabs2 on 6/7/2017.
  */
@@ -25,23 +26,25 @@ export class InvitePage extends BasePage{
         this.page.title = 'Invite friends';
 
         let comp = new Composite({
-            top:20,
-            left: '10%',
-            right: '10%'
+            top:0,
+            left: 0,
+            right: 0,
+            bottom: '90%',
+            background: ColorScheme.Background
         });
         comp.appendTo(this.page);
-        let comp1 = new tabris.Composite({top: comp, bottom: '10%', left: 0, right: 0, background: '#f74'}).appendTo(this.page);
-        let comp2 = new tabris.Composite({top: comp1, height: 40, left: 0, right: 0}).appendTo(this.page);
+        let comp1 = new tabris.Composite({top: comp, bottom: '15%', left: 0, right: 0, background: '#f74'}).appendTo(this.page);
+        let comp2 = new tabris.Composite({top: comp1, left: 0, right: 0, background: ColorScheme.Background, bottom: 0}).appendTo(this.page);
 
         let scrollView = new ScrollView({
             left: 0, right: 0, top: 0, bottom: 0,
             direction: 'vertical',
-            background: '#234'
+            background: ColorScheme.Background
         }).appendTo(comp1);
 
 
         new tabris.TextInput({
-            top: 0, left: '10%', right: '10%',
+            centerY: 0, left: '10%', right: '10%', alignment: 'center',
             message: 'Add by email',
             enterKeyType: 'done',
             autoCorrect: true
@@ -58,17 +61,42 @@ export class InvitePage extends BasePage{
                 if (isMatch == false) {
                     ServiceLayer.httpGetAsync('/user/name', 'userName=' + text, (response) => {
                         if (Number.isInteger(response)) {
-                            new TextView({
-                                top: 'prev() 20',
-                                centerX: 0,
-                                textColor: 'white',
-                                text: text
-                            }).appendTo(scrollView);
-                            textArray.push(text);
-                            idArray.push(response);
-                            console.log(idArray.length);
-                            window.plugins.toast.showShortCenter('User Added!');
-                        } else {
+                            ServiceLayer.httpGetAsync('/user', 'userId=' + response, (response2 )=>{
+                                let user = response2.user;
+
+                                let comp = new Composite({
+                                    left: 10,
+                                    right: 10,
+                                    height: 100,
+                                    top: 'prev() 10',
+                                    background: '#000000',
+                                    cornerRadius: 5
+                                }).appendTo(scrollView);
+                                let innerComp = new Composite({
+                                    left: 2,
+                                    right: 2,
+                                    top: 2,
+                                    bottom: 2,
+                                    background: ColorScheme.Background,
+                                    cornerRadius: 5
+                                }).appendTo(comp);
+                                let imageView = new ImageView({
+                                    centerY: 0, width: 80, height: 80, right: 40,
+                                    image: 'assets/' + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'
+                                }).appendTo(innerComp);
+                                new TextView({
+                                    centerY: 0,
+                                    right: [imageView, 30],
+                                    alignment: 'center',
+                                    font: 'bold 20px',
+                                    textColor: '#000000',
+                                    text: text
+                                }).appendTo(innerComp);
+                                textArray.push(text);
+                                idArray.push(response);
+                                console.log(idArray.length);
+                                window.plugins.toast.showShortCenter('User Added!');
+                            })} else {
                             window.plugins.toast.showShortCenter('User does not exist!');
                         }
                     });
@@ -83,9 +111,7 @@ export class InvitePage extends BasePage{
         let finishButton = new customButton({
             left: '10%',
             right: '10%',
-
-            centerY: 0,
-        }, 'Finish').appendTo(comp2).on('tap', ()=>{
+            centerY: 0, background: ColorScheme.Background}, 'Finish').appendTo(comp2).on('tap', ()=>{
             //create league
             ServiceLayer.httpPostAsync('/league', leagueInfo, (response) => {
                 this.userObj.leagues.push(response.id);
@@ -120,6 +146,7 @@ export class InvitePage extends BasePage{
                 });
             })
         });
+        finishButton.changeBorderColor('#000000');
         return this.page
     }
 
