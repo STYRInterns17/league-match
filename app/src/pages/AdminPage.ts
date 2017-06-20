@@ -18,12 +18,23 @@ export class AdminPage extends BasePage {
         super();
         this.leagueID = leagueIdentification;
         this.userID = userIdentification;
-
         this.createAdminPage();
     }
     private createAdminPage() {
         this.page.title = 'Broadcast Panel';
-        this.page.background = ColorScheme.Primary
+        this.page.background = ColorScheme.Primary;
+
+        let broadcastBackground = new tabris.Composite({
+            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+            background: '#b8d2ff',
+        }).appendTo(this.page);
+
+        let imageHolder = new tabris.ImageView({
+            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+            image: 'https://s-media-cache-ak0.pinimg.com/736x/51/17/90/5117908f2bd3aa0e0aaf4f2655cd8bfa--plain-wallpaper-girl-wallpaper.jpg',
+            scaleMode: 'fill'
+        }).appendTo(broadcastBackground);
+
         new tabris.TextInput({
             top: 20, left: '10%', right: '10%', height: 75,
             message: 'Send a league broadcast',

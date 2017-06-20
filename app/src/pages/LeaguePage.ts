@@ -74,6 +74,7 @@ export class LeaguePage extends BasePage {
         }).appendTo(comp2);
 
         this.page.background = ColorScheme.Primary;
+
     }
 
     private getLeagues(i): Promise<League> {

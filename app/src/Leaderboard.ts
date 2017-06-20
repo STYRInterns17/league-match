@@ -85,9 +85,13 @@ export class Leaderboard{
                     let cell = new Composite();
                     let comp = new Composite({background: ColorScheme.Background, left: 2, right: 2, top: 2, bottom: 2, cornerRadius: 5, opacity: .96});
                     new Composite({height: 100, background: '#000000', left: 10, right: 10, cornerRadius: 5, top: 'prev() 10' }).appendTo(cell).append(comp);
+
+
+
                     let imageView = new ImageView({
                         centerY: 0, width: 80, height: 80, right: 40
                     }).appendTo(comp);
+
                     new TextView({
                         left: 30, centerY: 0, right: [imageView, 10],
                         alignment: 'center',
