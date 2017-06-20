@@ -78,10 +78,19 @@ export class ProfilePage extends BasePage {
                 window.plugins.toast.showShortBottom('Your profile has been updated!');
 
 
-                let nameUpdateRequest = {userId: this.user.id, userName: firstName.text}
+                let nameUpdateRequest = {userId: this.user.id, userName: firstName.text};
 
                 ServiceLayer.httpPostAsync('/user/name/update', nameUpdateRequest, response => {
                     window.plugins.toast.showShortBottom(response.message);
+                });
+
+                let avatarUpdateRequest = {
+                    userId: this.user.id,
+                    userPref: new UserPreferences(this.user.pref.password, bio.text, Math.floor(Math.random() * (10 - 0 + 1)) - 1)
+                };
+
+                ServiceLayer.httpPostAsync('/user/pref', avatarUpdateRequest, response => {
+                    //window.plugins.toast.showShortBottom(response.message);
                 });
 
                 let userSettings = {
