@@ -24,6 +24,11 @@ export class LoginPage extends BasePage {
         this.page.title = 'Welcome to League Match';
         this.page.background = '#B4E0E1';
 
+        let imageHolder = new tabris.ImageView({
+            image: 'https://s-media-cache-ak0.pinimg.com/736x/66/a4/65/66a4652c45dd24eddc53fa3f088944e4.jpg',
+            scaleMode: "stretch"
+        }).appendTo(this.page);
+
         new tabris.TextView({
             layoutData: {left: 25, top: "20%", right: 25},
             alignment: "center",
@@ -85,6 +90,24 @@ export class LoginPage extends BasePage {
                 title: 'Create an Account!',
                 background: '#b8d2ff'
             }).appendTo(this.page.parent());
+
+            let signInLanding = new tabris.Composite({
+                layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+                background: '#b8d2ff',
+            }).appendTo(signUpPage);
+
+            let imageHolder = new tabris.ImageView({
+                image: 'http://www.designbolts.com/wp-content/uploads/2014/11/Best-iPhone-6-Login-Screen-Background.jpg',
+                scaleMode: 'fill'
+            }).appendTo(signInLanding);
+
+            new tabris.TextView({
+                layoutData: {left: 25, top: "20%", right: 25},
+                alignment: "center",
+                font: "bold 44px",
+                textColor: '#15fff4',
+                text: "Create Account"
+            }).appendTo(signUpPage);
 
             let usernameSignUp = new tabris.TextInput({
                 layoutData: {left: 25, right: 25, top: '30%', height: 50},

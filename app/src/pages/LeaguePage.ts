@@ -67,6 +67,8 @@ export class LeaguePage extends BasePage {
         new customButton({centerY: 0, left: 10, right: 10}, '➕ Create a League', ColorScheme.Primary).on('tap', () => {
             this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
         }).appendTo(comp2);
+
+        this.page.background = ColorScheme.Primary;
     }
 
     private getLeagues(i): Promise<League> {
