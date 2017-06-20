@@ -137,7 +137,10 @@ export class HomePage extends BasePage {
                     this.adminButton.opacity = 0;
                 }
             });
-        }
+        }else{
+    this.adminButton.enabled = false;
+    this.adminButton.opacity = 0;
+}
 
     }
 
