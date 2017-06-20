@@ -177,12 +177,12 @@ class App {
 
         // Update League Preferences
         router.post('/league/update', (req, res) => {
-            let leagueId: number = req.query.leagueId;
-            let pref: LeaguePreferences = req.query.leaguePref;
-
+            let leagueId: number = req.body.leagueId;
+            let pref: LeaguePreferences = req.body.leaguePref;
             LeagueController.updatePreferences(leagueId, pref).then(value => {
                 res.json({message: 'League Preferences updated'});
             }).catch(reason => {
+                console.log(reason);
                 res.json({message: 'Unable to update preferences'});
             });
         });

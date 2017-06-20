@@ -100,11 +100,10 @@ export class DBManager {
             let dbWrites: Promise<{}>[] = [];
             for (let i = 0; i < this.TABLES.length; i++) {
                 let metaData = this.getVolatileTableMetaData(this.TABLES[i]);
-
                 dbWrites.push(this.writeTableMetaData(this.TABLES[i], metaData));
                 for (let pageNum = 0; pageNum <= metaData.pageCount; pageNum++) {
-                    let newPageData = this.getVolatilePage(this.TABLES[i], i);
-                    dbWrites.push(this.writeToPage(this.TABLES[i], i, newPageData));
+                    let newPageData = this.getVolatilePage(this.TABLES[i], pageNum);
+                    dbWrites.push(this.writeToPage(this.TABLES[i], pageNum, newPageData));
                 }
             }
 
@@ -132,7 +131,7 @@ export class DBManager {
                 // For each table
                 for (let i = 0; i < metaDatas.length; i++) {
                     this.overWriteVolatileMetaData(this.TABLES[i], metaDatas[i]);
-                    console.log(metaDatas[i].pageCount);
+
                     // For each page in table //  <= because page numbers start at 0
                     for (let pageNum = 0; pageNum <= metaDatas[i].pageCount; pageNum++) {
                         this.getPage(this.TABLES[i], pageNum).then(page => {

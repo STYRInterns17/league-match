@@ -23,19 +23,13 @@ export class ProfilePage extends BasePage {
 
     private createProfilePage() {
 
-        let profilePic = new tabris.Composite({
+        /*let profilePic = new tabris.Composite({
             layoutData: {left: 0, right: 0, top: 0, bottom: 0},
             background: '#b8d2ff',
-        }).appendTo(this.page);
-
-        new tabris.ImageView({
-            layoutData: {left: 0, right: 0, top: 0, bottom: '60%'},
-            image: 'http://gazettereview.com/wp-content/uploads/2016/03/facebook-avatar.jpg',
-            scaleMode: 'fill'
-        }).appendTo(profilePic);
+        }).appendTo(this.page);*/
 
         let profileAttributeSection = new tabris.Composite({
-            layoutData: {left: 0, right: 0, bottom: 0, top: '40%'},
+            layoutData: {left: 0, right: 0, bottom: 0, top: 0},
             background: ColorScheme.Primary
         }).appendTo(this.page);
 
@@ -45,13 +39,19 @@ export class ProfilePage extends BasePage {
             scaleMode: 'fill'
         }).appendTo(profileAttributeSection);
 
+        new tabris.ImageView({
+            layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
+            image: 'http://you-log.com/wp-content/uploads/2015/08/People-Avatar-Set-Circular-04.png',
+            scaleMode: 'auto'
+        }).appendTo(profileAttributeSection);
+
         let firstName = new tabris.TextInput({
-            layoutData: {top: '45%', centerX: 0},
+            layoutData: {top: '50%', centerX: 0},
             message: 'Username                    '
         }).appendTo(this.page);
 
         let bio = new tabris.TextInput({
-            layoutData: {top: '55%', centerX: 0},
+            layoutData: {top: '60%', centerX: 0},
             message: 'Tell us about yourself!'
         }).appendTo(this.page);
 
@@ -72,9 +72,9 @@ export class ProfilePage extends BasePage {
             let profileDate = new Date(this.user.joinDate);
 
             new tabris.TextView(({
-                layoutData: {top: '90%', left: '59%'},
+                layoutData: {top: '41%', centerX: 0},
                 text: "Date Joined: " + (profileDate.getMonth() + 1) + " " + profileDate.getDate() + ", " + profileDate.getFullYear()
-            })).appendTo(profilePic);
+            })).appendTo(this.page);
 
             let changeSettings = new customButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
 
