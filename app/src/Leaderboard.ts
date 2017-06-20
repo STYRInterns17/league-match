@@ -102,7 +102,7 @@ export class Leaderboard{
                     let user = this.users[index];
                     cell.apply({
                         ImageView: {image: IMAGE_PATH + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'},
-                        TextView: {text: user.email + '-' + user.mmr[user.leagues.indexOf(+localStorage.getItem('currentLeagueId'))]},
+                        TextView: {text: user.name + '-' + user.mmr[user.leagues.indexOf(+localStorage.getItem('currentLeagueId'))]},
                     });
                 }
             }).on('select', ({index}) => console.log('selected', people[index].name));
