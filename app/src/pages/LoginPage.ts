@@ -6,18 +6,17 @@ import * as tabris from "tabris";
 import {BasePage} from './BasePage';
 import construct = Reflect.construct;
 import {ServiceLayer} from "../ServiceLayer";
+import {User} from "../../../common/User";
 import {UserPreferences} from "../../../common/UserPreferences";
 import {HomePage} from "./HomePage";
 
 export class LoginPage extends BasePage {
 
+    public user: User;
     private userEmail;
     private userPassword;
 
-    constructor() {
-        super();
-        this.createComponents();
-    }
+    constructor() { super(); this.user = JSON.parse(localStorage.getItem('userObj')); this.createComponents(); }
 
     public createComponents(): void {
 
