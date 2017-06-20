@@ -149,7 +149,7 @@ class App {
             let newName: string = req.body.userName;
 
             UserController.updateUserName(userId, newName).then(user => {
-                res.json(user);
+                res.json({user: user, message: 'Profile Updated Successfully'});
             }).catch(reason => {
                 res.json({message: reason})
             })

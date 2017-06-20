@@ -86,8 +86,6 @@ export class Leaderboard{
                     let comp = new Composite({background: ColorScheme.Background, left: 2, right: 2, top: 2, bottom: 2, cornerRadius: 5, opacity: .96});
                     new Composite({height: 100, background: '#000000', left: 10, right: 10, cornerRadius: 5, top: 'prev() 10' }).appendTo(cell).append(comp);
 
-
-
                     let imageView = new ImageView({
                         centerY: 0, width: 80, height: 80, right: 40
                     }).appendTo(comp);
@@ -104,7 +102,7 @@ export class Leaderboard{
                     let user = this.users[index];
                     cell.apply({
                         ImageView: {image: IMAGE_PATH + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'},
-                        TextView: {text: user.email + '-' + user.mmr[user.leagues.indexOf(+localStorage.getItem('currentLeagueId'))]},
+                        TextView: {text: user.name + '-' + user.mmr[user.leagues.indexOf(+localStorage.getItem('currentLeagueId'))]},
                     });
                 }
             }).on('select', ({index}) => console.log('selected', people[index].name));

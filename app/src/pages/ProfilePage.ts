@@ -19,14 +19,9 @@ export class ProfilePage extends BasePage {
     public userId: number;
     public user: User;
 
-    constructor() { super(); this.createProfilePage(); }
+    constructor() { super(); this.user = JSON.parse(localStorage.getItem('userObj')); this.createProfilePage(); }
 
     private createProfilePage() {
-
-        /*let profilePic = new tabris.Composite({
-            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
-            background: '#b8d2ff',
-        }).appendTo(this.page);*/
 
         let profileAttributeSection = new tabris.Composite({
             layoutData: {left: 0, right: 0, bottom: 0, top: 0},
@@ -41,7 +36,7 @@ export class ProfilePage extends BasePage {
 
         new tabris.ImageView({
             layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
-            image: 'http://you-log.com/wp-content/uploads/2015/08/People-Avatar-Set-Circular-04.png',
+            image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
             scaleMode: 'auto'
         }).appendTo(profileAttributeSection);
 
@@ -63,11 +58,11 @@ export class ProfilePage extends BasePage {
 
             this.user = JSON.parse(localStorage.getItem('userObj'));
 
-            firstName.text = this.user.pref.name;
+            firstName.text = this.user.name;
 
             bio.text = this.user.pref.bio;
 
-            this.page.title = this.user.pref.name + "'s Profile Page!";
+            this.page.title = this.user.name + "'s Profile Page!";
 
             let profileDate = new Date(this.user.joinDate);
 
@@ -78,18 +73,36 @@ export class ProfilePage extends BasePage {
 
             let changeSettings = new customButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
 
+                this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) - 1;
+
                 window.plugins.toast.showShortBottom('Your profile has been updated!');
+
+
+                let nameUpdateRequest = {userId: this.user.id, userName: firstName.text};
+
+                ServiceLayer.httpPostAsync('/user/name/update', nameUpdateRequest, response => {
+                    window.plugins.toast.showShortBottom(response.message);
+                });
+
+                let avatarUpdateRequest = {
+                    userId: this.user.id,
+                    userPref: new UserPreferences(this.user.pref.password, bio.text, Math.floor(Math.random() * (10 - 0 + 1)) - 1)
+                };
+
+                ServiceLayer.httpPostAsync('/user/pref', avatarUpdateRequest, response => {
+                    //window.plugins.toast.showShortBottom(response.message);
+                });
 
                 let userSettings = {
                     userId: this.user.id,
-                    userPref: new UserPreferences(this.user.pref.password, bio.text, 0, firstName.text)
+                    userPref: new UserPreferences(this.user.pref.password, bio.text, 0)
                 };
-
                 ServiceLayer.httpPostAsync('/user/pref', userSettings, () => {
                     this.user.name = firstName.text;
-                    this.user.pref.name = firstName.text;
                     this.user.pref.bio = bio.text;
                     this.page.title = this.user.name + "'s Profile";
+                    //this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) - 1;
+                    //console.log(Math.floor(Math.random() * (10 - 1 + 1)) - 1);
                     localStorage.removeItem('userObj');
                     localStorage.setItem('userObj', JSON.stringify(this.user));
                 })
