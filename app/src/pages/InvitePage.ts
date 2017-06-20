@@ -66,6 +66,7 @@ export class InvitePage extends BasePage{
                             }).appendTo(scrollView);
                             textArray.push(text);
                             idArray.push(response);
+                            console.log(idArray.length);
                             window.plugins.toast.showShortCenter('User Added!');
                         } else {
                             window.plugins.toast.showShortCenter('User does not exist!');
@@ -85,6 +86,7 @@ export class InvitePage extends BasePage{
 
             centerY: 0,
         }, 'Finish').appendTo(comp2).on('tap', ()=>{
+            //create league
             ServiceLayer.httpPostAsync('/league', leagueInfo, (response) => {
                 this.userObj.leagues.push(response.id);
                 this.userObj.mmr.push(5000);
@@ -93,6 +95,7 @@ export class InvitePage extends BasePage{
                 //store new userObj
                 localStorage.removeItem('userObj');
                 localStorage.setItem('userObj', JSON.stringify(this.userObj));
+                //update logged in user by adding league to user leagues
                 ServiceLayer.httpPostAsync('/user/update', this.userObj ,(response) =>{
                     console.log('user leagues array updated');
                     if(idArray.length>0){
@@ -105,9 +108,11 @@ export class InvitePage extends BasePage{
                             approvalData: new ApprovalData(leagueId)
                             };
                             ServiceLayer.httpPostAsync('/notification/user', notification, () =>{
-                                this.page.dispose();
                                 console.log('Invite sent')
                             });
+                            if(i == idArray.length - 1 ){
+                                this.page.dispose();
+                            }
                         }
                     }else{
                         this.page.dispose();

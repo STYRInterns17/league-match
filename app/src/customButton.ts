@@ -3,34 +3,33 @@
  */
 
 import * as tabris from 'tabris';
+import {ColorScheme} from "./ColorScheme";
 
 export class customButton extends tabris.Composite{
 
     private message: tabris.TextView;
-    constructor(config: tabris.CompositeProperties, text: string){
+    constructor(config: tabris.CompositeProperties, text: string, color: string){
         super(config);
 
         this.cornerRadius = 5;
-        /*this.left = 10;
-        this.right = 10;
-        this.height = 50;
-        this.background = '#448aff';*/
-
+        this.background = '#000000';
+        this.height = 55;
         let inner = new tabris.Composite({
-            background: this.background,
+            background: color,
             left: 2,
             right: 2,
             top: 2,
             bottom: 2
         }).appendTo(this);
 
-        this.background = '#ffffff';
+        inner.cornerRadius = 3;
 
         this.message = new tabris.TextView({
             centerX: 0,
             centerY: 0,
             text: text,
-            font: 'bold 20px'
+            font: 'bold 20px',
+            textColor: ColorScheme.WigetBackground
         }).appendTo(inner);
     }
 

@@ -8,6 +8,8 @@ import {LeagueCreationPage} from "./LeagueCreationPage";
 import {ServiceLayer} from "../ServiceLayer";
 import {League} from "../../../common/League";
 import {User} from "../../../common/User";
+import {ColorScheme} from "../ColorScheme";
+import {Composite} from "tabris";
 
 
 export class LeaguePage extends BasePage {
@@ -32,7 +34,7 @@ export class LeaguePage extends BasePage {
     private createLeaguePage(leagueLength: number): void {
 
         let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0}).appendTo(this.page);
-        let comp2 = new tabris.Composite({top: comp1, bottom: 0, left: 0, right: 0}).appendTo(this.page);
+        let comp2 = new tabris.Composite({top: comp1, bottom: 0, left: 0, right: 0, background: ColorScheme.Background}).appendTo(this.page);
 
 
 
@@ -40,14 +42,16 @@ export class LeaguePage extends BasePage {
             left: 0, top: 0, right: 0, bottom: 0,
             itemCount: leagueLength,
             cellHeight: 100,
+            background: ColorScheme.Background,
             //TODO let user refresh league page
             refreshEnabled: false,
             createCell: () => {
                 let cell = new tabris.Composite();
-
+                let comp = new Composite({background: ColorScheme.Background, left: 2, right: 2, top: 2, bottom: 2, cornerRadius: 5, opacity: .96});
+                new tabris.Composite({height: 80, background: '#000000', left: 10, right: 10, cornerRadius: 5, top: 'prev() 10' }).appendTo(cell).append(comp);
                 new tabris.TextView({
-                    top: 16, left: '10%', right: '10%', height: 80, background: '#f75'
-                }).appendTo(cell);
+                    background: ColorScheme.Background, font: 'bold 20px', centerX: 0, cornerRadius: 5, centerY: 0
+                }).appendTo(comp);
                 return cell;
             },
             updateCell: (cell, index) => {
@@ -61,7 +65,7 @@ export class LeaguePage extends BasePage {
             localStorage.setItem('currentLeagueId', this.userObj.leagues[index].toString());
         window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title)}).appendTo(comp1);
 
-        new customButton({centerY: 0, centerX: 0}, '➕ Create a League').on('tap', () => {
+        new customButton({centerY: 0, left: 10, right: 10}, '➕ Create a League', ColorScheme.Primary).on('tap', () => {
             this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
         }).appendTo(comp2);
 

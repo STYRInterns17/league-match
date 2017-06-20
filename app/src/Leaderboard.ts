@@ -2,6 +2,7 @@ import {Page} from "tabris";
 import {User} from "../../common/User";
 import {League} from "../../common/League";
 import {ServiceLayer} from "./ServiceLayer";
+import {ColorScheme} from "./ColorScheme";
 /**
  * Created by Michael on 6/6/2017.
  */
@@ -78,18 +79,21 @@ export class Leaderboard{
             let collectionView = new CollectionView({
                 left: 0, top: 0, right: 0, bottom: 0,
                 itemCount: this.users.length,
-                background: '#37474F',
+                background: ColorScheme.Background,
                 cellHeight: 135,
                 createCell: () => {
                     let cell = new Composite();
+                    let comp = new Composite({background: ColorScheme.Background, left: 2, right: 2, top: 2, bottom: 2, cornerRadius: 5, opacity: .96});
+                    new Composite({height: 100, background: '#000000', left: 10, right: 10, cornerRadius: 5, top: 'prev() 10' }).appendTo(cell).append(comp);
                     let imageView = new ImageView({
-                        top: 16, width: 100, height: 100, right: 40
-                    }).appendTo(cell);
+                        centerY: 0, width: 80, height: 80, right: 40
+                    }).appendTo(comp);
                     new TextView({
-                        left: 30, top: 50, right: [imageView, 10],
+                        left: 30, centerY: 0, right: [imageView, 10],
                         alignment: 'center',
-                        font: 'bold 20px'
-                    }).appendTo(cell);
+                        font: 'bold 20px',
+                        textColor: '#000000'
+                    }).appendTo(comp);
                     return cell;
                 },
                 updateCell: (cell, index) => {

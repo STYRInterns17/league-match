@@ -14,26 +14,30 @@ import {NotificationPage} from "./NotificationPage";
 import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
 import {LogMatchPage} from "./LogMatchPage";
-import {NavigationView} from "tabris";
+import {Button, Color, Composite, NavigationView} from "tabris";
+import {ColorScheme} from "../ColorScheme";
 
+const IMAGE_PATH = 'assets/';
 export class HomePage extends BasePage {
     public navigationView: tabris.NavigationView;
     public userId: number;
     public user: User;
     public userLeagueIds: Array = [];
+    public colorScheme: string;
 
-    constructor(navView: NavigationView) {
+    constructor() {
         super();
         this.createComponents();
         console.log('Page' + this.page);
         console.log('Page parent' + this.page.parent());
-            this.navigationView = navView
+          //  this.navigationView = navView
+        this.colorScheme =  ColorScheme.Primary;
     }
 
 
     public createComponents(): void {
 
-        this.page.background = '#37474f';
+        this.page.background =  '#B4E0E1';
 
         this.page.on('appear', () => {
             this.reloadLeaderBoard(this.page);
@@ -42,29 +46,29 @@ export class HomePage extends BasePage {
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
         drawer.enabled = true;
-        drawer.background = '#37474f';
+        drawer.background = ColorScheme.WigetBackground;
         this.page.on('disappear', () => drawer.enabled = false).on('appear', () => drawer.enabled = true);
         //CREATE BUTTONS
 
         //Add admin verification method here:
-        let adminButton = new customButton({top: 'prev() 30', centerX: 0}, 'Broadcast').on('tap', () => {
+        let adminButton = new customButton({top: 'prev() 16', left: '10%', right: '10%'}, 'Broadcast', ColorScheme.Secondary).on('tap', () => {
             // The '+' signifies that the string is actually a number
             this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
         });
         adminButton.appendTo(drawer);
 
-        let profileButton = new customButton({top: 'prev() 30', centerX: 0}, 'Profile').on('tap', () => {
+        let profileButton = new customButton({top: 'prev() 16',left: '10%', right: '10%'}, 'Profile', ColorScheme.Secondary).on('tap', () => {
             this.page.parent().append(new ProfilePage().page);
 
         });
         profileButton.appendTo(drawer);
 
-        let notificationButton = new customButton({top: 'prev() 30', centerX: 0}, 'Notifications').on('tap', () => {
+        let notificationButton = new customButton({top: 'prev() 16', left: '10%', right: '10%'}, 'Notifications', ColorScheme.Secondary).on('tap', () => {
             this.page.parent().append(new NotificationPage().page);
         });
         notificationButton.appendTo(drawer);
 
-        let leagueButton = new customButton({top: 'prev() 30', centerX: 0}, 'Leagues').on('tap', () => {
+        let leagueButton = new customButton({top: 'prev() 16', left: '10%', right: '10%'}, 'Leagues', ColorScheme.Secondary).on('tap', () => {
             let leaguePage = new LeaguePage().page.on('disappear', () => {
                 leaguePage.dispose();
             });
@@ -74,19 +78,19 @@ export class HomePage extends BasePage {
         });
         leagueButton.appendTo(drawer);
 
-        let logMatchButton = new customButton({top: 'prev() 30', centerX: 0}, 'Log A Match').on('tap', () => {
+        let logMatchButton = new customButton({top: 'prev() 16', left: '10%', right: '10%' }, 'Log A Match', ColorScheme.Secondary).on('tap', () => {
             let logmatchPage = new LogMatchPage().page.on('disappear', () => {
                 logmatchPage.dispose();
             });
             this.page.parent().append(logmatchPage);
-        });
+        }).append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
         logMatchButton.appendTo(drawer);
 
         let signOutButton = new customButton({
             bottom: 30,
-            centerX: 0,
+            left: '10%', right: '10%',
             background: '#cb2431'
-        }, 'Sign Out').on('tap', () => {
+        }, 'Sign Out',ColorScheme.Accent ).on('tap', () => {
             localStorage.clear();
             tabris.app.reload();
         });
