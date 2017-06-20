@@ -7,6 +7,7 @@ import {ColorScheme} from "../ColorScheme";
 import {League} from "../../../common/League";
 import {customButton} from "../customButton";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
+import {AdminInvitePage} from "./AdminInvitePage";
 
 /**
  * Created by STYRLabs2 on 6/7/2017.
@@ -103,7 +104,7 @@ export class AdminPage extends BasePage {
             background: ColorScheme.Accent
         }, 'Invite Players').on('tap', (event) => {
 
-            // Open invite player page
+            new AdminInvitePage().createInvitePage(this.league).appendTo(this.page.parent());
 
         }).changeBorderColor(ColorScheme.Primary).appendTo(this.page);
 

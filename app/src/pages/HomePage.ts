@@ -14,8 +14,9 @@ import {NotificationPage} from "./NotificationPage";
 import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
 import {LogMatchPage} from "./LogMatchPage";
-import {Button, Color, Composite, NavigationView} from "tabris";
+import {Button, Color, Composite, Drawer, NavigationView} from "tabris";
 import {ColorScheme} from "../ColorScheme";
+import {League} from "../../../common/League";
 
 const IMAGE_PATH = 'assets/';
 export class HomePage extends BasePage {
@@ -24,7 +25,7 @@ export class HomePage extends BasePage {
     public user: User;
     public userLeagueIds: Array = [];
     public colorScheme: string;
-
+    public adminButton: customButton;
     constructor() {
         super();
         this.createComponents();
@@ -35,10 +36,12 @@ export class HomePage extends BasePage {
 
     public createComponents(): void {
 
+
         this.page.background =  '#B4E0E1';
 
         this.page.on('appear', () => {
             this.reloadLeaderBoard(this.page);
+            this.reloadAdminButton();
         });
 
         //CREATE DRAWER
@@ -47,13 +50,6 @@ export class HomePage extends BasePage {
         drawer.background = ColorScheme.WigetBackground;
         this.page.on('disappear', () => drawer.enabled = false).on('appear', () => drawer.enabled = true);
         //CREATE BUTTONS
-
-        //Add admin verification method here:
-        let adminButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Admin').on('tap', () => {
-            // The '+' signifies that the string is actually a number
-            this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
-        }).changeBorderColor('#000000');
-        adminButton.appendTo(drawer);
 
         let profileButton = new customButton({top: 'prev() 16',left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Profile').on('tap', () => {
             this.page.parent().append(new ProfilePage().page);
@@ -78,11 +74,18 @@ export class HomePage extends BasePage {
 
         let logMatchButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary }, 'Log A Match').on('tap', () => {
             let logmatchPage = new LogMatchPage().page.on('disappear', () => {
-                logmatchPage.dispose();
+                    logmatchPage.dispose();
             });
             this.page.parent().append(logmatchPage);
         }).changeBorderColor('#000000').append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
         logMatchButton.appendTo(drawer);
+
+
+        this.adminButton = new customButton({top: [logMatchButton, 16], left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Admin').on('tap', () => {
+            // The '+' signifies that the string is actually a number
+            this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
+        }).changeBorderColor('#000000');
+        this.adminButton.appendTo(drawer);
 
         let signOutButton = new customButton({
             bottom: 30,
@@ -103,22 +106,39 @@ export class HomePage extends BasePage {
                 this.page.parent().append(new LoginPage().page);
                 this.page.dispose();
 
-            } else {
+            } else { //success
                 localStorage.setItem('userObj', JSON.stringify(response.user));
                 this.user = JSON.parse(localStorage.getItem('userObj'));
                 //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
-                if (this.user.leagues[0] != null) {
+
+                //user is in a league but currentLeagueId has not been set ie: logging into a new d
+                if (this.user.leagues[0] != null && localStorage.getItem('currentLeagueId') == null) {
                     localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
                 }
-
+                }
+                this.reloadAdminButton();
                 this.reloadLeaderBoard(this.page);
-            }
-        });
+            };
 
     }
 
     private reloadLeaderBoard(page: tabris.Page) {
         new Leaderboard(this.page);
+    }
+
+    public reloadAdminButton(){
+        if(localStorage.getItem('currentLeagueId') != null){
+            ServiceLayer.httpGetAsync('/league', 'leagueId=' + localStorage.getItem('currentLeagueId').toString(), (league: League) =>{
+                if(league.adminIds.indexOf(this.userId) != -1){
+                    this.adminButton.enabled = true;
+                    this.adminButton.opacity = 1;
+                }else{
+                    this.adminButton.enabled = false;
+                    this.adminButton.opacity = 0;
+                }
+            });
+        }
+
     }
 
 }
