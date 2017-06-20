@@ -33,7 +33,7 @@ export class Leaderboard{
             this.getLeague().then(value => {
                 this.league = value;
                 let memberIds: Array<number> = [];
-                memberIds = memberIds.concat(value.adminIds).concat(value.playerIds);
+                memberIds = value.playerIds;
 
                 if (memberIds.length > 1) {
                     this.leagueLoop(memberIds).then(() => {

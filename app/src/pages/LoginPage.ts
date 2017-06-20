@@ -79,7 +79,6 @@ export class LoginPage extends BasePage {
                     window.plugins.toast.showShortCenter('Login Invalid');
                 }
             });
-
         }).appendTo(this.page);
 
         new tabris.TextView({
