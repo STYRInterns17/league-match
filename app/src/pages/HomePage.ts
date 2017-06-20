@@ -49,24 +49,24 @@ export class HomePage extends BasePage {
         //CREATE BUTTONS
 
         //Add admin verification method here:
-        let adminButton = new customButton({top: 'prev() 16', left: '10%', right: '10%'}, 'Broadcast', ColorScheme.Secondary).on('tap', () => {
+        let adminButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Broadcast').on('tap', () => {
             // The '+' signifies that the string is actually a number
             this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
         });
         adminButton.appendTo(drawer);
 
-        let profileButton = new customButton({top: 'prev() 16',left: '10%', right: '10%'}, 'Profile', ColorScheme.Secondary).on('tap', () => {
+        let profileButton = new customButton({top: 'prev() 16',left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Profile').on('tap', () => {
             this.page.parent().append(new ProfilePage().page);
 
         });
         profileButton.appendTo(drawer);
 
-        let notificationButton = new customButton({top: 'prev() 16', left: '10%', right: '10%'}, 'Notifications', ColorScheme.Secondary).on('tap', () => {
+        let notificationButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Notifications').on('tap', () => {
             this.page.parent().append(new NotificationPage().page);
         });
         notificationButton.appendTo(drawer);
 
-        let leagueButton = new customButton({top: 'prev() 16', left: '10%', right: '10%'}, 'Leagues', ColorScheme.Secondary).on('tap', () => {
+        let leagueButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Leagues').on('tap', () => {
             let leaguePage = new LeaguePage().page.on('disappear', () => {
                 leaguePage.dispose();
             });
@@ -76,7 +76,7 @@ export class HomePage extends BasePage {
         });
         leagueButton.appendTo(drawer);
 
-        let logMatchButton = new customButton({top: 'prev() 16', left: '10%', right: '10%' }, 'Log A Match', ColorScheme.Secondary).on('tap', () => {
+        let logMatchButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary }, 'Log A Match').on('tap', () => {
             let logmatchPage = new LogMatchPage().page.on('disappear', () => {
                 logmatchPage.dispose();
             });
@@ -88,7 +88,7 @@ export class HomePage extends BasePage {
             bottom: 30,
             left: '10%', right: '10%',
             background: '#cb2431'
-        }, 'Sign Out',ColorScheme.Accent ).on('tap', () => {
+        }, 'Sign Out').on('tap', () => {
             localStorage.clear();
             tabris.app.reload();
         });

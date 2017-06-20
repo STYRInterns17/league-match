@@ -98,7 +98,6 @@ export class DBManager {
     private static writeTablesToDisk(): Promise<{}> {
         return new Promise((resolve, reject) => {
             let dbWrites: Promise<{}>[] = [];
-            console.log(this.tableDataVolatile[this.TABLES.indexOf('Users')][0]);
             for (let i = 0; i < this.TABLES.length; i++) {
                 let metaData = this.getVolatileTableMetaData(this.TABLES[i]);
 
