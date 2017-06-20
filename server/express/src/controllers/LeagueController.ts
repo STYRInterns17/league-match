@@ -18,6 +18,7 @@ export class LeagueController {
         let p = new Promise((resolve, reject) => {
             let newLeague = new League(ownerId, pref);
             newLeague.playerIds.push(ownerId);
+            newLeague.adminIds.push(ownerId);
             DBManager.appendItemToTable(this.TABLE, newLeague).then((league) =>{
                 //console.log(league);
                 resolve(league.id);
