@@ -10,6 +10,7 @@ import {League} from "../../../common/League";
 import {User} from "../../../common/User";
 import {ColorScheme} from "../ColorScheme";
 import {Composite} from "tabris";
+const IMAGE_PATH = 'assets/';
 
 
 export class LeaguePage extends BasePage {
@@ -41,7 +42,7 @@ export class LeaguePage extends BasePage {
             left: 0, top: 0, right: 0, bottom: 0,
             itemCount: leagueLength,
             cellHeight: 100,
-            background: ColorScheme.Background,
+            background: ColorScheme.Background
             //TODO let user refresh league page
             refreshEnabled: false,
             createCell: () => {
@@ -49,14 +50,18 @@ export class LeaguePage extends BasePage {
                 let comp = new Composite({background: ColorScheme.Background, left: 2, right: 2, top: 2, bottom: 2, cornerRadius: 5, opacity: .96});
                 new tabris.Composite({height: 80, background: '#000000', left: 10, right: 10, cornerRadius: 5, top: 'prev() 10' }).appendTo(cell).append(comp);
                 new tabris.TextView({
-                    background: ColorScheme.Background, font: 'bold 20px', centerX: 0, cornerRadius: 5, centerY: 0
+                    centerY: 0,
+                    centerX: 0,
+                    alignment: 'center',
+                    font: 'bold 20px',
+                    textColor: '#000000'
                 }).appendTo(comp);
                 return cell;
             },
             updateCell: (cell, index) => {
                 let title = this.leagues[index].pref.title;
                 cell.apply({
-                    TextView: {text: title, font: "bold 18px", layoutData: {left: '10%', right: '10%', top: 16, height: 80}}
+                    TextView: {text: title}
                 });
             }
         }).on('select', ({index}) =>{
