@@ -4,6 +4,7 @@ import {DBManager} from "./DBManager";
  */
 export class MapManager {
 
+    private static path = require('path');
     private static fs = require('fs');
     private static PATH = 'maps/';
 
@@ -112,5 +113,46 @@ export class MapManager {
             });
         });
 
+    }
+
+    public static getItemsByPrefix(map: string, prefix: string): Promise<string[]> {
+
+        return new Promise((resolve, reject) => {
+            MapManager.fs.readdir(this.PATH + map + '/', (err, files) => {
+
+                for (let i = files.length - 1; i >= 0; i--) {
+                    if (files[i].length >= prefix.length) {
+                        // Is potentially valid
+                        let partialText: string;
+                        if (files[i].length === 1) {
+                            partialText = files[i].substring(0, prefix.length + 1);
+                        } else {
+                            partialText = files[i].substring(0, prefix.length);
+                        }
+                        if (partialText === prefix || prefix.length === 0) {
+
+                            //Reminder fits search criteria
+
+
+                        } else {
+                            // Reminder does not fit search criteria
+                            files.splice(i, 1);
+                        }
+                    } else {
+                        // Reminder is shorter than search string
+                        files.splice(i, 1);
+                    }
+                }
+
+                // Scrub off .json extension
+                for(let i = 0; i < files.length; i++) {
+                    files[i] = files[i].substring(0, files[i].length - 5);
+                }
+
+                resolve(files);
+            });
+
+
+        });
     }
 }

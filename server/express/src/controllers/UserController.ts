@@ -18,19 +18,23 @@ export class UserController {
                 if (doesExist) {
                     reject(email + ' is already in use');
                 } else {
-                     //DBManager add user to db
-                     DBManager.appendItemToTable(this.TABLE, new User(pref, email)).then(user => {
-                     // Create a notification list for the new user
-                     NotificationController.create();
-                     // Add User email to map
-                     MapManager.createItem('emails', user.email, user.id);
-                     // Add User name to map
-                     MapManager.createItem('names', user.name, user.id);
-                     //Return success y/n
-                     resolve(user);
-                     }).catch(reason => { reject(reason);});
+                    //DBManager add user to db
+                    DBManager.appendItemToTable(this.TABLE, new User(pref, email)).then(user => {
+                        // Create a notification list for the new user
+                        NotificationController.create();
+                        // Add User email to map
+                        MapManager.createItem('emails', user.email, user.id);
+                        // Add User name to map
+                        MapManager.createItem('names', user.name, user.id);
+                        //Return success y/n
+                        resolve(user);
+                    }).catch(reason => {
+                        reject(reason);
+                    });
                 }
-            }).catch(reason => {reject(reason);});
+            }).catch(reason => {
+                reject(reason);
+            });
 
         })
     }
@@ -85,6 +89,12 @@ export class UserController {
         })
     }
 
+    public static getUsersByPrefix(prefix: string): Promise<string[]> {
+
+        return MapManager.getItemsByPrefix('names', prefix);
+
+    }
+
     public static updateUserName(userId: number, newName: string): Promise<User> {
         return new Promise((resolve, reject) => {
             MapManager.doesItemExist('names', newName).then(doesExist => {
@@ -122,12 +132,19 @@ export class UserController {
                         this.get(id.id).then(user => {
                             if (password === user.pref.password) {
                                 resolve(user);
-                            } else { reject(); }})
-                    }).catch(reason => { reject(); });
-                } else{ reject(); }
+                            } else {
+                                reject();
+                            }
+                        })
+                    }).catch(reason => {
+                        reject();
+                    });
+                } else {
+                    reject();
+                }
             })
         })
-}
+    }
 
     public static getAssociations(userId: number, mask: string): number[] {
         //DBManager get all leagues this users is part of

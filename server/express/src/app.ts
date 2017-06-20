@@ -165,6 +165,14 @@ class App {
             })
         });
 
+        router.get('/user/name/prefix', (req, res) => {
+            let namePrefix = req.query.prefix;
+
+            UserController.getUsersByPrefix(namePrefix).then(userNames => {
+                res.json(userNames);
+            });
+        });
+
 
         //GetLeague
         router.get('/league', (req, res) => {
