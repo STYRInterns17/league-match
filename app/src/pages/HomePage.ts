@@ -51,7 +51,7 @@ export class HomePage extends BasePage {
         //Add admin verification method here:
         let adminButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Admin').on('tap', () => {
 
-            if (localStorage.getItem('leaugeId') !== null) {
+            if (localStorage.getItem('currentLeagueId') !== null) {
                 // The '+' signifies that the string is actually a number
                 this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
             }
