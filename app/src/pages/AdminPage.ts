@@ -46,7 +46,7 @@ export class AdminPage extends BasePage {
             text: this.league.pref.title
 
         }).appendTo(this.page);
-        
+
         new tabris.TextInput({
             top: 'prev() 20', left: '10%', right: '10%', height: 60,
             message: 'Broadcast to the league',
