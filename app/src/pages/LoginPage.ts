@@ -29,7 +29,7 @@ export class LoginPage extends BasePage {
             background: '#b8d2ff',
         }).appendTo(this.page);
 
-        let imageHolder = new tabris.ImageView({
+        new tabris.ImageView({
             layoutData: {left: 0, right: 0, top: 0, bottom: 0},
             image: 'https://iphonewallpapers.tips/wp-content/uploads/2017/02/iphone-wallpapers4-577x1024.jpg',
             scaleMode: 'fill'

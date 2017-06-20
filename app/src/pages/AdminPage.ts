@@ -29,9 +29,9 @@ export class AdminPage extends BasePage {
             background: '#b8d2ff',
         }).appendTo(this.page);
 
-        let imageHolder = new tabris.ImageView({
+        new tabris.ImageView({
             layoutData: {left: 0, right: 0, top: 0, bottom: 0},
-            image: 'https://s-media-cache-ak0.pinimg.com/736x/51/17/90/5117908f2bd3aa0e0aaf4f2655cd8bfa--plain-wallpaper-girl-wallpaper.jpg',
+            image: 'https://s-media-cache-ak0.pinimg.com/originals/7e/a5/80/7ea5807d81a471478dd7aa5ad13fdca9.jpg',
             scaleMode: 'fill'
         }).appendTo(broadcastBackground);
 
