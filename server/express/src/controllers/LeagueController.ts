@@ -48,12 +48,15 @@ export class LeagueController {
         return true;
     }
     //id, which league to update. newPref, the new preferences
-    public static updatePreferences(id: number, newPref: LeaguePreferences): boolean {
+    public static updatePreferences(id: number, newPref: LeaguePreferences): Promise<League> {
         //DBManager get league, update league preferences
-        this.get(id).then((league) => {
-            DBManager.updateItem(this.TABLE, league);
+        return this.get(id).then((league) => {
+            league.pref = newPref;
+            return league;
+        }).then(updatedLeague => {
+            DBManager.updateItem(this.TABLE, updatedLeague);
+            return updatedLeague;
         });
-        return true;
     }
 
     public static addLeaguePlayers(leagueId: number, userId): boolean {
@@ -86,24 +89,5 @@ export class LeagueController {
         return [];
     }
 
-    public static postMatch(leaugeId: number, match: Match): boolean {
-        //DBManager get league by Id
 
-        //Update all players MMR
-
-        //Update all players activity history
-
-        //Add match to match history
-
-
-        return true;
-    }
-
-    public static postMatchUnapproved(leaugeId: number, submitterId: number, match: Match): boolean {
-        //DBManager get league by Id
-
-        //Notify admins in league that submitter is trying to log a match
-
-        return true;
-    }
 }
