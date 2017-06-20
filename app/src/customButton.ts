@@ -16,7 +16,6 @@ export class customButton extends tabris.Composite{
          this.background = '#448aff';*/
 
         this.cornerRadius = 5;
-        this.background = '#000000';
         this.height = 55;
         let inner = new tabris.Composite({
             background: this.background,
