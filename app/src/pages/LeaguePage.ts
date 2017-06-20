@@ -37,7 +37,6 @@ export class LeaguePage extends BasePage {
         let comp2 = new tabris.Composite({top: comp1, bottom: 0, left: 0, right: 0, background: ColorScheme.Background}).appendTo(this.page);
 
 
-
         let collectionView = new tabris.CollectionView({
             left: 0, top: 0, right: 0, bottom: 0,
             itemCount: leagueLength,
@@ -57,7 +56,7 @@ export class LeaguePage extends BasePage {
             updateCell: (cell, index) => {
                 let title = this.leagues[index].pref.title;
                 cell.apply({
-                    TextView: {text: title}
+                    TextView: {text: title, font: "bold 18px", layoutData: {left: '10%', right: '10%', top: 16, height: 80}}
                 });
             }
         }).on('select', ({index}) =>{
@@ -68,7 +67,6 @@ export class LeaguePage extends BasePage {
         new customButton({centerY: 0, left: 10, right: 10}, '➕ Create a League', ColorScheme.Primary).on('tap', () => {
             this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
         }).appendTo(comp2);
-
     }
 
     private getLeagues(i): Promise<League> {

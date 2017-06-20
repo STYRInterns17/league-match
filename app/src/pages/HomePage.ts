@@ -34,14 +34,13 @@ export class HomePage extends BasePage {
         this.colorScheme =  ColorScheme.Primary;
     }
 
-
     public createComponents(): void {
 
         this.page.background =  '#B4E0E1';
 
         this.page.on('appear', () => {
             this.reloadLeaderBoard(this.page);
-        })
+        });
 
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
