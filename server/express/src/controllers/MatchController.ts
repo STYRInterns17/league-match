@@ -26,21 +26,21 @@ export class MatchController {
             //DBManager get league by Id
             LeagueController.get(leaugeId).then(league => {
 
-                let getUserPromises: Promise<{user: User, team: number}>[] = [];
+                let getUserPromises: Promise<{ user: User, team: number }>[] = [];
                 // Push users in match to respective arrays
                 for (let i = 0; i < match.team1Names.length; i++) {
                     // Team 1
                     getUserPromises.push(UserController.getUserByName(match.team1Names[i]).then(userId => {
                         return UserController.get(userId);
                     }).then(user => {
-                        return {user:user,team:1};
+                        return {user: user, team: 1};
                     }));
 
                     // Team 2
                     getUserPromises.push(UserController.getUserByName(match.team2Names[i]).then(userId => {
                         return UserController.get(userId);
                     }).then(user => {
-                        return {user: user, team:2};
+                        return {user: user, team: 2};
                     }));
 
 
@@ -50,16 +50,15 @@ export class MatchController {
                 Promise.all(getUserPromises).then(value => {
 
 
-
                     let team1: User[] = [];
                     let team2: User[] = [];
 
 
-                    for(let i = 0; i < value.length; i++) {
+                    for (let i = 0; i < value.length; i++) {
 
-                        if(value[i].team === 1) {
+                        if (value[i].team === 1) {
                             team1.push(value[i].user)
-                        } else if(value[i].team === 2) {
+                        } else if (value[i].team === 2) {
                             team2.push(value[i].user)
                         }
 
@@ -86,7 +85,7 @@ export class MatchController {
                         if (match.team1Score > match.team2Score) {
                             MMROffsets = this.getMMROffset(team1AverageMMR, team2AverageMMR);
                             team1wins = true;
-                        } else if(match.team1Score < match.team2Score) {
+                        } else if (match.team1Score < match.team2Score) {
                             MMROffsets = this.getMMROffset(team2AverageMMR, team1AverageMMR);
                             team1wins = false;
                         }
@@ -96,7 +95,7 @@ export class MatchController {
                         if (match.team1Score > match.team2Score) {
                             MMROffsets = this.getMMROffset(team2AverageMMR, team1AverageMMR);
                             team1wins = false;
-                        } else if(match.team1Score < match.team2Score) {
+                        } else if (match.team1Score < match.team2Score) {
                             MMROffsets = this.getMMROffset(team1AverageMMR, team2AverageMMR);
                             team1wins = true;
                         }
@@ -105,11 +104,9 @@ export class MatchController {
                     }
 
 
-
-
                     // Update the MMR of all User Objects
-                    for(let i = 0; i < team1.length; i++) {
-                        if(team1wins) {
+                    for (let i = 0; i < team1.length; i++) {
+                        if (team1wins) {
                             team1[i].mmr[team1[i].leagues.indexOf(leaugeId)] += MMROffsets.winnerOffset;
                             team2[i].mmr[team2[i].leagues.indexOf(leaugeId)] += MMROffsets.loserOffset;
                         } else {
@@ -118,18 +115,10 @@ export class MatchController {
                         }
 
                         // Write User back to server
-                        setTimeout(() =>{
-                            UserController.updateUser(team1[i]);
-                            console.log('Updating team2')
-                        }, 10);
-
-
-                        setTimeout(() =>{
-                            UserController.updateUser(team2[i]);
-                        }, 20);
-
-                        resolve('Match logged successfully');
+                        UserController.updateUser(team1[i]);
+                        UserController.updateUser(team2[i]);
                     }
+                    resolve('Match logged successfully');
 
                 }).catch(reason => {
                     console.log(reason);
