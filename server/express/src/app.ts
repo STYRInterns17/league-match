@@ -175,6 +175,18 @@ class App {
             });
         });
 
+        // Update League Preferences
+        router.post('/league/update', (req, res) => {
+            let leagueId: number = req.query.leagueId;
+            let pref: LeaguePreferences = req.query.leaguePref;
+
+            LeagueController.updatePreferences(leagueId, pref).then(value => {
+                res.json({message: 'League Preferences updated'});
+            }).catch(reason => {
+                res.json({message: 'Unable to update preferences'});
+            });
+        });
+
 
         //GetLeagueUserIds
         router.get('/league/users', (req, res) => {
@@ -238,7 +250,7 @@ class App {
             let submitterId = req.body.userId;
             let match = req.body.match;
 
-            res.json(LeagueController.postMatchUnapproved(leagueId, submitterId, match));
+            res.json({message: 'This end point is incomplete'});
         });
 
         //Get Notifications
