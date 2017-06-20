@@ -8,14 +8,18 @@ import {ColorScheme} from "./ColorScheme";
 export class customButton extends tabris.Composite{
 
     private message: tabris.TextView;
-    constructor(config: tabris.CompositeProperties, text: string, color: string){
+    constructor(config: tabris.CompositeProperties, text: string){
         super(config);
+        /*this.left = 10;
+         this.right = 10;
+         this.height = 50;
+         this.background = '#448aff';*/
 
         this.cornerRadius = 5;
         this.background = '#000000';
         this.height = 55;
         let inner = new tabris.Composite({
-            background: color,
+            background: this.background,
             left: 2,
             right: 2,
             top: 2,
