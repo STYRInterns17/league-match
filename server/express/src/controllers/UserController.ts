@@ -11,7 +11,7 @@ export class UserController {
     private static TABLE = 'Users';
 
     //Create a new user
-    public static create(pref: UserPreferences, email: string): Promise<UserPreferences> {
+    public static create(pref: UserPreferences, email: string): Promise<User> {
 
         return new Promise((resolve, reject) => {
             MapManager.doesItemExist('emails', email).then(doesExist => {
@@ -94,6 +94,7 @@ export class UserController {
                     UserController.get(userId).then(user => {
 
                         MapManager.changeItemKey('names', user.name, newName).then(value => {
+
                             if (value) {
                                 // These promises are not changed to save computation time, trade off is they are not checked
                                 // for successful write

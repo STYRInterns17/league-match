@@ -143,7 +143,7 @@ export class LoginPage extends BasePage {
 
                         let userPref = {
                             userEmail: usernameSignUp.text,
-                            userPref: new UserPreferences(usernamePasswordSignUp.text, "Tell us about yourself!", 0, usernameSignUp.text)
+                            userPref: new UserPreferences(usernamePasswordSignUp.text, "Tell us about yourself!", 0)
                         };
 
                         ServiceLayer.httpPostAsync('/user', userPref, (response: Response) => {

@@ -63,11 +63,11 @@ export class ProfilePage extends BasePage {
 
             this.user = JSON.parse(localStorage.getItem('userObj'));
 
-            firstName.text = this.user.pref.name;
+            firstName.text = this.user.name;
 
             bio.text = this.user.pref.bio;
 
-            this.page.title = this.user.pref.name + "'s Profile Page!";
+            this.page.title = this.user.name + "'s Profile Page!";
 
             let profileDate = new Date(this.user.joinDate);
 
@@ -78,16 +78,20 @@ export class ProfilePage extends BasePage {
 
             let changeSettings = new customButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
 
-                window.plugins.toast.showShortBottom('Your profile has been updated!');
+
+
+                let nameUpdateRequest = {userId: this.user.id, userName: firstName.text}
+
+                ServiceLayer.httpPostAsync('/user/name/update', nameUpdateRequest, response => {
+                    window.plugins.toast.showShortBottom(response.message);
+                });
 
                 let userSettings = {
                     userId: this.user.id,
-                    userPref: new UserPreferences(this.user.pref.password, bio.text, 0, firstName.text)
+                    userPref: new UserPreferences(this.user.pref.password, bio.text, 0)
                 };
-
                 ServiceLayer.httpPostAsync('/user/pref', userSettings, () => {
                     this.user.name = firstName.text;
-                    this.user.pref.name = firstName.text;
                     this.user.pref.bio = bio.text;
                     this.page.title = this.user.name + "'s Profile";
                     localStorage.removeItem('userObj');
