@@ -102,7 +102,7 @@ export class DBManager {
                 let metaData = this.getVolatileTableMetaData(this.TABLES[i]);
                 dbWrites.push(this.writeTableMetaData(this.TABLES[i], metaData));
                 for (let pageNum = 0; pageNum <= metaData.pageCount; pageNum++) {
-                    let newPageData = this.getVolatilePage(this.TABLES[i], i);
+                    let newPageData = this.getVolatilePage(this.TABLES[i], pageNum);
                     dbWrites.push(this.writeToPage(this.TABLES[i], pageNum, newPageData));
                 }
             }
