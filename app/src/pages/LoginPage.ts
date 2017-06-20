@@ -24,16 +24,22 @@ export class LoginPage extends BasePage {
         this.page.title = 'Welcome to League Match';
         this.page.background = '#B4E0E1';
 
-        let imageHolder = new tabris.ImageView({
-            image: 'https://s-media-cache-ak0.pinimg.com/736x/66/a4/65/66a4652c45dd24eddc53fa3f088944e4.jpg',
-            scaleMode: "stretch"
+        let logInLanding = new tabris.Composite({
+            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+            background: '#b8d2ff',
         }).appendTo(this.page);
+
+        new tabris.ImageView({
+            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+            image: 'https://iphonewallpapers.tips/wp-content/uploads/2017/02/iphone-wallpapers4-577x1024.jpg',
+            scaleMode: 'fill'
+        }).appendTo(logInLanding);
 
         new tabris.TextView({
             layoutData: {left: 25, top: "20%", right: 25},
             alignment: "center",
             font: "bold 48px",
-            textColor: '#224687',
+            textColor: '#ffffff',
             text: "League Match"
         }).appendTo(this.page);
 
@@ -96,8 +102,9 @@ export class LoginPage extends BasePage {
                 background: '#b8d2ff',
             }).appendTo(signUpPage);
 
-            let imageHolder = new tabris.ImageView({
-                image: 'http://www.designbolts.com/wp-content/uploads/2014/11/Best-iPhone-6-Login-Screen-Background.jpg',
+            new tabris.ImageView({
+                layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+                image: 'https://s-media-cache-ak0.pinimg.com/736x/21/c9/90/21c990af42eca5c94e4d311fb7fb70ba.jpg',
                 scaleMode: 'fill'
             }).appendTo(signInLanding);
 
@@ -105,7 +112,7 @@ export class LoginPage extends BasePage {
                 layoutData: {left: 25, top: "20%", right: 25},
                 alignment: "center",
                 font: "bold 44px",
-                textColor: '#15fff4',
+                textColor: '#FFFFFF',
                 text: "Create Account"
             }).appendTo(signUpPage);
 

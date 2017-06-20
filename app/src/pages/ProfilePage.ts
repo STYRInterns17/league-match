@@ -19,28 +19,31 @@ export class ProfilePage extends BasePage {
     public userId: number;
     public user: User;
 
-    constructor() {
-        super();
-        this.createProfilePage();
-    }
+    constructor() { super(); this.createProfilePage(); }
 
     private createProfilePage() {
 
         let profilePic = new tabris.Composite({
-            layoutData: {left: 0, right: 0, bottom: '60%', top: 0},
-            background: '#0bfffa'
+            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+            background: '#b8d2ff',
         }).appendTo(this.page);
 
-        let imageHolder = new tabris.ImageView({
-            layoutData: {left: 0, right: 0, bottom: 0, top: 0},
+        new tabris.ImageView({
+            layoutData: {left: 0, right: 0, top: 0, bottom: '60%'},
+            image: 'http://gazettereview.com/wp-content/uploads/2016/03/facebook-avatar.jpg',
+            scaleMode: 'fill'
         }).appendTo(profilePic);
-
-        imageHolder.set("image", {src: "http://gazettereview.com/wp-content/uploads/2016/03/facebook-avatar.jpg"});
 
         let profileAttributeSection = new tabris.Composite({
             layoutData: {left: 0, right: 0, bottom: 0, top: '40%'},
             background: ColorScheme.Primary
         }).appendTo(this.page);
+
+        new tabris.ImageView({
+            layoutData: {left: 0, right: 0, top: 0, bottom: 0},
+            image: 'http://hunsci.com/data/out/119/546417.png',
+            scaleMode: 'fill'
+        }).appendTo(profileAttributeSection);
 
         let firstName = new tabris.TextInput({
             layoutData: {top: '45%', centerX: 0},
@@ -82,7 +85,7 @@ export class ProfilePage extends BasePage {
                     userPref: new UserPreferences(this.user.pref.password, bio.text, 0, firstName.text)
                 };
 
-                ServiceLayer.httpPostAsync('/user/pref', userSettings, (response) => {
+                ServiceLayer.httpPostAsync('/user/pref', userSettings, () => {
                     this.user.name = firstName.text;
                     this.user.pref.name = firstName.text;
                     this.user.pref.bio = bio.text;

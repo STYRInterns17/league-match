@@ -30,7 +30,6 @@ export class HomePage extends BasePage {
         this.createComponents();
         console.log('Page' + this.page);
         console.log('Page parent' + this.page.parent());
-          //  this.navigationView = navView
         this.colorScheme =  ColorScheme.Primary;
     }
 
