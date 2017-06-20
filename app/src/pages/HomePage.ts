@@ -53,18 +53,18 @@ export class HomePage extends BasePage {
         let adminButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Broadcast').on('tap', () => {
             // The '+' signifies that the string is actually a number
             this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
-        });
+        }).changeBorderColor('#000000');
         adminButton.appendTo(drawer);
 
         let profileButton = new customButton({top: 'prev() 16',left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Profile').on('tap', () => {
             this.page.parent().append(new ProfilePage().page);
 
-        });
+        }).changeBorderColor('#000000');
         profileButton.appendTo(drawer);
 
         let notificationButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Notifications').on('tap', () => {
             this.page.parent().append(new NotificationPage().page);
-        });
+        }).changeBorderColor('#000000');
         notificationButton.appendTo(drawer);
 
         let leagueButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Leagues').on('tap', () => {
@@ -74,7 +74,7 @@ export class HomePage extends BasePage {
             if(this.page.parent() == null){
             }
             this.page.parent().append(leaguePage);
-        });
+        }).changeBorderColor('#000000');
         leagueButton.appendTo(drawer);
 
         let logMatchButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary }, 'Log A Match').on('tap', () => {
@@ -82,7 +82,7 @@ export class HomePage extends BasePage {
                 logmatchPage.dispose();
             });
             this.page.parent().append(logmatchPage);
-        }).append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
+        }).changeBorderColor('#000000').append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
         logMatchButton.appendTo(drawer);
 
         let signOutButton = new customButton({
@@ -92,7 +92,7 @@ export class HomePage extends BasePage {
         }, 'Sign Out').on('tap', () => {
             localStorage.clear();
             tabris.app.reload();
-        });
+        }).changeBorderColor('#000000');
         signOutButton.appendTo(drawer);
 
         this.userId = parseInt(localStorage.getItem('userId'));

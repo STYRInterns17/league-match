@@ -9,6 +9,7 @@ import {InvitePage} from "./InvitePage";
 import {ServiceLayer} from "../ServiceLayer";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
 import {User} from "../../../common/User";
+import {ColorScheme} from "../ColorScheme";
 
 const HIGH_SCORE = [
     {
@@ -119,15 +120,16 @@ export class LeagueCreationPage extends BasePage{
         };
 
         let inviteButton = new customButton({
-            top: 'prev() 40',
+            top: 'prev() 10',
             left: '10%',
             right: '10%',
+            background: ColorScheme.Background
         }, 'Invite...').on('tap', () =>
 
             this.page.parent().append(new InvitePage().createInvitePage(LeagueInfo).on('disappear', () => {
                 this.page.dispose();
             }))
-        );
+        ).changeBorderColor('#000000');
 
         inviteButton.appendTo(this.page);
         return this.page;
