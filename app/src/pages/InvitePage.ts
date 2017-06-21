@@ -1,6 +1,6 @@
 import {BasePage} from "./BasePage";
 import * as tabris from 'tabris';
-import {Composite, ImageView, ScrollView, TextView, SearchAction} from "tabris";
+import {Composite, ImageView, ScrollView, TextView, SearchAction, AlertDialog} from "tabris";
 import {League} from "../../../common/League";
 import {customButton} from "../customButton";
 import {ServiceLayer} from "../ServiceLayer";
@@ -26,15 +26,13 @@ export class InvitePage extends BasePage{
          let idArray: Array<number> = [];
          //this.page.title = 'Invite friends';
 
-        let comp = new Composite({
-            top:0,
-            left: 0,
-            right: 0,
-            bottom: '90%',
-            background: ColorScheme.Background
+        // dispose of page and action search on dissappear
+        this.page.on('disappear', () => {
+            action.dispose();
+            this.page.dispose();
         });
-        comp.appendTo(this.page);
-        let comp1 = new tabris.Composite({top: comp, bottom: '15%', left: 0, right: 0, background: '#f74'}).appendTo(this.page);
+
+        let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0, background: '#f74'}).appendTo(this.page);
         let comp2 = new tabris.Composite({top: comp1, left: 0, right: 0, background: ColorScheme.Background, bottom: 0}).appendTo(this.page);
 
         let scrollView = new ScrollView({
@@ -44,23 +42,24 @@ export class InvitePage extends BasePage{
         }).appendTo(comp1);
 
 
-        new tabris.TextInput({
-            centerY: 0, left: '10%', right: '10%', alignment: 'center',
-            message: 'Add by email',
-            enterKeyType: 'done',
-            autoCorrect: true
-        }).on('accept', ({text}) => {
+        let action = new SearchAction({
+            title: 'Search',
+            image: {
+                src: device.platform === 'iOS' ? 'assets/search.png' : 'assets/search.png',
+                scale: 2
+            }
+        }).on('accept', ({target}) =>{
             console.log('Invite2: ' + this.userObj.email);
             let isMatch = false;
-            if(text != this.userObj.email) {
+            if(target.text != this.userObj.email) {
                 for (let i = 0; i < textArray.length; i++) {
-                    if (textArray[i] == text) {
+                    if (textArray[i] == target.text) {
                         isMatch = true;
                         break;
                     }
                 }
                 if (isMatch == false) {
-                    ServiceLayer.httpGetAsync('/user/name', 'userName=' + text, (response) => {
+                    ServiceLayer.httpGetAsync('/user/name', 'userName=' + target.text, (response) => {
                         if (Number.isInteger(response)) {
                             ServiceLayer.httpGetAsync('/user', 'userId=' + response, (response2 )=>{
                                 let user = response2.user;
@@ -90,9 +89,34 @@ export class InvitePage extends BasePage{
                                     alignment: 'center',
                                     font: 'bold 20px',
                                     textColor: '#000000',
-                                    text: text
-                                }).appendTo(innerComp);
-                                textArray.push(text);
+                                    text: target.text
+                                }).appendTo(innerComp).on('tap', () =>{
+                                    new AlertDialog({
+                                        title: 'Would you like to remove this user?',
+                                        buttons: {
+                                            ok: 'Yes',
+                                            cancel: 'No',
+                                        }
+                                    }).on({
+                                        closeOk: () => {
+                                            console.log('oldIdArray ' + idArray);
+                                            console.log('oldTextArray: ' + textArray);
+                                            let index = textArray.indexOf(target.text);
+                                            if (index > -1) {
+                                                textArray.splice(index, 1);
+                                            }
+                                            let index2 = idArray.indexOf(response);
+                                            if (index2 > -1) {
+                                                idArray.splice(index2, 1);
+                                            }
+                                            console.log('newIdArray ' + idArray);
+                                            console.log('newTextArray: ' + textArray);
+                                            comp.dispose()
+                                        },
+                                        closeCancel: () => console.log('NO')
+                                    }).open();
+                                });
+                                textArray.push(target.text);
                                 idArray.push(response);
                                 console.log(idArray.length);
                                 window.plugins.toast.showShortCenter('User Added!');
@@ -104,98 +128,23 @@ export class InvitePage extends BasePage{
             }else{
                 window.plugins.toast.showShortCenter('You are already in the league!');
             }
-        }).appendTo(comp);
 
-        const PROPOSALS = ['baseball', 'batman', 'battleship', 'bangkok', 'bangladesh', 'banana', 'b@b.com'];
 
-        let page = new tabris.Page({
-            title: 'Search action'
-        }).appendTo(this.page.parent());
 
-        let searchBox = new Composite({
-            centerX: 0, centerY: 0
-        }).appendTo(page);
-
-        let textView = new TextView().appendTo(searchBox);
-
-        let action = new SearchAction({
-            title: 'Search',
-            image: {
-                src: device.platform === 'iOS' ? 'images/search-black-24dp@3x.png' : 'images/search-white-24dp@3x.png',
-                scale: 3
-            }
-        }).on('select', ({target}) => target.text = '')
-            .on('input', ({text}) => updateProposals(text))
-            .on('accept', ({text}) =>
-            {
-                console.log('Invite2: ' + this.userObj.email);
-                let isMatch = false;
-                if(text != this.userObj.email) {
-                    for (let i = 0; i < textArray.length; i++) {
-                        if (textArray[i] == text) {
-                            isMatch = true;
-                            break;
-                        }
-                    }
-                    if (isMatch == false) {
-                        ServiceLayer.httpGetAsync('/user/name', 'userName=' + text, (response) => {
-                            if (Number.isInteger(response)) {
-                                ServiceLayer.httpGetAsync('/user', 'userId=' + response, (response2 )=>{
-                                    let user = response2.user;
-
-                                    let comp = new Composite({
-                                        left: 10,
-                                        right: 10,
-                                        height: 100,
-                                        top: 'prev() 10',
-                                        background: '#000000',
-                                        cornerRadius: 5
-                                    }).appendTo(scrollView);
-                                    let innerComp = new Composite({
-                                        left: 2,
-                                        right: 2,
-                                        top: 2,
-                                        bottom: 2,
-                                        background: ColorScheme.Background,
-                                        cornerRadius: 5
-                                    }).appendTo(comp);
-                                    let imageView = new ImageView({
-                                        centerY: 0, width: 80, height: 80, right: 40,
-                                        image: 'assets/' + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'
-                                    }).appendTo(innerComp);
-                                    new TextView({
-                                        centerY: 0,
-                                        right: [imageView, 30],
-                                        alignment: 'center',
-                                        font: 'bold 20px',
-                                        textColor: '#000000',
-                                        text: text
-                                    }).appendTo(innerComp);
-                                    textArray.push(text);
-                                    idArray.push(response);
-                                    console.log(idArray.length);
-                                    window.plugins.toast.showShortCenter('User Added!');
-                                })} else {
-                                window.plugins.toast.showShortCenter('User does not exist!');
-                            }
-                        });
-                    }
-                }else{
-                    window.plugins.toast.showShortCenter('You are already in the league!');
+        })
+            .on('input', ({text}) =>{
+                if(text.length>0){
+                    ServiceLayer.httpGetAsync('/user/name/prefix', 'prefix=' + text, (response) => {
+                        console.log(response);
+                        updateProposals(response);
+                    })
                 }
-            }).appendTo(this.page.parent());
+            })
+            .appendTo(this.page.parent());
+        updateProposals(['']);
 
-        updateProposals('');
-
-        new tabris.Button({
-            text: 'Open Search',
-            centerX: 0,
-            top: 'prev() 10'
-        }).on('select', () => action.open())
-            .appendTo(searchBox);
-
-        function updateProposals(query) {
-            action.proposals = PROPOSALS.filter(proposal => proposal.indexOf(query.toLowerCase()) !== -1);
+        function updateProposals(array){
+            action.proposals = array;
         }
 
         let finishButton = new customButton({
@@ -241,4 +190,5 @@ export class InvitePage extends BasePage{
     }
 
 }
+
 
