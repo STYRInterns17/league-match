@@ -28,6 +28,7 @@ export class InvitePage extends BasePage{
 
         // dispose of page and action search on dissappear
         this.page.on('disappear', () => {
+            action.visible = false;
             action.dispose();
             this.page.dispose();
         });
@@ -45,7 +46,7 @@ export class InvitePage extends BasePage{
         let action = new SearchAction({
             title: 'Search',
             image: {
-                src: device.platform === 'iOS' ? 'assets/search.png' : 'assets/search.png',
+                src: tabris.device.platform === 'iOS' ? 'assets/search.png' : 'assets/search.png',
                 scale: 2
             }
         }).on('accept', ({text}) =>{
