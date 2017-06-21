@@ -124,12 +124,14 @@ export class LeagueCreationPage extends BasePage{
             left: '10%',
             right: '10%',
             background: ColorScheme.Background
-        }, 'Invite...').on('tap', () =>
+        }, 'Invite...').on('tap', () =>{
+                let invitePage = new InvitePage();
 
-            this.page.parent().append(new InvitePage().createInvitePage(LeagueInfo).on('disappear', () => {
-                this.page.dispose();
-            }))
-        ).changeBorderColor('#000000');
+                this.page.parent().append(invitePage.page)
+            invitePage.createInvitePage(LeagueInfo).on('disappear', () => {
+                    this.page.dispose();
+                })
+        }).changeBorderColor('#000000');
 
         inviteButton.appendTo(this.page);
         return this.page;
