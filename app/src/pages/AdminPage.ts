@@ -71,6 +71,8 @@ export class AdminPage extends BasePage {
             }));
         }).appendTo(this.page);
 
+
+
         let switchComp = new Composite({
             top: 'prev() 40',
             left: '10%',
@@ -101,9 +103,11 @@ export class AdminPage extends BasePage {
             checked: this.league.pref.matchesApprovedByAdmin
         }).appendTo(switchComp);
 
+        switchComp.visible = false;
+
 
         new customButton({
-            top: 'prev() 80',
+            top: 'prev() 120',
             left: '10%',
             right: '10%',
             background: ColorScheme.Background

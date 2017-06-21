@@ -57,6 +57,9 @@ export class LeagueCreationPage extends BasePage{
         }).appendTo(this.page).on('textChanged', ({value}) => {
             LeagueInfo.leaguePref.title = value;
         });
+
+
+
         let switchComp = new Composite({
             top: 'prev() 40',
             left: 0,
@@ -73,6 +76,8 @@ export class LeagueCreationPage extends BasePage{
             centerY: 0,
             checked: true
         }));
+
+        switchComp.visible = false;
 
         let scoreComp = new Composite({
             top: 'prev() 40',
