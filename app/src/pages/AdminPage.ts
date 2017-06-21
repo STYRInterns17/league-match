@@ -61,8 +61,13 @@ export class AdminPage extends BasePage {
                 submitterName: currentUser.name
             };
 
+
+
             ServiceLayer.httpPostAsync('/notification/league', broadcastRequest, (response => {
                 window.plugins.toast.showShortCenter(response.message);
+                if(response.message === 'Broadcast Sent') {
+                    event.target.text = '';
+                }
             }));
         }).appendTo(this.page);
 
