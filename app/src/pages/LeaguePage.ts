@@ -25,16 +25,16 @@ export class LeaguePage extends BasePage {
 
         if (!Array.isArray(this.userObj.leagues) || !this.userObj.leagues.length) {
             this.page.title = 'You are not in any leagues';
-            this.createLeaguePage(0);
+            this.createComponents(0);
         } else {
             this.leagueLoop().then(value => {
-                this.createLeaguePage(this.userObj.leagues.length);
+                this.createComponents(this.userObj.leagues.length);
             });
             this.page.title = 'League Page';
         }
     }
 
-    private createLeaguePage(leagueLength: number): void {
+    private createComponents(leagueLength: number): void {
 
         let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0}).appendTo(this.page);
         let comp2 = new tabris.Composite({

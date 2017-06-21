@@ -135,7 +135,7 @@ export class LeagueCreationPage extends BasePage {
             let invitePage = new InvitePage();
 
             this.page.parent().append(invitePage.page)
-            invitePage.createInvitePage(LeagueInfo).on('disappear', () => {
+            invitePage.createComponents(LeagueInfo).on('disappear', () => {
                 this.page.dispose();
             })
         }).changeBorderColor('#000000');

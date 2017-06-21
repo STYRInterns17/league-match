@@ -33,7 +33,7 @@ export class NotificationPage extends BasePage {
         });
     }
 
-    public createComponents(): void {
+    private createComponents(): void {
         this.page.background = ColorScheme.Background;
 
         let notificationContainer = new tabris.Composite({

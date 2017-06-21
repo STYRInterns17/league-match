@@ -23,7 +23,7 @@ export class LoginPage extends BasePage {
         this.createComponents();
     }
 
-    public createComponents(): void {
+    private createComponents(): void {
 
         this.page.title = 'Welcome to League Match';
         this.page.background = '#B4E0E1';

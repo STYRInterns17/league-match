@@ -24,7 +24,7 @@ export class InvitePage extends BasePage {
         this.page.title = 'Invite friends';
     }
 
-    public createInvitePage(leagueInfo) {
+    public createComponents(leagueInfo) {
         console.log('Invite1: ' + this.userObj.email);
         let textArray: Array<string> = [];
         let idArray: Array<number> = [];
