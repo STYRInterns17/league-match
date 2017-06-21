@@ -1,8 +1,8 @@
 import {Page} from "tabris";
-import {User} from "../../common/User";
-import {League} from "../../common/League";
-import {ServiceLayer} from "./ServiceLayer";
-import {ColorScheme} from "./ColorScheme";
+import {User} from "../../../common/User";
+import {League} from "../../../common/League";
+import {ServiceLayer} from "../util/ServiceLayer";
+import {ColorScheme} from "../util/ColorScheme";
 /**
  * Created by Michael on 6/6/2017.
  */

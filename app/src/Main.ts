@@ -2,7 +2,7 @@ import * as tabris from 'tabris';
 import {LoginPage} from './pages/LoginPage';
 import {NotificationPage} from './pages/NotificationPage'
 import {LogMatchPage} from "./pages/LogMatchPage";
-import {Leaderboard} from "./Leaderboard";
+import {Leaderboard} from "./components/Leaderboard";
 import {HomePage} from "./pages/HomePage";
 
 

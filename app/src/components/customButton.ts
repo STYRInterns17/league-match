@@ -3,7 +3,7 @@
  */
 
 import * as tabris from 'tabris';
-import {ColorScheme} from "./ColorScheme";
+import {ColorScheme} from "../util/ColorScheme";
 
 export class customButton extends tabris.Composite{
 

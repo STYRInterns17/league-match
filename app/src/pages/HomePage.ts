@@ -4,18 +4,18 @@
 import * as tabris from 'tabris';
 
 import {BasePage} from './BasePage';
-import {Leaderboard} from '../Leaderboard';
-import {customButton} from '../customButton';
+import {Leaderboard} from '../components/Leaderboard';
+import {customButton} from '../components/customButton';
 import {AdminPage} from './AdminPage';
 import {LeaguePage} from "./LeaguePage";
-import {ServiceLayer} from "../ServiceLayer";
+import {ServiceLayer} from "../util/ServiceLayer";
 import {User} from "../../../common/User";
 import {NotificationPage} from "./NotificationPage";
 import {ProfilePage} from "./ProfilePage";
 import {LoginPage} from "./LoginPage";
 import {LogMatchPage} from "./LogMatchPage";
 import {Button, Color, Composite, Drawer, NavigationView} from "tabris";
-import {ColorScheme} from "../ColorScheme";
+import {ColorScheme} from "../util/ColorScheme";
 import {League} from "../../../common/League";
 
 const IMAGE_PATH = 'assets/';

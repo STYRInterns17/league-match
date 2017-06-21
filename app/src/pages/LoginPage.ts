@@ -5,7 +5,7 @@
 import * as tabris from "tabris";
 import {BasePage} from './BasePage';
 import construct = Reflect.construct;
-import {ServiceLayer} from "../ServiceLayer";
+import {ServiceLayer} from "../util/ServiceLayer";
 import {User} from "../../../common/User";
 import {UserPreferences} from "../../../common/UserPreferences";
 import {HomePage} from "./HomePage";

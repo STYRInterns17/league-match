@@ -5,11 +5,11 @@ import * as tabris from 'tabris';
 import {Notification} from "../../../common/Notification"
 
 import {BasePage} from './BasePage';
-import {ServiceLayer} from "../ServiceLayer";
+import {ServiceLayer} from "../util/ServiceLayer";
 import {NotificationComposite} from "../components/NotificationComposite";
 import {TextView} from "tabris";
-import {ColorScheme} from "../ColorScheme";
-import {customButton} from "../customButton";
+import {ColorScheme} from "../util/ColorScheme";
+import {customButton} from "../components/customButton";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {User} from "../../../common/User";
 

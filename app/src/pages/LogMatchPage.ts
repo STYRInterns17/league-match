@@ -4,9 +4,9 @@
 import * as tabris from 'tabris';
 
 import {BasePage} from './BasePage';
-import {ServiceLayer} from "../ServiceLayer";
-import {ColorScheme} from "../ColorScheme";
-import {customButton} from "../customButton";
+import {ServiceLayer} from "../util/ServiceLayer";
+import {ColorScheme} from "../util/ColorScheme";
+import {customButton} from "../components/customButton";
 import {Match} from "../../../common/Match";
 
 export class LogMatchPage extends BasePage {

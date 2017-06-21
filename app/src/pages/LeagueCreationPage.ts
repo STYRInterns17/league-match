@@ -4,12 +4,12 @@
 import {BasePage} from './BasePage';
 import * as tabris from 'tabris';
 import {Composite, TextView} from "tabris";
-import {customButton} from '../customButton';
+import {customButton} from '../components/customButton';
 import {InvitePage} from "./InvitePage";
-import {ServiceLayer} from "../ServiceLayer";
+import {ServiceLayer} from "../util/ServiceLayer";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
 import {User} from "../../../common/User";
-import {ColorScheme} from "../ColorScheme";
+import {ColorScheme} from "../util/ColorScheme";
 
 const HIGH_SCORE = [
     {

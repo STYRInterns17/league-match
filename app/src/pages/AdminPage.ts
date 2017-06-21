@@ -2,10 +2,10 @@ import {BasePage} from './BasePage';
 import * as tabris from 'tabris';
 import {Composite} from "tabris";
 import {User} from "../../../common/User";
-import {ServiceLayer} from "../ServiceLayer";
-import {ColorScheme} from "../ColorScheme";
+import {ServiceLayer} from "../util/ServiceLayer";
+import {ColorScheme} from "../util/ColorScheme";
 import {League} from "../../../common/League";
-import {customButton} from "../customButton";
+import {customButton} from "../components/customButton";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
 import {AdminInvitePage} from "./AdminInvitePage";
 

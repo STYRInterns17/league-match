@@ -5,14 +5,14 @@ import {BasePage} from "./BasePage";
 import * as tabris from 'tabris';
 import {AlertDialog, Composite, device, ImageView, ScrollView, SearchAction, TextView} from "tabris";
 import {League} from "../../../common/League";
-import {customButton} from "../customButton";
-import {ServiceLayer} from "../ServiceLayer";
+import {customButton} from "../components/customButton";
+import {ServiceLayer} from "../util/ServiceLayer";
 import {User} from "../../../common/User";
 import {stripComments} from "tslint/lib/utils";
 import {Notification} from "../../../common/Notification";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {ApprovalData} from "../../../common/ApprovalData";
-import {ColorScheme} from "../ColorScheme";
+import {ColorScheme} from "../util/ColorScheme";
 
 export class AdminInvitePage extends BasePage {
     private userObj: User;

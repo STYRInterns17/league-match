@@ -2,13 +2,13 @@
  * Created by STYRLabs2 on 6/7/2017.
  */
 import {BasePage} from './BasePage';
-import {customButton} from '../customButton';
+import {customButton} from '../components/customButton';
 import * as tabris from 'tabris';
 import {LeagueCreationPage} from "./LeagueCreationPage";
-import {ServiceLayer} from "../ServiceLayer";
+import {ServiceLayer} from "../util/ServiceLayer";
 import {League} from "../../../common/League";
 import {User} from "../../../common/User";
-import {ColorScheme} from "../ColorScheme";
+import {ColorScheme} from "../util/ColorScheme";
 import {Composite} from "tabris";
 const IMAGE_PATH = 'assets/';
 

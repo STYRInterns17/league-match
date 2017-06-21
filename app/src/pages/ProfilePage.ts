@@ -4,11 +4,11 @@
 
 import {BasePage} from './BasePage';
 import * as tabris from 'tabris';
-import {ServiceLayer} from "../ServiceLayer";
+import {ServiceLayer} from "../util/ServiceLayer";
 import {User} from "../../../common/User";
-import {customButton} from '../customButton';
+import {customButton} from '../components/customButton';
 import {UserPreferences} from "../../../common/UserPreferences";
-import {ColorScheme} from "../ColorScheme";
+import {ColorScheme} from "../util/ColorScheme";
 
 /**
  * Created by STYRLabs2 on 6/7/2017.

@@ -2,10 +2,10 @@
  * Created by STYR-Curt on 6/7/2017.
  */
 import * as tabris from 'tabris/tabris';
-import {ColorScheme} from "../ColorScheme";
+import {ColorScheme} from "../util/ColorScheme";
 import {Notification} from "../../../common/Notification";
-import {customButton} from "../customButton";
-import {ServiceLayer} from "../ServiceLayer";
+import {customButton} from "./customButton";
+import {ServiceLayer} from "../util/ServiceLayer";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {ApprovalData} from "../../../common/ApprovalData";
 
