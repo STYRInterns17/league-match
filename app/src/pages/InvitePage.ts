@@ -134,7 +134,7 @@ export class InvitePage extends BasePage {
                                 textArray.push(text);
                                 idArray.push(response);
                                 console.log(idArray.length);
-                                window.plugins.toast.showShortCenter('User Added!');
+                                //window.plugins.toast.showShortCenter('User Added!');
                                 event.target.text = '';
                             })
                         } else {

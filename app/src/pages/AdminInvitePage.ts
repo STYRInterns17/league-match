@@ -131,7 +131,7 @@ export class AdminInvitePage extends BasePage {
                                     textArray.push(searchText);
                                     idArray.push(response);
                                     console.log(idArray.length);
-                                    window.plugins.toast.showShortCenter('User Added!');
+                                    //window.plugins.toast.showShortCenter('User Added!');
                                     event.target.text = '';
                                 })
                             }
