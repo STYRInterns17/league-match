@@ -58,28 +58,7 @@ export class LoginPage extends BasePage {
             textColor: 'black'
         })).appendTo(this.page);
 
-        new tabris.Button({
-            layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
-            text: 'Sign in'
-        }).on('select', () => {
 
-            let userValidation = {
-                userEmail: this.userEmail.text,
-                userPassword: this.userPassword.text
-            };
-
-            ServiceLayer.httpPostAsync('/user/validate', userValidation, (response) => {
-                console.log(response.success);
-                if (response.success) {
-                    localStorage.setItem('userId', response.user.id);
-                    window.plugins.toast.showShortCenter('Welcome');
-                    new HomePage(this.page.parent()).page.appendTo(this.page.parent());
-                    this.page.dispose();
-                } else {
-                    window.plugins.toast.showShortCenter('Login Invalid');
-                }
-            });
-        }).appendTo(this.page);
 
         new tabris.TextView({
             layoutData: {left: 0, right: 0, bottom: 0, height: 40},
@@ -127,7 +106,7 @@ export class LoginPage extends BasePage {
             }).appendTo(signUpPage);
 
             new tabris.Button({
-                layoutData: {left: '25%', right: '25%', top: '80%', bottom: '10%'},
+                layoutData: {left: '25%', right: '25%', height: 40, bottom: '10%'},
                 text: 'Finish'
             }).on('select', () => {
 
@@ -158,6 +137,29 @@ export class LoginPage extends BasePage {
                     }
                 }
             }).appendTo(signUpPage)
+        }).appendTo(this.page);
+
+        new tabris.Button({
+            layoutData: {left: '25%', right: '25%', height: 40, bottom: 'prev()'},
+            text: 'Sign in'
+        }).on('select', () => {
+
+            let userValidation = {
+                userEmail: this.userEmail.text,
+                userPassword: this.userPassword.text
+            };
+
+            ServiceLayer.httpPostAsync('/user/validate', userValidation, (response) => {
+                console.log(response.success);
+                if (response.success) {
+                    localStorage.setItem('userId', response.user.id);
+                    window.plugins.toast.showShortCenter('Welcome');
+                    new HomePage(this.page.parent()).page.appendTo(this.page.parent());
+                    this.page.dispose();
+                } else {
+                    window.plugins.toast.showShortCenter('Login Invalid');
+                }
+            });
         }).appendTo(this.page);
     }
 }
