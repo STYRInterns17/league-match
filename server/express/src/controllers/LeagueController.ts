@@ -63,15 +63,31 @@ export class LeagueController {
     public static addLeaguePlayers(leagueId: number, userId): boolean {
         //DBManager get league, update league preferences
         this.get(leagueId).then((league: League) => {
-            league.playerIds.push(parseInt(userId));
-            DBManager.updateItem(this.TABLE, league);
-        });
-        UserController.get(userId).then((user) =>{
-            user.leagues.push(leagueId);
-            user.mmr.push(5000);
-           UserController.updateUser(user) ;
+            let userInLeagueAlready = false;
+            for(let i = 0; i < league.playerIds.length; i++) {
+                if(league.playerIds[i] === userId) {
+                    userInLeagueAlready = true;
+                }
+            }
+
+            if(!userInLeagueAlready) {
+                league.playerIds.push(parseInt(userId));
+                DBManager.updateItem(this.TABLE, league);
+
+
+                UserController.get(userId).then((user) =>{
+                    user.leagues.push(leagueId);
+                    user.mmr.push(5000);
+                    UserController.updateUser(user) ;
+                });
+
+                return true;
+            }
+
+
         });
         return true;
+
     }
 
     public static getUsers(id: number): number[] {
