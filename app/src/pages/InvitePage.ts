@@ -13,18 +13,20 @@ import {ColorScheme} from "../ColorScheme";
 /**
  * Created by STYRLabs2 on 6/7/2017.
  */
-export class InvitePage extends BasePage{
+export class InvitePage extends BasePage {
     private userObj: User;
-    constructor(){
+
+    constructor() {
         super();
         this.userObj = JSON.parse(localStorage.getItem('userObj'));
         this.page.title = 'Invite friends';
     }
-    public createInvitePage(leagueInfo){
+
+    public createInvitePage(leagueInfo) {
         console.log('Invite1: ' + this.userObj.email);
-         let textArray: Array<string> = [];
-         let idArray: Array<number> = [];
-         //this.page.title = 'Invite friends';
+        let textArray: Array<string> = [];
+        let idArray: Array<number> = [];
+        //this.page.title = 'Invite friends';
 
         // dispose of page and action search on dissappear
         this.page.on('disappear', () => {
@@ -33,8 +35,20 @@ export class InvitePage extends BasePage{
             this.page.dispose();
         });
 
-        let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0, background: '#f74'}).appendTo(this.page);
-        let comp2 = new tabris.Composite({top: comp1, left: 0, right: 0, background: ColorScheme.Background, bottom: 0}).appendTo(this.page);
+        let comp1 = new tabris.Composite({
+            top: 0,
+            bottom: '15%',
+            left: 0,
+            right: 0,
+            background: '#f74'
+        }).appendTo(this.page);
+        let comp2 = new tabris.Composite({
+            top: comp1,
+            left: 0,
+            right: 0,
+            background: ColorScheme.Background,
+            bottom: 0
+        }).appendTo(this.page);
 
         let scrollView = new ScrollView({
             left: 0, right: 0, top: 0, bottom: 0,
@@ -49,11 +63,10 @@ export class InvitePage extends BasePage{
                 src: tabris.device.platform === 'iOS' ? 'assets/search.png' : 'assets/search.png',
                 scale: 2
             }
-        }).on('accept', ({text}) =>{
-            console.log('Target '+ text);
-            console.log('Invite2: ' + this.userObj.email);
+        }).on('accept', (event) => {
+            let text = event.text;
             let isMatch = false;
-            if(text != this.userObj.email) {
+            if (text != this.userObj.email) {
                 for (let i = 0; i < textArray.length; i++) {
                     if (textArray[i] == text) {
                         isMatch = true;
@@ -63,7 +76,7 @@ export class InvitePage extends BasePage{
                 if (isMatch == false) {
                     ServiceLayer.httpGetAsync('/user/name', 'userName=' + text.toString(), (response) => {
                         if (Number.isInteger(response)) {
-                            ServiceLayer.httpGetAsync('/user', 'userId=' + response, (response2 )=>{
+                            ServiceLayer.httpGetAsync('/user', 'userId=' + response, (response2) => {
                                 let user = response2.user;
                                 let comp = new Composite({
                                     left: 10,
@@ -92,7 +105,7 @@ export class InvitePage extends BasePage{
                                     font: 'bold 20px',
                                     textColor: '#000000',
                                     text: text
-                                }).appendTo(innerComp).on('tap', () =>{
+                                }).appendTo(innerComp).on('tap', () => {
                                     new AlertDialog({
                                         title: 'Would you like to remove this user?',
                                         buttons: {
@@ -101,8 +114,7 @@ export class InvitePage extends BasePage{
                                         }
                                     }).on({
                                         closeOk: () => {
-                                            console.log('oldIdArray ' + idArray);
-                                            console.log('oldTextArray: ' + textArray);
+
                                             let index = textArray.indexOf(text);
                                             if (index > -1) {
                                                 textArray.splice(index, 1);
@@ -111,8 +123,7 @@ export class InvitePage extends BasePage{
                                             if (index2 > -1) {
                                                 idArray.splice(index2, 1);
                                             }
-                                            console.log('newIdArray ' + idArray);
-                                            console.log('newTextArray: ' + textArray);
+                                            ;
                                             comp.dispose()
                                         },
                                         closeCancel: () => console.log('NO')
@@ -122,20 +133,21 @@ export class InvitePage extends BasePage{
                                 idArray.push(response);
                                 console.log(idArray.length);
                                 window.plugins.toast.showShortCenter('User Added!');
-                            })} else {
+                                event.target.text = '';
+                            })
+                        } else {
                             window.plugins.toast.showShortCenter('User does not exist!');
                         }
                     });
                 }
-            }else{
+            } else {
                 window.plugins.toast.showShortCenter('You are already in the league!');
             }
 
 
-
         })
-            .on('input', ({text}) =>{
-                if(text.length>0){
+            .on('input', ({text}) => {
+                if (text.length > 0) {
                     ServiceLayer.httpGetAsync('/user/name/prefix', 'prefix=' + text, (response) => {
                         console.log(response);
                         updateProposals(response);
@@ -145,14 +157,15 @@ export class InvitePage extends BasePage{
             .appendTo(this.page.parent());
         updateProposals(['']);
 
-        function updateProposals(array){
+        function updateProposals(array) {
             action.proposals = array;
         }
 
         let finishButton = new customButton({
             left: '10%',
             right: '10%',
-            centerY: 0, background: ColorScheme.Background}, 'Finish').appendTo(comp2).on('tap', ()=>{
+            centerY: 0, background: ColorScheme.Background
+        }, 'Finish').appendTo(comp2).on('tap', () => {
             //create league
             ServiceLayer.httpPostAsync('/league', leagueInfo, (response) => {
                 this.userObj.leagues.push(response.id);
@@ -163,25 +176,26 @@ export class InvitePage extends BasePage{
                 localStorage.removeItem('userObj');
                 localStorage.setItem('userObj', JSON.stringify(this.userObj));
                 //update logged in user by adding league to user leagues
-                ServiceLayer.httpPostAsync('/user/update', this.userObj ,(response) =>{
+                ServiceLayer.httpPostAsync('/user/update', this.userObj, (response) => {
                     console.log('user leagues array updated');
-                    if(idArray.length>0){
-                        for(let i =0; i<idArray.length; i++){
-                            let notification = {userId: idArray[i],
-                            message: 'Invite to ' + leagueInfo.leaguePref.title,
+                    if (idArray.length > 0) {
+                        for (let i = 0; i < idArray.length; i++) {
+                            let notification = {
+                                userId: idArray[i],
+                                message: 'Invite to ' + leagueInfo.leaguePref.title,
                                 type: ApprovalType.InviteApproval,
                                 submitterName: this.userObj.email,
-                            submitterLeague: leagueInfo.leaguePref.title,
-                            approvalData: new ApprovalData(leagueId)
+                                submitterLeague: leagueInfo.leaguePref.title,
+                                approvalData: new ApprovalData(leagueId)
                             };
-                            ServiceLayer.httpPostAsync('/notification/user', notification, () =>{
+                            ServiceLayer.httpPostAsync('/notification/user', notification, () => {
                                 console.log('Invite sent')
                             });
-                            if(i == idArray.length - 1 ){
+                            if (i == idArray.length - 1) {
                                 this.page.dispose();
                             }
                         }
-                    }else{
+                    } else {
                         this.page.dispose();
                     }
                 });
