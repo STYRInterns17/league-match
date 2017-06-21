@@ -30,21 +30,22 @@ export class HomePage extends BasePage {
 
     constructor() {
         super();
-        this.createComponents();
-        console.log('Page' + this.page);
-        console.log('Page parent' + this.page.parent());
-        this.colorScheme = ColorScheme.Primary;
-    }
-
-    public createComponents(): void {
-
 
         this.page.background = '#B4E0E1';
+        this.page.autoDispose = false;
+        console.log('new');
 
         this.page.on('appear', () => {
             this.reloadLeaderBoard(this.page);
             this.reloadAdminButton();
         });
+
+        this.createComponents();
+        this.colorScheme = ColorScheme.Primary;
+    }
+
+    public createComponents(): void {
+
 
         //CREATE DRAWER
         let drawer = tabris.ui.drawer;
@@ -119,6 +120,7 @@ export class HomePage extends BasePage {
             left: '10%', right: '10%',
             background: '#cb2431'
         }, 'Sign Out').on('tap', () => {
+            this.page.dispose();
             CacheManager.clearCache();
             tabris.app.reload();
         }).changeBorderColor('#000000');
