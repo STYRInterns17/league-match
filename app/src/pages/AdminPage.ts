@@ -36,7 +36,7 @@ export class AdminPage extends BasePage {
     private createComponents() {
         console.log('creating components');
         this.page.title = 'League Settings';
-        this.page.background = ColorScheme.Primary
+        this.page.background = ColorScheme.Background;
 
 
         let leagueTitle = new tabris.TextInput({
@@ -72,7 +72,7 @@ export class AdminPage extends BasePage {
             right: '10%',
             height: 60,
             cornerRadius: 5,
-            background: ColorScheme.Accent,
+            background: ColorScheme.Background,
 
         }).appendTo(this.page);
 
@@ -101,18 +101,22 @@ export class AdminPage extends BasePage {
             top: 'prev() 80',
             left: '10%',
             right: '10%',
-            background: ColorScheme.Accent
+            background: ColorScheme.Background
         }, 'Invite Players').on('tap', (event) => {
 
-            new AdminInvitePage().createInvitePage(this.league).appendTo(this.page.parent());
+            let invitePage = new AdminInvitePage();
 
-        }).changeBorderColor(ColorScheme.Primary).appendTo(this.page);
+            this.page.parent().append(invitePage.page);
+            invitePage.createInvitePage(this.league).on('disappear', () => {
+                this.page.dispose();
+            });
+        }).changeBorderColor('#000000').appendTo(this.page);
 
         new customButton({
             top: 'prev() 80',
             left: '10%',
             right: '10%',
-            background: ColorScheme.Accent
+            background: ColorScheme.Background
         }, 'Apply').on('tap', (event) => {
 
             let newPref = new LeaguePreferences(approvedByadminSwitch.checked, leagueTitle.text, this.league.pref.timeZone, this.league.pref.scoreRange, this.league.pref.highestScore)
@@ -121,7 +125,7 @@ export class AdminPage extends BasePage {
                 console.log(response);
                 window.plugins.toast.showShortCenter(response.message);
             })
-        }).changeBorderColor(ColorScheme.Primary).appendTo(this.page);
+        }).changeBorderColor('#000000').appendTo(this.page);
 
 
         /*new tabris.Button({

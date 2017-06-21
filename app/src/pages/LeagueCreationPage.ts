@@ -47,6 +47,7 @@ export class LeagueCreationPage extends BasePage{
     }
 
     private createAdminPage(){
+        this.page.background = ColorScheme.Background;
         this.page.title = 'Create a League';
             new tabris.TextInput({
             top: 20, left: '10%', right: '10%',
@@ -120,7 +121,7 @@ export class LeagueCreationPage extends BasePage{
         };
 
         let inviteButton = new customButton({
-            top: 'prev() 10',
+            bottom: 10,
             left: '10%',
             right: '10%',
             background: ColorScheme.Background

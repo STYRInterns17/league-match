@@ -3,7 +3,7 @@
  */
 import {BasePage} from "./BasePage";
 import * as tabris from 'tabris';
-import {Composite, ImageView, ScrollView, TextView} from "tabris";
+import {Composite, ImageView, ScrollView, SearchAction, TextView} from "tabris";
 import {League} from "../../../common/League";
 import {customButton} from "../customButton";
 import {ServiceLayer} from "../ServiceLayer";
@@ -19,12 +19,13 @@ export class AdminInvitePage extends BasePage{
     constructor(){
         super();
         this.userObj = JSON.parse(localStorage.getItem('userObj'));
+        this.page.title = 'Add friends to to this League';
     }
     public createInvitePage(leagueInfo:League){
         console.log('Invite1: ' + this.userObj.email);
         let textArray: Array<string> = [];
         let idArray: Array<number> = [];
-        this.page.title = 'Add friends to to this League';
+
 
         let comp = new Composite({
             top:0,
@@ -44,74 +45,89 @@ export class AdminInvitePage extends BasePage{
         }).appendTo(comp1);
 
 
-        new tabris.TextInput({
-            centerY: 0, left: '10%', right: '10%', alignment: 'center',
-            message: 'Add by email',
-            enterKeyType: 'done',
-            autoCorrect: true
-        }).on('accept', ({text}) => {
-            console.log('Invite2: ' + this.userObj.email);
-            let isMatch = false;
-            if(text != this.userObj.email) {
-                for (let i = 0; i < textArray.length; i++) {
-                    if (textArray[i] == text) {
-                        isMatch = true;
-                        break;
-                    }
-                }
-                if (isMatch == false) {
-                    ServiceLayer.httpGetAsync('/user/name', 'userName=' + text, (response) => {
-                        if (Number.isInteger(response)) {
-                            //case that user is already in league
-                            if(leagueInfo.playerIds.indexOf(response) != -1){
-                                window.plugins.toast.showShortCenter('User is already in the league!');
-                            }else{
-                                ServiceLayer.httpGetAsync('/user', 'userId=' + response, (response2 )=>{
-                                    let user = response2.user;
-
-                                    let comp = new Composite({
-                                        left: 10,
-                                        right: 10,
-                                        height: 100,
-                                        top: 'prev() 10',
-                                        background: '#000000',
-                                        cornerRadius: 5
-                                    }).appendTo(scrollView);
-                                    let innerComp = new Composite({
-                                        left: 2,
-                                        right: 2,
-                                        top: 2,
-                                        bottom: 2,
-                                        background: ColorScheme.Background,
-                                        cornerRadius: 5
-                                    }).appendTo(comp);
-                                    let imageView = new ImageView({
-                                        centerY: 0, width: 80, height: 80, right: 40,
-                                        image: 'assets/' + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'
-                                    }).appendTo(innerComp);
-                                    new TextView({
-                                        centerY: 0,
-                                        right: [imageView, 30],
-                                        alignment: 'center',
-                                        font: 'bold 20px',
-                                        textColor: '#000000',
-                                        text: text
-                                    }).appendTo(innerComp);
-                                    textArray.push(text);
-                                    idArray.push(response);
-                                    console.log(idArray.length);
-                                    window.plugins.toast.showShortCenter('User Added!');
-                                })
-                            }
-                            } else {
-                            window.plugins.toast.showShortCenter('User does not exist!');
-                        }
-                    });
-                }
-            }else{
-                window.plugins.toast.showShortCenter('You are already in the league!');
+        let action = new SearchAction({
+            title: 'Search',
+            image: {
+                src: device.platform === 'iOS' ? 'assets/search.png' : 'images/search-white-24dp@3x.png',
+                scale: 2
             }
-        }).appendTo(comp);
+        }).on('select', ({target}) => target.text = '')
+            .on('input', ({text}) =>{
+                if(text.length>3){
+                    console.log(text);
+                    ServiceLayer.httpGetAsync()
+                }
+            })
+            .appendTo(this.page.parent());
+
+        // new tabris.TextInput({
+        //     centerY: 0, left: '10%', right: '10%', alignment: 'center',
+        //     message: 'Add by email',
+        //     enterKeyType: 'done',
+        //     autoCorrect: true
+        // }).on('accept', ({text}) => {
+        //     console.log('Invite2: ' + this.userObj.email);
+        //     let isMatch = false;
+        //     if(text != this.userObj.email) {
+        //         for (let i = 0; i < textArray.length; i++) {
+        //             if (textArray[i] == text) {
+        //                 isMatch = true;
+        //                 break;
+        //             }
+        //         }
+        //         if (isMatch == false) {
+        //             ServiceLayer.httpGetAsync('/user/name', 'userName=' + text, (response) => {
+        //                 if (Number.isInteger(response)) {
+        //                     //case that user is already in league
+        //                     if(leagueInfo.playerIds.indexOf(response) != -1){
+        //                         window.plugins.toast.showShortCenter('User is already in the league!');
+        //                     }else{
+        //                         ServiceLayer.httpGetAsync('/user', 'userId=' + response, (response2 )=>{
+        //                             let user = response2.user;
+        //
+        //                             let comp = new Composite({
+        //                                 left: 10,
+        //                                 right: 10,
+        //                                 height: 100,
+        //                                 top: 'prev() 10',
+        //                                 background: '#000000',
+        //                                 cornerRadius: 5
+        //                             }).appendTo(scrollView);
+        //                             let innerComp = new Composite({
+        //                                 left: 2,
+        //                                 right: 2,
+        //                                 top: 2,
+        //                                 bottom: 2,
+        //                                 background: ColorScheme.Background,
+        //                                 cornerRadius: 5
+        //                             }).appendTo(comp);
+        //                             let imageView = new ImageView({
+        //                                 centerY: 0, width: 80, height: 80, right: 40,
+        //                                 image: 'assets/' + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'
+        //                             }).appendTo(innerComp);
+        //                             new TextView({
+        //                                 centerY: 0,
+        //                                 right: [imageView, 30],
+        //                                 alignment: 'center',
+        //                                 font: 'bold 20px',
+        //                                 textColor: '#000000',
+        //                                 text: text
+        //                             }).appendTo(innerComp);
+        //                             textArray.push(text);
+        //                             idArray.push(response);
+        //                             console.log(idArray.length);
+        //                             window.plugins.toast.showShortCenter('User Added!');
+        //                         })
+        //                     }
+        //                     } else {
+        //                     window.plugins.toast.showShortCenter('User does not exist!');
+        //                 }
+        //             });
+        //         }
+        //     }else{
+        //         window.plugins.toast.showShortCenter('You are already in the league!');
+        //     }
+        // }).appendTo(comp);
 
 
 
