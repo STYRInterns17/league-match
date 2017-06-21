@@ -1,11 +1,9 @@
+import {Config} from "../config/Config";
 export class ServiceLayer {
-
-    private static URL: string = 'http://192.168.100.184:3000';
-
 
     public static httpGetAsync(route: string, query: string, callback: (response: any) => void) {
 
-        let fetchRequest: Request = new Request(this.URL + route + '?' + query, {
+        let fetchRequest: Request = new Request(Config.url + route + '?' + query, {
             method: 'GET',
             body: null,
         });
@@ -26,7 +24,7 @@ export class ServiceLayer {
 
 
     public static httpPostAsync(route: string, data: any, callback: (response: Response) => void) {
-        let fetchRequest: Request = new Request(this.URL + route, {
+        let fetchRequest: Request = new Request(Config.url + route, {
             method: 'POST',
             headers: {
                 "Content-type": "application/json",
@@ -50,7 +48,7 @@ export class ServiceLayer {
     public static httpDeleteAsync(route: string, query: string, callback: (response: Response) => void) {
 
 
-        let fetchRequest: Request = new Request(this.URL + route + '?' + query, {
+        let fetchRequest: Request = new Request(Config.url + route + '?' + query, {
             method: 'DELETE',
             body: null,
         });
