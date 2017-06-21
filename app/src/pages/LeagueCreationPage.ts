@@ -37,19 +37,20 @@ const SCORE_RANGE = [
 ];
 
 
-export class LeagueCreationPage extends BasePage{
+export class LeagueCreationPage extends BasePage {
     private ownerID: number;
-    constructor(userIdentification: number){
+
+    constructor(userIdentification: number) {
         super();
         this.ownerID = userIdentification;
 
         this.createAdminPage();
     }
 
-    private createAdminPage(){
+    private createAdminPage() {
         this.page.background = ColorScheme.Background;
         this.page.title = 'Create a League';
-            new tabris.TextInput({
+        new tabris.TextInput({
             top: 20, left: '10%', right: '10%',
             message: 'Title of League',
             enterKeyType: 'send',
@@ -57,7 +58,6 @@ export class LeagueCreationPage extends BasePage{
         }).appendTo(this.page).on('textChanged', ({value}) => {
             LeagueInfo.leaguePref.title = value;
         });
-
 
 
         let switchComp = new Composite({
@@ -71,7 +71,7 @@ export class LeagueCreationPage extends BasePage{
             centerY: 0
         }));
         switchComp.append(new tabris.Switch({
-            left: 'prev() 10' ,
+            left: 'prev() 10',
             id: 'switch',
             centerY: 0,
             checked: true
@@ -85,7 +85,7 @@ export class LeagueCreationPage extends BasePage{
             right: 0
         }).appendTo(this.page);
 
-        new TextView({text: 'Score Range is...',font: 'bold 20px', centerX: 0}).appendTo(scoreComp);
+        new TextView({text: 'Score Range is...', font: 'bold 20px', centerX: 0}).appendTo(scoreComp);
         new tabris.Picker({
             top: 'prev() 10',
             left: '10%',
@@ -93,7 +93,7 @@ export class LeagueCreationPage extends BasePage{
             itemCount: SCORE_RANGE.length,
             itemText: (index) => SCORE_RANGE[index].name,
             selectionIndex: 0
-        }).appendTo(scoreComp).on('selectionIndexChanged', ({value}) =>{
+        }).appendTo(scoreComp).on('selectionIndexChanged', ({value}) => {
             LeagueInfo.leaguePref.scoreRange = value;
         });
 
@@ -103,7 +103,7 @@ export class LeagueCreationPage extends BasePage{
             right: 0
         }).appendTo(this.page);
 
-        new TextView({text: 'Highest score...',font: 'bold 20px', centerX: 0}).appendTo(highestScore);
+        new TextView({text: 'Highest score...', font: 'bold 20px', centerX: 0}).appendTo(highestScore);
         new tabris.Picker({
             top: 'prev() 10',
             left: '10%',
@@ -111,7 +111,7 @@ export class LeagueCreationPage extends BasePage{
             itemCount: HIGH_SCORE.length,
             itemText: (index) => HIGH_SCORE[index].name,
             selectionIndex: 0
-        }).appendTo(highestScore).on('selectionIndexChanged', ({value}) =>{
+        }).appendTo(highestScore).on('selectionIndexChanged', ({value}) => {
             LeagueInfo.leaguePref.highestScore = value;
         });
 
@@ -121,7 +121,7 @@ export class LeagueCreationPage extends BasePage{
         let LeagueInfo = {
             //place userId of current logged in user here
             ownerId: userObj.id,
-            leaguePref: new LeaguePreferences(true, 'My League', 'Arizona', 0 , 0),
+            leaguePref: new LeaguePreferences(true, 'My League', 'Arizona', 0, 0),
             playerIds: arrayId
         };
 
@@ -130,13 +130,13 @@ export class LeagueCreationPage extends BasePage{
             left: '10%',
             right: '10%',
             background: ColorScheme.Background
-        }, 'Invite...').on('tap', () =>{
-                let invitePage = new InvitePage();
+        }, 'Invite...').on('tap', () => {
+            let invitePage = new InvitePage();
 
-                this.page.parent().append(invitePage.page)
+            this.page.parent().append(invitePage.page)
             invitePage.createInvitePage(LeagueInfo).on('disappear', () => {
-                    this.page.dispose();
-                })
+                this.page.dispose();
+            })
         }).changeBorderColor('#000000');
 
         inviteButton.appendTo(this.page);

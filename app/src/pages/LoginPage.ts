@@ -16,7 +16,11 @@ export class LoginPage extends BasePage {
     private userEmail;
     private userPassword;
 
-    constructor() { super(); this.user = JSON.parse(localStorage.getItem('userObj')); this.createComponents(); }
+    constructor() {
+        super();
+        this.user = JSON.parse(localStorage.getItem('userObj'));
+        this.createComponents();
+    }
 
     public createComponents(): void {
 
@@ -57,7 +61,6 @@ export class LoginPage extends BasePage {
             id: "userPassword",
             textColor: 'black'
         })).appendTo(this.page);
-
 
 
         new tabris.TextView({
@@ -154,7 +157,7 @@ export class LoginPage extends BasePage {
                 if (response.success) {
                     localStorage.setItem('userId', response.user.id);
                     window.plugins.toast.showShortCenter('Welcome');
-                    new HomePage(this.page.parent()).page.appendTo(this.page.parent());
+                    new HomePage().page.appendTo(this.page.parent());
                     this.page.dispose();
                 } else {
                     window.plugins.toast.showShortCenter('Login Invalid');

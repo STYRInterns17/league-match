@@ -16,15 +16,16 @@ const IMAGE_PATH = 'assets/';
 export class LeaguePage extends BasePage {
     private leagues: League[];
     private userObj: User;
+
     constructor() {
         super();
         this.userObj = JSON.parse(localStorage.getItem('userObj'));
         this.leagues = [];
 
-        if(!Array.isArray(this.userObj.leagues) || !this.userObj.leagues.length) {
+        if (!Array.isArray(this.userObj.leagues) || !this.userObj.leagues.length) {
             this.page.title = 'You are not in any leagues';
             this.createLeaguePage(0);
-        }else{
+        } else {
             this.leagueLoop().then(value => {
                 this.createLeaguePage(this.userObj.leagues.length);
             });
@@ -35,7 +36,13 @@ export class LeaguePage extends BasePage {
     private createLeaguePage(leagueLength: number): void {
 
         let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0}).appendTo(this.page);
-        let comp2 = new tabris.Composite({top: comp1, bottom: 0, left: 0, right: 0, background: ColorScheme.Background}).appendTo(this.page);
+        let comp2 = new tabris.Composite({
+            top: comp1,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: ColorScheme.Background
+        }).appendTo(this.page);
 
 
         let collectionView = new tabris.CollectionView({
@@ -47,8 +54,23 @@ export class LeaguePage extends BasePage {
             refreshEnabled: false,
             createCell: () => {
                 let cell = new tabris.Composite();
-                let comp = new Composite({background: ColorScheme.Background, left: 2, right: 2, top: 2, bottom: 2, cornerRadius: 5, opacity: .96});
-                new tabris.Composite({height: 80, background: '#000000', left: 10, right: 10, cornerRadius: 5, top: 'prev() 10' }).appendTo(cell).append(comp);
+                let comp = new Composite({
+                    background: ColorScheme.Background,
+                    left: 2,
+                    right: 2,
+                    top: 2,
+                    bottom: 2,
+                    cornerRadius: 5,
+                    opacity: .96
+                });
+                new tabris.Composite({
+                    height: 80,
+                    background: '#000000',
+                    left: 10,
+                    right: 10,
+                    cornerRadius: 5,
+                    top: 'prev() 10'
+                }).appendTo(cell).append(comp);
                 new tabris.TextView({
                     centerY: 0,
                     centerX: 0,
@@ -64,12 +86,18 @@ export class LeaguePage extends BasePage {
                     TextView: {text: title}
                 });
             }
-        }).on('select', ({index}) =>{
+        }).on('select', ({index}) => {
             //console.log('selected', index);
             localStorage.setItem('currentLeagueId', this.userObj.leagues[index].toString());
-        window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title)}).appendTo(comp1);
+            window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title)
+        }).appendTo(comp1);
 
-        new CustomButton({centerY: 0, left: 10, right: 10, background: ColorScheme.Background}, '➕ Create a League').changeBorderColor('#000000').on('tap', () => {
+        new CustomButton({
+            centerY: 0,
+            left: 10,
+            right: 10,
+            background: ColorScheme.Background
+        }, '➕ Create a League').changeBorderColor('#000000').on('tap', () => {
             this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
         }).appendTo(comp2);
 
@@ -78,27 +106,27 @@ export class LeaguePage extends BasePage {
     }
 
     private getLeagues(i): Promise<League> {
-             let p = new Promise((resolve, reject) => {
-                 ServiceLayer.httpGetAsync('/league', 'leagueId=' + this.userObj.leagues[i].toString(), (response) => {
-                      resolve(response);
-                 });
-             });
+        let p = new Promise((resolve, reject) => {
+            ServiceLayer.httpGetAsync('/league', 'leagueId=' + this.userObj.leagues[i].toString(), (response) => {
+                resolve(response);
+            });
+        });
         return p;
     }
 
- private leagueLoop(): Promise<any>{
-    return new Promise((resolve, reject) => {
-        for(let i = 0;i<this.userObj.leagues.length; i++){
-        this.getLeagues(i).then((League) => {
-            this.leagues.push(League);
-            if(i == this.userObj.leagues.length -1){
-                resolve();
-            }
+    private leagueLoop(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            for (let i = 0; i < this.userObj.leagues.length; i++) {
+                this.getLeagues(i).then((League) => {
+                    this.leagues.push(League);
+                    if (i == this.userObj.leagues.length - 1) {
+                        resolve();
+                    }
 
-        }).catch((err) => {
-            console.log(err);
+                }).catch((err) => {
+                    console.log(err);
+                });
+            }
         });
-        }
-    });
-};
+    };
 }

@@ -116,7 +116,7 @@ export class AdminPage extends BasePage {
             let invitePage = new AdminInvitePage();
 
             this.page.parent().append(invitePage.page);
-            invitePage.createInvitePage(this.league);
+            invitePage.createComponents(this.league);
         }).changeBorderColor('#000000').appendTo(this.page);
 
         new CustomButton({

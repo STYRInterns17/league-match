@@ -40,7 +40,6 @@ export class LogMatchPage extends BasePage {
         }).appendTo(this.page);
 
 
-
         this.centerColumn = new tabris.Composite({
             width: 50, centerX: 0, top: 0, height: this.TEXTINPUT_HEIGHT * 6,
             background: ColorScheme.Background
@@ -79,7 +78,7 @@ export class LogMatchPage extends BasePage {
         // LeftTeamScoreInput
         let leftScoreBox = new tabris.Composite({
             left: 0, right: this.centerColumn, top: [this.leftPlayerMaxBox, 30], height: this.TEXTINPUT_HEIGHT,
-            background:ColorScheme.WigetBackground,
+            background: ColorScheme.WigetBackground,
             cornerRadius: 5
         }).appendTo(this.marginBox);
         this.leftScoreInput = new tabris.TextInput({
@@ -91,7 +90,7 @@ export class LogMatchPage extends BasePage {
         // RightTeamScoreInput
         let rightScoreBox = new tabris.Composite({
             left: this.centerColumn, right: 0, top: [this.leftPlayerMaxBox, 30], height: this.TEXTINPUT_HEIGHT,
-            background:ColorScheme.WigetBackground,
+            background: ColorScheme.WigetBackground,
 
             cornerRadius: 5
         }).appendTo(this.marginBox);
@@ -174,7 +173,6 @@ export class LogMatchPage extends BasePage {
     }
 
 
-
     private otherItemListener(target) {
         let leftPlayers = this.leftPlayerContainer.children();
         let rightPlayers = this.rightPlayerContainer.children();
@@ -188,12 +186,13 @@ export class LogMatchPage extends BasePage {
     private removeSetsOfFields(): void {
         let leftPlayers = this.leftPlayerContainer.children();
         let rightPlayers = this.rightPlayerContainer.children();
-        while(leftPlayers[leftPlayers.length - 1].text === '' && rightPlayers[rightPlayers.length - 1].text === '' && leftPlayers.length > 1) {
+        while (leftPlayers[leftPlayers.length - 1].text === '' && rightPlayers[rightPlayers.length - 1].text === '' && leftPlayers.length > 1) {
             this.removeRecentPlayerFields();
             leftPlayers = this.leftPlayerContainer.children();
             rightPlayers = this.rightPlayerContainer.children();
         }
     }
+
     private lastItemListener() {
         let leftPlayers = this.leftPlayerContainer.children();
         let rightPlayers = this.rightPlayerContainer.children();
@@ -204,7 +203,7 @@ export class LogMatchPage extends BasePage {
 
         if (leftPlayers[leftPlayers.length - 1].text !== '' && rightPlayers[rightPlayers.length - 1].text !== '' && this.isInputFieldsFull()) {
             // Creates no more that 12 player fields
-            if(this.playerCounter < 11) {
+            if (this.playerCounter < 11) {
                 this.createAdditionPlayerFields();
             }
 
@@ -216,12 +215,12 @@ export class LogMatchPage extends BasePage {
         let rightPlayers = this.rightPlayerContainer.children();
 
         let allFieldsFull = true;
-        for(let i = 0; i < leftPlayers.length - 1; i++) {
-            if(leftPlayers[i].text === '') {
+        for (let i = 0; i < leftPlayers.length - 1; i++) {
+            if (leftPlayers[i].text === '') {
                 allFieldsFull = false;
             }
 
-            if(rightPlayers[i].text === '') {
+            if (rightPlayers[i].text === '') {
                 allFieldsFull = false;
             }
         }
@@ -229,8 +228,8 @@ export class LogMatchPage extends BasePage {
     }
 
     private updatePlayerListHeights(): void {
-        this.leftPlayerContainer.height = this.playerCounter/2 * this.TEXTINPUT_HEIGHT;
-        this.rightPlayerContainer.height = this.playerCounter/2 * this.TEXTINPUT_HEIGHT;
+        this.leftPlayerContainer.height = this.playerCounter / 2 * this.TEXTINPUT_HEIGHT;
+        this.rightPlayerContainer.height = this.playerCounter / 2 * this.TEXTINPUT_HEIGHT;
     }
 
     private submitMatch(): void {
@@ -238,59 +237,60 @@ export class LogMatchPage extends BasePage {
         let rightPlayers = this.rightPlayerContainer.children();
 
 
-
         // Check if players were input
-        if (this.playerCounter === 2 && leftPlayers[0].text === ''&& rightPlayers[0].text === '') {
+        if (this.playerCounter === 2 && leftPlayers[0].text === '' && rightPlayers[0].text === '') {
             window.plugins.toast.showLongCenter('Please add players to the match');
             return;
         }
 
         // Check for empty player fields
-        for(let i = 0; i < this.playerCounter / 2; i++) {
+        for (let i = 0; i < this.playerCounter / 2; i++) {
             // XOR Operator
-            if(!(leftPlayers[i].text === '' && rightPlayers[i].text === '') && (leftPlayers[i].text === '' || rightPlayers[i].text === '')) {
+            if (!(leftPlayers[i].text === '' && rightPlayers[i].text === '') && (leftPlayers[i].text === '' || rightPlayers[i].text === '')) {
                 window.plugins.toast.showLongCenter('Please fill in all empty player fields');
                 return;
             }
         }
 
         // Check for half of last fields
-        if(leftPlayers[leftPlayers.length - 1].text === '' && rightPlayers[rightPlayers.length - 1].text !== '') {
+        if (leftPlayers[leftPlayers.length - 1].text === '' && rightPlayers[rightPlayers.length - 1].text !== '') {
             window.plugins.toast.showLongCenter('Please finish Player ' + (this.playerCounter - 1));
             return;
         }
 
-        if(leftPlayers[leftPlayers.length - 1].text !== '' && rightPlayers[rightPlayers.length - 1].text === '') {
+        if (leftPlayers[leftPlayers.length - 1].text !== '' && rightPlayers[rightPlayers.length - 1].text === '') {
             window.plugins.toast.showLongCenter('Please finish Player ' + this.playerCounter);
             return;
         }
 
         // Check for invalid score fields
-        if(isNaN(this.leftScoreInput.text)) {
+        if (isNaN(this.leftScoreInput.text)) {
             window.plugins.toast.showLongCenter("Please fill out the left team's score");
             return;
         }
 
-        if(isNaN(this.rightScoreInput.text)) {
+        if (isNaN(this.rightScoreInput.text)) {
             window.plugins.toast.showLongCenter("Please fill out the right team's score");
             return;
         }
-
 
 
         // If we have gotten here our input fields must be valid
         let leftTeam = [];
         let rightTeam = [];
 
-        for(let i = 0; i < this.playerCounter / 2; i++) {
-            if(leftPlayers[i].text !== '') {
+        for (let i = 0; i < this.playerCounter / 2; i++) {
+            if (leftPlayers[i].text !== '') {
                 leftTeam.push(leftPlayers[i].text);
                 rightTeam.push(rightPlayers[i].text);
             }
         }
 
         let match = new Match(leftTeam, rightTeam, this.leftScoreInput.text, this.rightScoreInput.text);
-        ServiceLayer.httpPostAsync('/match/approved', {match: match, leagueId: +localStorage.getItem('currentLeagueId')}, response => {
+        ServiceLayer.httpPostAsync('/match/approved', {
+            match: match,
+            leagueId: +localStorage.getItem('currentLeagueId')
+        }, response => {
             window.plugins.toast.showLongCenter(response.message);
         });
 

@@ -10,6 +10,7 @@ import {Notification} from "../../../common/Notification";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {ApprovalData} from "../../../common/ApprovalData";
 import {ColorScheme} from "../util/ColorScheme";
+import {IStorable} from "../../../server/express/src/middleware/IStorable";
 /**
  * Created by STYRLabs2 on 6/7/2017.
  */

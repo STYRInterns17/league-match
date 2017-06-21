@@ -26,18 +26,19 @@ export class HomePage extends BasePage {
     public userLeagueIds: Array = [];
     public colorScheme: string;
     public adminButton: CustomButton;
+
     constructor() {
         super();
         this.createComponents();
         console.log('Page' + this.page);
         console.log('Page parent' + this.page.parent());
-        this.colorScheme =  ColorScheme.Primary;
+        this.colorScheme = ColorScheme.Primary;
     }
 
     public createComponents(): void {
 
 
-        this.page.background =  '#B4E0E1';
+        this.page.background = '#B4E0E1';
 
         this.page.on('appear', () => {
             this.reloadLeaderBoard(this.page);
@@ -51,37 +52,62 @@ export class HomePage extends BasePage {
         this.page.on('disappear', () => drawer.enabled = false).on('appear', () => drawer.enabled = true);
         //CREATE BUTTONS
 
-        let profileButton = new CustomButton({top: 'prev() 16',left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Profile').on('tap', () => {
+        let profileButton = new CustomButton({
+            top: 'prev() 16',
+            left: '10%',
+            right: '10%',
+            background: ColorScheme.Secondary
+        }, 'Profile').on('tap', () => {
             this.page.parent().append(new ProfilePage().page);
 
         }).changeBorderColor('#000000');
         profileButton.appendTo(drawer);
 
-        let notificationButton = new CustomButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Notifications').on('tap', () => {
+        let notificationButton = new CustomButton({
+            top: 'prev() 16',
+            left: '10%',
+            right: '10%',
+            background: ColorScheme.Secondary
+        }, 'Notifications').on('tap', () => {
             this.page.parent().append(new NotificationPage().page);
         }).changeBorderColor('#000000');
         notificationButton.appendTo(drawer);
 
-        let leagueButton = new CustomButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Leagues').on('tap', () => {
+        let leagueButton = new CustomButton({
+            top: 'prev() 16',
+            left: '10%',
+            right: '10%',
+            background: ColorScheme.Secondary
+        }, 'Leagues').on('tap', () => {
             let leaguePage = new LeaguePage().page.on('disappear', () => {
                 leaguePage.dispose();
             });
-            if(this.page.parent() == null){
+            if (this.page.parent() == null) {
             }
             this.page.parent().append(leaguePage);
         }).changeBorderColor('#000000');
         leagueButton.appendTo(drawer);
 
-        let logMatchButton = new CustomButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary }, 'Log A Match').on('tap', () => {
+        let logMatchButton = new CustomButton({
+            top: 'prev() 16',
+            left: '10%',
+            right: '10%',
+            background: ColorScheme.Secondary
+        }, 'Log A Match').on('tap', () => {
             let logmatchPage = new LogMatchPage().page.on('disappear', () => {
-                    logmatchPage.dispose();
+                logmatchPage.dispose();
             });
             this.page.parent().append(logmatchPage);
         }).changeBorderColor('#000000').append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
         logMatchButton.appendTo(drawer);
 
 
-        this.adminButton = new CustomButton({top: [logMatchButton, 16], left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Admin').on('tap', () => {
+        this.adminButton = new CustomButton({
+            top: [logMatchButton, 16],
+            left: '10%',
+            right: '10%',
+            background: ColorScheme.Secondary
+        }, 'Admin').on('tap', () => {
             // The '+' signifies that the string is actually a number
             this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
         }).changeBorderColor('#000000');
@@ -115,10 +141,10 @@ export class HomePage extends BasePage {
                 if (this.user.leagues[0] != null && localStorage.getItem('currentLeagueId') == null) {
                     localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
                 }
-                }
-                this.reloadAdminButton();
-                this.reloadLeaderBoard(this.page);
-            };
+            }
+            this.reloadAdminButton();
+            this.reloadLeaderBoard(this.page);
+        });
 
     }
 
@@ -126,21 +152,21 @@ export class HomePage extends BasePage {
         new Leaderboard(this.page);
     }
 
-    public reloadAdminButton(){
-        if(localStorage.getItem('currentLeagueId') != null){
-            ServiceLayer.httpGetAsync('/league', 'leagueId=' + localStorage.getItem('currentLeagueId').toString(), (league: League) =>{
-                if(league.adminIds.indexOf(this.userId) != -1){
+    public reloadAdminButton() {
+        if (localStorage.getItem('currentLeagueId') != null) {
+            ServiceLayer.httpGetAsync('/league', 'leagueId=' + localStorage.getItem('currentLeagueId').toString(), (league: League) => {
+                if (league.adminIds.indexOf(this.userId) != -1) {
                     this.adminButton.enabled = true;
                     this.adminButton.opacity = 1;
-                }else{
+                } else {
                     this.adminButton.enabled = false;
                     this.adminButton.opacity = 0;
                 }
             });
-        }else{
-    this.adminButton.enabled = false;
-    this.adminButton.opacity = 0;
-}
+        } else {
+            this.adminButton.enabled = false;
+            this.adminButton.opacity = 0;
+        }
 
     }
 

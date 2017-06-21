@@ -19,7 +19,11 @@ export class ProfilePage extends BasePage {
     public userId: number;
     public user: User;
 
-    constructor() { super(); this.user = JSON.parse(localStorage.getItem('userObj')); this.createProfilePage(); }
+    constructor() {
+        super();
+        this.user = JSON.parse(localStorage.getItem('userObj'));
+        this.createProfilePage();
+    }
 
     private createProfilePage() {
 

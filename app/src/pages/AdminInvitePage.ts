@@ -23,8 +23,7 @@ export class AdminInvitePage extends BasePage {
         this.page.title = 'Add friends to to this League';
     }
 
-    public createInvitePage(leagueInfo: League) {
-        console.log('Invite1: ' + this.userObj.email);
+    public createComponents(leagueInfo: League) {
         let textArray: Array<string> = [];
         let idArray: Array<number> = [];
 
@@ -58,17 +57,17 @@ export class AdminInvitePage extends BasePage {
                 scale: 2
             }
         }).on('accept', (event) => {
-            let text = event.text;
-            let isMatch = false;
-            if (text != this.userObj.email) {
+            let searchText = event.text;
+            let isDuplicateInvite = false;
+            if (searchText != this.userObj.email) {
                 for (let i = 0; i < textArray.length; i++) {
-                    if (textArray[i] == text) {
-                        isMatch = true;
+                    if (textArray[i] == searchText) {
+                        isDuplicateInvite = true;
                         break;
                     }
                 }
-                if (isMatch == false) {
-                    ServiceLayer.httpGetAsync('/user/name', 'userName=' + text, (response) => {
+                if (isDuplicateInvite == false) {
+                    ServiceLayer.httpGetAsync('/user/name', 'userName=' + searchText, (response) => {
                         if (Number.isInteger(response)) {
                             //case that user is already in league
                             if (leagueInfo.playerIds.indexOf(response) != -1) {
@@ -103,7 +102,7 @@ export class AdminInvitePage extends BasePage {
                                         alignment: 'center',
                                         font: 'bold 20px',
                                         textColor: '#000000',
-                                        text: text
+                                        text: searchText
                                     }).appendTo(innerComp).on('tap', () => {
                                         new AlertDialog({
                                             title: 'Would you like to remove this user?',
@@ -114,7 +113,7 @@ export class AdminInvitePage extends BasePage {
                                         }).on({
                                             closeOk: () => {
 
-                                                let index = textArray.indexOf(text);
+                                                let index = textArray.indexOf(searchText);
                                                 if (index > -1) {
                                                     textArray.splice(index, 1);
                                                 }
@@ -128,7 +127,7 @@ export class AdminInvitePage extends BasePage {
                                             closeCancel: () => console.log('NO')
                                         }).open();
                                     });
-                                    textArray.push(text);
+                                    textArray.push(searchText);
                                     idArray.push(response);
                                     console.log(idArray.length);
                                     window.plugins.toast.showShortCenter('User Added!');
