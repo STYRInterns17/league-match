@@ -51,11 +51,19 @@ export class LeagueCreationPage extends BasePage {
     private createComponents() {
         this.page.background = ColorScheme.Background;
         this.page.title = 'Create a League';
+        let inviteButton: CustomButton;
+
         new tabris.TextInput({
             top: 20, left: '10%', right: '10%',
             message: 'Title of League',
             enterKeyType: 'send',
             autoCorrect: true
+        }).on('focus', (event) => {
+            inviteButton.enabled = false;
+            inviteButton.visible = false;
+        }).on('blur', (event) => {
+            inviteButton.enabled = true;
+            inviteButton.visible = true;
         }).appendTo(this.page).on('textChanged', ({value}) => {
             LeagueInfo.leaguePref.title = value;
         });
@@ -126,7 +134,7 @@ export class LeagueCreationPage extends BasePage {
             playerIds: arrayId
         };
 
-        let inviteButton = new CustomButton({
+        inviteButton = new CustomButton({
             bottom: 10,
             left: '10%',
             right: '10%',
