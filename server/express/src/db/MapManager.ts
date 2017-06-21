@@ -120,39 +120,71 @@ export class MapManager {
         return new Promise((resolve, reject) => {
             MapManager.fs.readdir(this.PATH + map + '/', (err, files) => {
 
-                for (let i = files.length - 1; i >= 0; i--) {
-                    if (files[i].length >= prefix.length) {
-                        // Is potentially valid
-                        let partialText: string;
-                        if (files[i].length === 1) {
-                            partialText = files[i].substring(0, prefix.length + 1);
-                        } else {
-                            partialText = files[i].substring(0, prefix.length);
-                        }
-                        if (partialText === prefix || prefix.length === 0) {
+                let left = 0;
+                let right = files.length - 1;
+                let middle = Math.floor((left + right) / 2);
 
-                            //Reminder fits search criteria
+                while (left <= right && !this.isPrefixEqual(prefix, files[middle])) {
 
-
-                        } else {
-                            // Reminder does not fit search criteria
-                            files.splice(i, 1);
-                        }
+                    if (this.wordIsBeforePrefix(prefix, files[middle])) {
+                        left = middle + 1;
                     } else {
-                        // Reminder is shorter than search string
-                        files.splice(i, 1);
+                        right = middle - 1;
                     }
+                    middle = Math.floor((left + right) / 2);
                 }
 
-                // Scrub off .json extension
-                for(let i = 0; i < files.length; i++) {
-                    files[i] = files[i].substring(0, files[i].length - 5);
+                if (left > right) {
+                    console.log('blank');
+                    resolve([]);
+                } else {
+                    let firstValidIndex = middle;
+                    let lastValidIndex = middle;
+
+                    while (firstValidIndex !== 0 && this.isPrefixEqual(prefix, files[firstValidIndex - 1])) {
+                        firstValidIndex--;
+                    }
+
+
+                    while (lastValidIndex !== files.length - 1 && this.isPrefixEqual(prefix, files[lastValidIndex + 1])) {
+                        lastValidIndex++;
+                    }
+
+                    files = files.slice(firstValidIndex, lastValidIndex + 1);
+
+                    // Scrub off .json extension
+                    for (let i = 0; i < files.length; i++) {
+                        files[i] = files[i].substring(0, files[i].length - 5);
+                    }
+
+                    resolve(files);
                 }
 
-                resolve(files);
             });
 
 
         });
+    }
+
+    private static isPrefixEqual(prefix: string, word: string): boolean {
+        let partialText: string;
+        if (word.length === 1) {
+            partialText = word.substring(0, prefix.length + 1);
+        } else {
+            partialText = word.substring(0, prefix.length);
+        }
+
+        return (partialText.toLowerCase() === prefix.toLowerCase() || prefix.length === 0);
+    }
+
+    private static wordIsBeforePrefix(prefix: string, word: string): boolean {
+        let partialText: string;
+        if (word.length === 1) {
+            partialText = word.substring(0, prefix.length + 1);
+        } else {
+            partialText = word.substring(0, prefix.length);
+        }
+
+        return prefix.toLowerCase() > partialText.toLowerCase();
     }
 }
