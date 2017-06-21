@@ -131,8 +131,7 @@ export class AdminInvitePage extends BasePage{
                 }else{
                     window.plugins.toast.showShortCenter('You are already in the league!');
                 }
-        })
-            .on('input', ({text}) =>{
+        }).on('input', ({text}) =>{
                     if(text.length>0){
                         ServiceLayer.httpGetAsync('/user/name/prefix', 'prefix=' + text, (response) => {
                             console.log(response);
@@ -148,8 +147,11 @@ export class AdminInvitePage extends BasePage{
         }
 
         this.page.on('disappear', () => {
+
+           action.visible = false;
            action.dispose();
            this.page.dispose();
+
         });
 
         let finishButton = new customButton({
