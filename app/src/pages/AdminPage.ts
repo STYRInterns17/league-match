@@ -8,6 +8,7 @@ import {League} from "../../../common/League";
 import {CustomButton} from "../components/CustomButton";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
 import {AdminInvitePage} from "./AdminInvitePage";
+import {CacheManager} from "../util/CacheManager";
 
 /**
  * Created by STYRLabs2 on 6/7/2017.
@@ -54,9 +55,9 @@ export class AdminPage extends BasePage {
             enterKeyType: 'send',
             autoCorrect: true
         }).on('accept', (event) => {
-            let currentUser: User = JSON.parse(localStorage.getItem('userObj'));
+            let currentUser: User = CacheManager.getCurrentUser();
             let broadcastRequest = {
-                leagueId: localStorage.getItem('currentLeagueId'),
+                leagueId: CacheManager.getCurrentLeagueId(),
                 message: event.target.text,
                 submitterName: currentUser.name
             };
@@ -147,7 +148,7 @@ export class AdminPage extends BasePage {
 
     private getLeague(): Promise<League> {
         let p = new Promise((resolve, reject) => {
-            ServiceLayer.httpGetAsync('/league', 'leagueId=' + localStorage.getItem('currentLeagueId'), (response) => {
+            ServiceLayer.httpGetAsync('/league', 'leagueId=' + CacheManager.getCurrentLeagueId(), (response) => {
                 resolve(response);
             });
         });

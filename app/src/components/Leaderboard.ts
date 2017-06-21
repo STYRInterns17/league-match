@@ -3,6 +3,7 @@ import {User} from "../../../common/User";
 import {League} from "../../../common/League";
 import {ServiceLayer} from "../util/ServiceLayer";
 import {ColorScheme} from "../util/ColorScheme";
+import {CacheManager} from "../util/CacheManager";
 /**
  * Created by Michael on 6/6/2017.
  */
@@ -18,7 +19,7 @@ export class Leaderboard{
     private userObj: User;
 
     constructor(page: Page){
-        this.userObj = JSON.parse(localStorage.getItem('userObj'));
+        this.userObj = CacheManager.getCurrentUser();
         //this.users.push(this.userObj);
         this.page = page;
         this.reloadLeaderBoard();
@@ -27,9 +28,9 @@ export class Leaderboard{
 
     public reloadLeaderBoard(): void {
         console.log('ReloadingLeaderBoard');
-        console.log('Current league Id =', localStorage.getItem('currentLeagueId'));
+        console.log('Current league Id =', CacheManager.getCurrentLeagueId());
         this.page.children().dispose();
-        if(localStorage.getItem('currentLeagueId') != null) {
+        if(CacheManager.getCurrentLeagueId() != null) {
             this.getLeague().then(value => {
                 this.league = value;
                 let memberIds: Array<number> = [];
@@ -69,7 +70,7 @@ export class Leaderboard{
                 }
             } while (swapped);
         }
-        bubbleSortByMMR(this.users, +localStorage.getItem('currentLeagueId'));
+        bubbleSortByMMR(this.users, CacheManager.getCurrentLeagueId());
 
         //The user is in at least one league
         if(this.userObj.leagues.length>0){
@@ -102,7 +103,7 @@ export class Leaderboard{
                     let user = this.users[index];
                     cell.apply({
                         ImageView: {image: IMAGE_PATH + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'},
-                        TextView: {text: user.name + '-' + user.mmr[user.leagues.indexOf(+localStorage.getItem('currentLeagueId'))]},
+                        TextView: {text: user.name + '-' + user.mmr[user.leagues.indexOf(CacheManager.getCurrentLeagueId())]},
                     });
                 }
             }).on('select', ({index}) => console.log('selected', people[index].name));
@@ -112,7 +113,7 @@ export class Leaderboard{
 
     private getLeague(): Promise<League> {
         let p = new Promise((resolve, reject) => {
-            ServiceLayer.httpGetAsync('/league', 'leagueId=' + localStorage.getItem('currentLeagueId'), (response) => {
+            ServiceLayer.httpGetAsync('/league', 'leagueId=' + CacheManager.getCurrentLeagueId(), (response) => {
                 resolve(response);
             });
         });

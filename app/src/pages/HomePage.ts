@@ -17,6 +17,7 @@ import {LogMatchPage} from "./LogMatchPage";
 import {Button, Color, Composite, Drawer, NavigationView} from "tabris";
 import {ColorScheme} from "../util/ColorScheme";
 import {League} from "../../../common/League";
+import {CacheManager} from "../util/CacheManager";
 
 const IMAGE_PATH = 'assets/';
 export class HomePage extends BasePage {
@@ -109,7 +110,7 @@ export class HomePage extends BasePage {
             background: ColorScheme.Secondary
         }, 'Admin').on('tap', () => {
             // The '+' signifies that the string is actually a number
-            this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
+            this.page.parent().append(new AdminPage(CacheManager.getCurrentUserId(), CacheManager.getCurrentLeagueId()).page);
         }).changeBorderColor('#000000');
         this.adminButton.appendTo(drawer);
 
@@ -118,28 +119,28 @@ export class HomePage extends BasePage {
             left: '10%', right: '10%',
             background: '#cb2431'
         }, 'Sign Out').on('tap', () => {
-            localStorage.clear();
+            CacheManager.clearCache();
             tabris.app.reload();
         }).changeBorderColor('#000000');
         signOutButton.appendTo(drawer);
 
-        this.userId = parseInt(localStorage.getItem('userId'));
+        this.userId = CacheManager.getCurrentUserId();
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
             //get the current user logged in
             if (response.message !== 'success') {
                 console.log('Invalid UserId');
-                localStorage.clear();
+                CacheManager.clearCache();
                 this.page.parent().append(new LoginPage().page);
                 this.page.dispose();
 
             } else { //success
-                localStorage.setItem('userObj', JSON.stringify(response.user));
-                this.user = JSON.parse(localStorage.getItem('userObj'));
+                CacheManager.setCurrentUser(response.user);
+                this.user = CacheManager.getCurrentUser();
                 //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
 
                 //user is in a league but currentLeagueId has not been set ie: logging into a new d
-                if (this.user.leagues[0] != null && localStorage.getItem('currentLeagueId') == null) {
-                    localStorage.setItem('currentLeagueId', this.user.leagues[0].toString());
+                if (this.user.leagues[0] != null && CacheManager.getCurrentLeagueId() == null) {
+                    CacheManager.setCurrentLeagueId(this.user.leagues[0]);
                 }
             }
             this.reloadAdminButton();
@@ -153,8 +154,8 @@ export class HomePage extends BasePage {
     }
 
     public reloadAdminButton() {
-        if (localStorage.getItem('currentLeagueId') != null) {
-            ServiceLayer.httpGetAsync('/league', 'leagueId=' + localStorage.getItem('currentLeagueId').toString(), (league: League) => {
+        if (CacheManager.getCurrentLeagueId() != null) {
+            ServiceLayer.httpGetAsync('/league', 'leagueId=' + CacheManager.getCurrentLeagueId().toString(), (league: League) => {
                 if (league.adminIds.indexOf(this.userId) != -1) {
                     this.adminButton.enabled = true;
                     this.adminButton.opacity = 1;

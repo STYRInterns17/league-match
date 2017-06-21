@@ -8,6 +8,7 @@ import {ServiceLayer} from "../util/ServiceLayer";
 import {ColorScheme} from "../util/ColorScheme";
 import {CustomButton} from "../components/CustomButton";
 import {Match} from "../../../common/Match";
+import {CacheManager} from "../util/CacheManager";
 
 export class LogMatchPage extends BasePage {
     private TEXTINPUT_HEIGHT: number = 60;
@@ -289,7 +290,7 @@ export class LogMatchPage extends BasePage {
         let match = new Match(leftTeam, rightTeam, this.leftScoreInput.text, this.rightScoreInput.text);
         ServiceLayer.httpPostAsync('/match/approved', {
             match: match,
-            leagueId: +localStorage.getItem('currentLeagueId')
+            leagueId: CacheManager.getCurrentLeagueId()
         }, response => {
             window.plugins.toast.showLongCenter(response.message);
         });

@@ -13,13 +13,14 @@ import {Notification} from "../../../common/Notification";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {ApprovalData} from "../../../common/ApprovalData";
 import {ColorScheme} from "../util/ColorScheme";
+import {CacheManager} from "../util/CacheManager";
 
 export class AdminInvitePage extends BasePage {
     private userObj: User;
 
     constructor() {
         super();
-        this.userObj = JSON.parse(localStorage.getItem('userObj'));
+        this.userObj = CacheManager.getCurrentUser();
         this.page.title = 'Add friends to to this League';
     }
 

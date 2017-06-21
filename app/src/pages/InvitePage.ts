@@ -11,6 +11,7 @@ import {ApprovalType} from "../../../common/ApprovalType";
 import {ApprovalData} from "../../../common/ApprovalData";
 import {ColorScheme} from "../util/ColorScheme";
 import {IStorable} from "../../../server/express/src/middleware/IStorable";
+import {CacheManager} from "../util/CacheManager";
 /**
  * Created by STYRLabs2 on 6/7/2017.
  */
@@ -19,7 +20,7 @@ export class InvitePage extends BasePage {
 
     constructor() {
         super();
-        this.userObj = JSON.parse(localStorage.getItem('userObj'));
+        this.userObj = CacheManager.getCurrentUser();
         this.page.title = 'Invite friends';
     }
 
@@ -172,10 +173,9 @@ export class InvitePage extends BasePage {
                 this.userObj.leagues.push(response.id);
                 this.userObj.mmr.push(5000);
                 let leagueId: number = response.id;
-                localStorage.setItem('currentLeagueId', response.id);
+                CacheManager.setCurrentLeagueId(response.id);
                 //store new userObj
-                localStorage.removeItem('userObj');
-                localStorage.setItem('userObj', JSON.stringify(this.userObj));
+                CacheManager.setCurrentUser(this.userObj);
                 //update logged in user by adding league to user leagues
                 ServiceLayer.httpPostAsync('/user/update', this.userObj, (response) => {
                     console.log('user leagues array updated');

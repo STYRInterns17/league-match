@@ -10,6 +10,7 @@ import {League} from "../../../common/League";
 import {User} from "../../../common/User";
 import {ColorScheme} from "../util/ColorScheme";
 import {Composite} from "tabris";
+import {CacheManager} from "../util/CacheManager";
 const IMAGE_PATH = 'assets/';
 
 
@@ -19,7 +20,7 @@ export class LeaguePage extends BasePage {
 
     constructor() {
         super();
-        this.userObj = JSON.parse(localStorage.getItem('userObj'));
+        this.userObj = CacheManager.getCurrentUser();
         this.leagues = [];
 
         if (!Array.isArray(this.userObj.leagues) || !this.userObj.leagues.length) {
@@ -87,8 +88,7 @@ export class LeaguePage extends BasePage {
                 });
             }
         }).on('select', ({index}) => {
-            //console.log('selected', index);
-            localStorage.setItem('currentLeagueId', this.userObj.leagues[index].toString());
+            CacheManager.setCurrentLeagueId(this.userObj.leagues[index]);
             window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title)
         }).appendTo(comp1);
 
@@ -98,7 +98,7 @@ export class LeaguePage extends BasePage {
             right: 10,
             background: ColorScheme.Background
         }, '➕ Create a League').changeBorderColor('#000000').on('tap', () => {
-            this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
+            this.page.parent().append(new LeagueCreationPage(CacheManager.getCurrentUserId()).page);
         }).appendTo(comp2);
 
         this.page.background = ColorScheme.Primary;

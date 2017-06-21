@@ -10,6 +10,7 @@ import {ServiceLayer} from "../util/ServiceLayer";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
 import {User} from "../../../common/User";
 import {ColorScheme} from "../util/ColorScheme";
+import {CacheManager} from "../util/CacheManager";
 
 const HIGH_SCORE = [
     {
@@ -44,10 +45,10 @@ export class LeagueCreationPage extends BasePage {
         super();
         this.ownerID = userIdentification;
 
-        this.createAdminPage();
+        this.createComponents();
     }
 
-    private createAdminPage() {
+    private createComponents() {
         this.page.background = ColorScheme.Background;
         this.page.title = 'Create a League';
         new tabris.TextInput({
@@ -115,7 +116,7 @@ export class LeagueCreationPage extends BasePage {
             LeagueInfo.leaguePref.highestScore = value;
         });
 
-        let userObj: User = JSON.parse(localStorage.getItem('userObj'));
+        let userObj: User = CacheManager.getCurrentUser();
         let arrayId = [];
         arrayId.push(userObj.id);
         let LeagueInfo = {

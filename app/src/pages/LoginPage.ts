@@ -8,6 +8,7 @@ import {ServiceLayer} from "../util/ServiceLayer";
 import {User} from "../../../common/User";
 import {HomePage} from "./HomePage";
 import {SignUpPage} from "./SignUpPage";
+import {CacheManager} from "../util/CacheManager";
 
 export class LoginPage extends BasePage {
 
@@ -17,7 +18,8 @@ export class LoginPage extends BasePage {
 
     constructor() {
         super();
-        this.user = JSON.parse(localStorage.getItem('userObj'));
+        this.user = CacheManager.getCurrentUser();
+
         this.createComponents();
     }
 
@@ -89,7 +91,7 @@ export class LoginPage extends BasePage {
             ServiceLayer.httpPostAsync('/user/validate', userValidation, (response) => {
                 console.log(response.success);
                 if (response.success) {
-                    localStorage.setItem('userId', response.user.id);
+                    CacheManager.setCurrentUserId(response.user.id);
                     window.plugins.toast.showShortCenter('Welcome');
                     new HomePage().page.appendTo(this.page.parent());
                     this.page.dispose();

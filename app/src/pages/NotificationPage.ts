@@ -12,6 +12,7 @@ import {ColorScheme} from "../util/ColorScheme";
 import {CustomButton} from "../components/CustomButton";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {User} from "../../../common/User";
+import {CacheManager} from "../util/CacheManager";
 
 export class NotificationPage extends BasePage {
     private notifications: Notification[];
@@ -94,7 +95,7 @@ export class NotificationPage extends BasePage {
 
     private getNotifications(): Promise<Notification[]> {
         let p = new Promise((resolve, reject) => {
-            let userId = localStorage.getItem('userId');
+            let userId = CacheManager.getCurrentUserId();
             ServiceLayer.httpGetAsync('/notification/user', 'userId=' + userId, (response) => {
                 resolve(response);
             });
@@ -162,7 +163,7 @@ export class NotificationPage extends BasePage {
         // Dispose of this element
         // Notify server that it has been disposed of
         ServiceLayer.httpPostAsync('/notification/user/dismiss', {
-            userId: localStorage.getItem('userId'),
+            userId: CacheManager.getCurrentUserId(),
             notificationId: index
         }, (response) => {
             // No need to do anything in callback
@@ -176,14 +177,14 @@ export class NotificationPage extends BasePage {
 
     private joinLeague(leagueId: number) {
 
-        let joinLeagueRequest = {leagueId: leagueId, userId: parseInt(localStorage.getItem('userId'))};
+        let joinLeagueRequest = {leagueId: leagueId, userId: CacheManager.getCurrentUserId()};
 
         ServiceLayer.httpPostAsync('/league/addUser', joinLeagueRequest, (response => {
             window.plugins.toast.showShortCenter('Joined new league!');
-            localStorage.setItem('currentLeagueId', leagueId.toString());
-            let userObj: User = JSON.parse(localStorage.getItem('userObj'));
+            CacheManager.setCurrentLeagueId(leagueId);
+            let userObj: User = CacheManager.getCurrentUser();
             userObj.leagues.push(leagueId);
-            localStorage.setItem('userObj', JSON.stringify(userObj));
+            CacheManager.setCurrentUser(userObj);
 
         }));
 

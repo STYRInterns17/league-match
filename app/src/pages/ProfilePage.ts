@@ -9,6 +9,7 @@ import {User} from "../../../common/User";
 import {CustomButton} from '../components/CustomButton';
 import {UserPreferences} from "../../../common/UserPreferences";
 import {ColorScheme} from "../util/ColorScheme";
+import {CacheManager} from "../util/CacheManager";
 
 /**
  * Created by STYRLabs2 on 6/7/2017.
@@ -21,7 +22,7 @@ export class ProfilePage extends BasePage {
 
     constructor() {
         super();
-        this.user = JSON.parse(localStorage.getItem('userObj'));
+        this.user = CacheManager.getCurrentUser();
         this.createProfilePage();
     }
 
@@ -54,13 +55,13 @@ export class ProfilePage extends BasePage {
             message: 'Tell us about yourself!'
         }).appendTo(this.page);
 
-        this.userId = parseInt(localStorage.getItem('userId'));
+        this.userId = CacheManager.getCurrentUserId();
 
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
 
-            localStorage.setItem('userObj', JSON.stringify(response.user));
+            CacheManager.setCurrentUser(response.user);
 
-            this.user = JSON.parse(localStorage.getItem('userObj'));
+            this.user = CacheManager.getCurrentUser();
 
             firstName.text = this.user.name;
 
@@ -107,8 +108,7 @@ export class ProfilePage extends BasePage {
                     this.page.title = this.user.name + "'s Profile";
                     //this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) - 1;
                     //console.log(Math.floor(Math.random() * (10 - 1 + 1)) - 1);
-                    localStorage.removeItem('userObj');
-                    localStorage.setItem('userObj', JSON.stringify(this.user));
+                    CacheManager.setCurrentUser(this.user);
                 })
             });
             changeSettings.appendTo(this.page);
