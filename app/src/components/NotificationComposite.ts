@@ -27,7 +27,7 @@ export class NotificationComposite extends tabris.Composite {
 
     constructor(config: tabris.CompositeProperties) {
         super(config);
-        this.background = ColorScheme.Secondary;
+        this.background = ColorScheme.Accent;
 
 
         let border = new tabris.Composite({
@@ -56,7 +56,7 @@ export class NotificationComposite extends tabris.Composite {
             lineSpacing: 1.3, alignment: 'center',
             font: '14px monospace',
             markupEnabled: true,
-            textColor: ColorScheme.Background,
+            textColor: ColorScheme.Accent,
             maxLines: 3
         }).appendTo(bodyContainer);
 
@@ -65,7 +65,7 @@ export class NotificationComposite extends tabris.Composite {
             lineSpacing: 1.3, alignment: 'center',
             font: '10px monospace',
             markupEnabled: true,
-            textColor: ColorScheme.Background,
+            textColor: ColorScheme.Accent,
             maxLines: 3
         }).appendTo(footerContainer);
 
@@ -80,13 +80,13 @@ export class NotificationComposite extends tabris.Composite {
             case ApprovalType.InviteApproval:
                 this.approvalData = notification.data;
                 this.yesApprove = new customButton({
-                    left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.Secondary
+                    left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.WigetBackground
                 }, '✔').changeBorderColor(ColorScheme.Accent).changeTextColor('#4CAF50').appendTo(this.approvalContainer);
 
                 this.noApprove = new customButton({
-                    left: 'prev() 1', right: 1, top: 0, bottom: 1, background: ColorScheme.Secondary
+                    left: 'prev() 1', right: 1, top: 0, bottom: 1, background: ColorScheme.WigetBackground
                 }, '✖').changeBorderColor(ColorScheme.Accent).changeTextColor('#D50000').appendTo(this.approvalContainer);
-                console.log('d');
+
                 break;
             case ApprovalType.MatchApproval:
                 break;
