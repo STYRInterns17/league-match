@@ -5,7 +5,7 @@ import {User} from "../../../common/User";
 import {ServiceLayer} from "../util/ServiceLayer";
 import {ColorScheme} from "../util/ColorScheme";
 import {League} from "../../../common/League";
-import {customButton} from "../components/customButton";
+import {CustomButton} from "../components/CustomButton";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
 import {AdminInvitePage} from "./AdminInvitePage";
 
@@ -106,7 +106,7 @@ export class AdminPage extends BasePage {
         switchComp.visible = false;
 
 
-        new customButton({
+        new CustomButton({
             top: 'prev() 120',
             left: '10%',
             right: '10%',
@@ -119,7 +119,7 @@ export class AdminPage extends BasePage {
             invitePage.createInvitePage(this.league);
         }).changeBorderColor('#000000').appendTo(this.page);
 
-        new customButton({
+        new CustomButton({
             top: 'prev() 80',
             left: '10%',
             right: '10%',

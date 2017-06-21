@@ -2,7 +2,7 @@ import {BasePage} from "./BasePage";
 import * as tabris from 'tabris';
 import {Composite, ImageView, ScrollView, TextView, SearchAction, AlertDialog} from "tabris";
 import {League} from "../../../common/League";
-import {customButton} from "../components/customButton";
+import {CustomButton} from "../components/CustomButton";
 import {ServiceLayer} from "../util/ServiceLayer";
 import {User} from "../../../common/User";
 import {stripComments} from "tslint/lib/utils";
@@ -161,7 +161,7 @@ export class InvitePage extends BasePage {
             action.proposals = array;
         }
 
-        let finishButton = new customButton({
+        let finishButton = new CustomButton({
             left: '10%',
             right: '10%',
             centerY: 0, background: ColorScheme.Background

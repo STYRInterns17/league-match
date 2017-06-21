@@ -2,7 +2,7 @@
  * Created by STYRLabs2 on 6/7/2017.
  */
 import {BasePage} from './BasePage';
-import {customButton} from '../components/customButton';
+import {CustomButton} from '../components/CustomButton';
 import * as tabris from 'tabris';
 import {LeagueCreationPage} from "./LeagueCreationPage";
 import {ServiceLayer} from "../util/ServiceLayer";
@@ -69,7 +69,7 @@ export class LeaguePage extends BasePage {
             localStorage.setItem('currentLeagueId', this.userObj.leagues[index].toString());
         window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title)}).appendTo(comp1);
 
-        new customButton({centerY: 0, left: 10, right: 10, background: ColorScheme.Background}, '➕ Create a League').changeBorderColor('#000000').on('tap', () => {
+        new CustomButton({centerY: 0, left: 10, right: 10, background: ColorScheme.Background}, '➕ Create a League').changeBorderColor('#000000').on('tap', () => {
             this.page.parent().append(new LeagueCreationPage(+localStorage.getItem('userId')).page);
         }).appendTo(comp2);
 

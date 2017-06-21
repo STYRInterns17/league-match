@@ -6,7 +6,7 @@ import {BasePage} from './BasePage';
 import * as tabris from 'tabris';
 import {ServiceLayer} from "../util/ServiceLayer";
 import {User} from "../../../common/User";
-import {customButton} from '../components/customButton';
+import {CustomButton} from '../components/CustomButton';
 import {UserPreferences} from "../../../common/UserPreferences";
 import {ColorScheme} from "../util/ColorScheme";
 
@@ -71,7 +71,7 @@ export class ProfilePage extends BasePage {
                 text: "Date Joined: " + (profileDate.getMonth() + 1) + " " + profileDate.getDate() + ", " + profileDate.getFullYear()
             })).appendTo(this.page);
 
-            let changeSettings = new customButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
+            let changeSettings = new CustomButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
 
                 this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) - 1;
 

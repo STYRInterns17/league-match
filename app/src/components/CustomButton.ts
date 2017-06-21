@@ -5,7 +5,7 @@
 import * as tabris from 'tabris';
 import {ColorScheme} from "../util/ColorScheme";
 
-export class customButton extends tabris.Composite{
+export class CustomButton extends tabris.Composite{
 
     private message: tabris.TextView;
     constructor(config: tabris.CompositeProperties, text: string){
@@ -36,12 +36,12 @@ export class customButton extends tabris.Composite{
         }).appendTo(inner);
     }
 
-    public changeBorderColor(borderColor: string): customButton{
+    public changeBorderColor(borderColor: string): CustomButton{
         this.background = borderColor;
         return this;
     }
 
-    public changeTextColor(textColor: string): customButton{
+    public changeTextColor(textColor: string): CustomButton{
         this.message.textColor = textColor;
         return this;
     }

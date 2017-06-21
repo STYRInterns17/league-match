@@ -5,7 +5,7 @@ import * as tabris from 'tabris';
 
 import {BasePage} from './BasePage';
 import {Leaderboard} from '../components/Leaderboard';
-import {customButton} from '../components/customButton';
+import {CustomButton} from '../components/CustomButton';
 import {AdminPage} from './AdminPage';
 import {LeaguePage} from "./LeaguePage";
 import {ServiceLayer} from "../util/ServiceLayer";
@@ -25,7 +25,7 @@ export class HomePage extends BasePage {
     public user: User;
     public userLeagueIds: Array = [];
     public colorScheme: string;
-    public adminButton: customButton;
+    public adminButton: CustomButton;
     constructor() {
         super();
         this.createComponents();
@@ -51,18 +51,18 @@ export class HomePage extends BasePage {
         this.page.on('disappear', () => drawer.enabled = false).on('appear', () => drawer.enabled = true);
         //CREATE BUTTONS
 
-        let profileButton = new customButton({top: 'prev() 16',left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Profile').on('tap', () => {
+        let profileButton = new CustomButton({top: 'prev() 16',left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Profile').on('tap', () => {
             this.page.parent().append(new ProfilePage().page);
 
         }).changeBorderColor('#000000');
         profileButton.appendTo(drawer);
 
-        let notificationButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Notifications').on('tap', () => {
+        let notificationButton = new CustomButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Notifications').on('tap', () => {
             this.page.parent().append(new NotificationPage().page);
         }).changeBorderColor('#000000');
         notificationButton.appendTo(drawer);
 
-        let leagueButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Leagues').on('tap', () => {
+        let leagueButton = new CustomButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Leagues').on('tap', () => {
             let leaguePage = new LeaguePage().page.on('disappear', () => {
                 leaguePage.dispose();
             });
@@ -72,7 +72,7 @@ export class HomePage extends BasePage {
         }).changeBorderColor('#000000');
         leagueButton.appendTo(drawer);
 
-        let logMatchButton = new customButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary }, 'Log A Match').on('tap', () => {
+        let logMatchButton = new CustomButton({top: 'prev() 16', left: '10%', right: '10%', background: ColorScheme.Secondary }, 'Log A Match').on('tap', () => {
             let logmatchPage = new LogMatchPage().page.on('disappear', () => {
                     logmatchPage.dispose();
             });
@@ -81,13 +81,13 @@ export class HomePage extends BasePage {
         logMatchButton.appendTo(drawer);
 
 
-        this.adminButton = new customButton({top: [logMatchButton, 16], left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Admin').on('tap', () => {
+        this.adminButton = new CustomButton({top: [logMatchButton, 16], left: '10%', right: '10%', background: ColorScheme.Secondary}, 'Admin').on('tap', () => {
             // The '+' signifies that the string is actually a number
             this.page.parent().append(new AdminPage(+localStorage.getItem('userId'), +localStorage.getItem('leagueId')).page);
         }).changeBorderColor('#000000');
         this.adminButton.appendTo(drawer);
 
-        let signOutButton = new customButton({
+        let signOutButton = new CustomButton({
             bottom: 30,
             left: '10%', right: '10%',
             background: '#cb2431'

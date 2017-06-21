@@ -4,7 +4,7 @@
 import * as tabris from 'tabris/tabris';
 import {ColorScheme} from "../util/ColorScheme";
 import {Notification} from "../../../common/Notification";
-import {customButton} from "./customButton";
+import {CustomButton} from "./CustomButton";
 import {ServiceLayer} from "../util/ServiceLayer";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {ApprovalData} from "../../../common/ApprovalData";
@@ -16,8 +16,8 @@ export class NotificationComposite extends tabris.Composite {
     // Composite already has an id number, this name can not be reused
     public db_id: number;
     public wasRead: boolean;
-    public yesApprove: customButton;
-    public noApprove: customButton;
+    public yesApprove: CustomButton;
+    public noApprove: CustomButton;
 
     public approvalData: ApprovalData;
     public type: ApprovalType;
@@ -79,11 +79,11 @@ export class NotificationComposite extends tabris.Composite {
         switch (notification.type) {
             case ApprovalType.InviteApproval:
                 this.approvalData = notification.data;
-                this.yesApprove = new customButton({
+                this.yesApprove = new CustomButton({
                     left: 0, right: '50%', top: 0, bottom: 1, background: ColorScheme.WigetBackground
                 }, '✔').changeBorderColor(ColorScheme.Accent).changeTextColor('#4CAF50').appendTo(this.approvalContainer);
 
-                this.noApprove = new customButton({
+                this.noApprove = new CustomButton({
                     left: 'prev() 1', right: 1, top: 0, bottom: 1, background: ColorScheme.WigetBackground
                 }, '✖').changeBorderColor(ColorScheme.Accent).changeTextColor('#D50000').appendTo(this.approvalContainer);
 

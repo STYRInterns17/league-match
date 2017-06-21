@@ -9,7 +9,7 @@ import {ServiceLayer} from "../util/ServiceLayer";
 import {NotificationComposite} from "../components/NotificationComposite";
 import {TextView} from "tabris";
 import {ColorScheme} from "../util/ColorScheme";
-import {customButton} from "../components/customButton";
+import {CustomButton} from "../components/CustomButton";
 import {ApprovalType} from "../../../common/ApprovalType";
 import {User} from "../../../common/User";
 

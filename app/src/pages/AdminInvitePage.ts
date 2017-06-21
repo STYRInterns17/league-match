@@ -5,7 +5,7 @@ import {BasePage} from "./BasePage";
 import * as tabris from 'tabris';
 import {AlertDialog, Composite, device, ImageView, ScrollView, SearchAction, TextView} from "tabris";
 import {League} from "../../../common/League";
-import {customButton} from "../components/customButton";
+import {CustomButton} from "../components/CustomButton";
 import {ServiceLayer} from "../util/ServiceLayer";
 import {User} from "../../../common/User";
 import {stripComments} from "tslint/lib/utils";
@@ -166,7 +166,7 @@ export class AdminInvitePage extends BasePage {
 
         });
 
-        let finishButton = new customButton({
+        let finishButton = new CustomButton({
             left: '10%',
             right: '10%',
             centerY: 0, background: ColorScheme.Background

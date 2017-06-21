@@ -4,7 +4,7 @@
 import {BasePage} from './BasePage';
 import * as tabris from 'tabris';
 import {Composite, TextView} from "tabris";
-import {customButton} from '../components/customButton';
+import {CustomButton} from '../components/CustomButton';
 import {InvitePage} from "./InvitePage";
 import {ServiceLayer} from "../util/ServiceLayer";
 import {LeaguePreferences} from "../../../common/LeaguePreferences";
@@ -125,7 +125,7 @@ export class LeagueCreationPage extends BasePage{
             playerIds: arrayId
         };
 
-        let inviteButton = new customButton({
+        let inviteButton = new CustomButton({
             bottom: 10,
             left: '10%',
             right: '10%',

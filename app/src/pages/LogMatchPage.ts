@@ -6,7 +6,7 @@ import * as tabris from 'tabris';
 import {BasePage} from './BasePage';
 import {ServiceLayer} from "../util/ServiceLayer";
 import {ColorScheme} from "../util/ColorScheme";
-import {customButton} from "../components/customButton";
+import {CustomButton} from "../components/CustomButton";
 import {Match} from "../../../common/Match";
 
 export class LogMatchPage extends BasePage {
@@ -102,7 +102,7 @@ export class LogMatchPage extends BasePage {
         }).appendTo(rightScoreBox);
 
         // SubmitButton
-        new customButton({
+        new CustomButton({
             width: 300, height: this.TEXTINPUT_HEIGHT, centerX: 0, top: [rightScoreBox, 30],
             background: ColorScheme.Secondary
         }, 'Submit').on('tap', target => {
