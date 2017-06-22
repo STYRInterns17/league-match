@@ -111,7 +111,7 @@ export class HomePage extends BasePage {
             background: ColorScheme.Secondary
         }, 'Admin').on('tap', () => {
             // The '+' signifies that the string is actually a number
-            this.page.parent().append(new AdminPage(CacheManager.getCurrentUserId(), CacheManager.getCurrentLeagueId()).page);
+            this.page.parent().append(new AdminPage().page);
         }).changeBorderColor('#000000');
         this.adminButton.appendTo(drawer);
 

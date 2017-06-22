@@ -21,10 +21,10 @@ export class AdminPage extends BasePage {
 
     private league: League;
 
-    constructor(leagueIdentification: number, userIdentification: number) {
+    constructor() {
         super();
-        this.leagueID = leagueIdentification;
-        this.userID = userIdentification;
+        this.leagueID = CacheManager.getCurrentLeagueId();
+        this.userID = CacheManager.getCurrentUserId();
 
 
         this.getLeague().then(league => {
