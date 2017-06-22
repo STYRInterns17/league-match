@@ -62,17 +62,17 @@ export class ProfilePage extends BasePage {
             text: 'Avatar!'
         }).on('select', ({target}) => {
 
+            this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) + 0;
+
             new tabris.ImageView({
                 layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
                 image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
                 scaleMode: 'auto'
             }).appendTo(profileAttributeSection);
 
-            this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) + 0;
-
             let avatarUpdateRequest = {
                 userId: this.user.id,
-                userPref: new UserPreferences(this.user.pref.password, bio.text, Math.floor(Math.random() * (10 - 0 + 1)) - 1)
+                userPref: new UserPreferences(this.user.pref.password, bio.text, this.user.pref.avatarId)
             };
 
             ServiceLayer.httpPostAsync('/user/pref', avatarUpdateRequest, response => {
@@ -101,8 +101,6 @@ export class ProfilePage extends BasePage {
             })).appendTo(this.page);
 
             let changeSettings = new CustomButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
-
-                console.log(Math.floor(Math.random() * (9 - 1 + 1)) - 1);
 
                 // new tabris.ImageView({
                 //     layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
