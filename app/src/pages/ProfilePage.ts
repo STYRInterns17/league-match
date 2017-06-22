@@ -58,11 +58,41 @@ export class ProfilePage extends BasePage {
         this.userId = CacheManager.getCurrentUserId();
 
         new tabris.Button({
-            left: 10, top: 10,
-            text: 'Avatar!'
+            right: 5, top: '20%',
+            text: '⇨',
         }).on('select', () => {
 
-            this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) + 0;
+            if (this.user.pref.avatarId <= 10)
+            {
+                this.user.pref.avatarId++;
+            }
+            else
+            {
+                this.user.pref.avatarId = 0;
+            }
+
+            new tabris.ImageView({
+                layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
+                image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
+                scaleMode: 'auto'
+            }).appendTo(profileAttributeSection);
+
+            CacheManager.setCurrentUser(this.user);
+        }).appendTo(this.page);
+
+        new tabris.Button({
+            left: 5, top: '20%',
+            text: '⇦'
+        }).on('select', () => {
+
+            if (this.user.pref.avatarId >= 0)
+            {
+                this.user.pref.avatarId--;
+            }
+            else
+            {
+                this.user.pref.avatarId = 10;
+            }
 
             new tabris.ImageView({
                 layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
@@ -109,7 +139,7 @@ export class ProfilePage extends BasePage {
                 ServiceLayer.httpPostAsync('/user/pref', userSettings, () => {
                     this.user.name = firstName.text;
                     this.user.pref.bio = bio.text;
-                    this.page.title = this.user.name + "'s Profile";
+                    this.page.title = this.user.name + "'s Profile Page!";
                     CacheManager.setCurrentUser(this.user);
                 })
             });
