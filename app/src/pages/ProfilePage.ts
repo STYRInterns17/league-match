@@ -35,7 +35,7 @@ export class ProfilePage extends BasePage {
 
         new tabris.ImageView({
             layoutData: {left: 0, right: 0, top: 0, bottom: 0},
-            image: 'http://hunsci.com/data/out/119/546417.png',
+            image: 'http://www.retinaiphonewallpapers.com/wp-content/uploads/00025.jpg',
             scaleMode: 'fill'
         }).appendTo(profileAttributeSection);
 
@@ -122,7 +122,7 @@ export class ProfilePage extends BasePage {
                 text: "Date Joined: " + (profileDate.getMonth() + 1) + " " + profileDate.getDate() + ", " + profileDate.getFullYear()
             })).appendTo(this.page);
 
-            let changeSettings = new CustomButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
+            let changeSettings = new CustomButton({top: 'prev() 200', centerX: 0}, '   Update   ').changeBorderColor('#000000').on('tap', () => {
 
                 window.plugins.toast.showShortBottom('Your profile has been updated!');
 

@@ -49,7 +49,7 @@ export class AdminPage extends BasePage {
 
         }).appendTo(this.page);
 
-        new tabris.TextInput({
+        let broadcastInput = new tabris.TextInput({
             top: 'prev() 20', left: '10%', right: '10%', height: 60,
             message: 'Broadcast to the league',
             enterKeyType: 'send',
@@ -61,8 +61,6 @@ export class AdminPage extends BasePage {
                 message: event.target.text,
                 submitterName: currentUser.name
             };
-
-
 
             ServiceLayer.httpPostAsync('/notification/league', broadcastRequest, (response => {
                 window.plugins.toast.showShortCenter(response.message);
@@ -106,9 +104,29 @@ export class AdminPage extends BasePage {
 
         switchComp.visible = false;
 
+        new CustomButton({
+            top: '45%',
+            left: '10%',
+            right: '10%',
+            background: ColorScheme.Background
+        }, 'Send Broadcast').on('tap', (event) => {
+            let currentUser: User = CacheManager.getCurrentUser();
+            let broadcastRequest = {
+                leagueId: CacheManager.getCurrentLeagueId(),
+                message: broadcastInput.text,
+                submitterName: currentUser.name
+            };
+            ServiceLayer.httpPostAsync('/notification/league', broadcastRequest, (response => {
+                window.plugins.toast.showShortCenter(response.message);
+                if(response.message === 'Broadcast Sent') {
+                    broadcastInput.text = '';
+                }
+            }));
+        }).changeBorderColor('#000000').appendTo(this.page);
+
 
         new CustomButton({
-            top: 'prev() 120',
+            top: 'prev() 80',
             left: '10%',
             right: '10%',
             background: ColorScheme.Background
@@ -125,7 +143,7 @@ export class AdminPage extends BasePage {
             left: '10%',
             right: '10%',
             background: ColorScheme.Background
-        }, 'Apply').on('tap', (event) => {
+        }, 'Update Title').on('tap', (event) => {
 
             let newPref = new LeaguePreferences(approvedByadminSwitch.checked, leagueTitle.text, this.league.pref.timeZone, this.league.pref.scoreRange, this.league.pref.highestScore)
             let updateRequest = {leagueId: this.leagueID, leaguePref: newPref};
@@ -134,7 +152,6 @@ export class AdminPage extends BasePage {
                 window.plugins.toast.showShortCenter(response.message);
             })
         }).changeBorderColor('#000000').appendTo(this.page);
-
 
         /*new tabris.Button({
          top: 'prev() 50',
