@@ -85,7 +85,7 @@ export class LogMatchPage extends BasePage {
         this.leftScoreInput = new tabris.TextInput({
             left: 0, right: 0, top: 0, bottom: 0,
             message: 'Score',
-            background: ColorScheme.Secondary
+            background: ColorScheme.WigetBackground
         }).appendTo(leftScoreBox);
 
         // RightTeamScoreInput
@@ -98,16 +98,16 @@ export class LogMatchPage extends BasePage {
         this.rightScoreInput = new tabris.TextInput({
             left: 0, right: 0, top: 0, bottom: 0,
             message: 'Score',
-            background: ColorScheme.Secondary
+            background: ColorScheme.WigetBackground
         }).appendTo(rightScoreBox);
 
         // SubmitButton
         new CustomButton({
             width: 300, height: this.TEXTINPUT_HEIGHT, centerX: 0, top: [rightScoreBox, 30],
-            background: ColorScheme.Secondary
+            background: ColorScheme.Background
         }, 'Submit').on('tap', target => {
             this.submitMatch();
-        }).appendTo(this.marginBox);
+        }).changeBorderColor('#000000').appendTo(this.marginBox);
     }
 
     private createAdditionPlayerFields(): void {
@@ -131,7 +131,7 @@ export class LogMatchPage extends BasePage {
         new tabris.TextInput({
             left: 0, right: 0, bottom: 'prev()', height: this.TEXTINPUT_HEIGHT,
             message: 'Player ' + this.playerCounter,
-            background: ColorScheme.Secondary
+            background: ColorScheme.WigetBackground
         }).on('input', (target) => {
             this.lastItemListener();
         }).appendTo(this.leftPlayerContainer);
@@ -140,7 +140,7 @@ export class LogMatchPage extends BasePage {
         new tabris.TextInput({
             left: 0, right: 0, bottom: 'prev()', height: this.TEXTINPUT_HEIGHT,
             message: 'Player ' + this.playerCounter,
-            background: ColorScheme.Secondary
+            background: ColorScheme.WigetBackground
         }).on('input', (target) => {
             this.lastItemListener();
         }).appendTo(this.rightPlayerContainer);
