@@ -14,8 +14,10 @@ import {CacheManager} from "../util/CacheManager";
 const IMAGE_PATH = 'assets/';
 
 
+
+
 export class LeaguePage extends BasePage {
-    private leagues: League[];
+    private leagues;
     private userObj: User;
 
     constructor() {
@@ -27,9 +29,7 @@ export class LeaguePage extends BasePage {
             this.page.title = 'You are not in any leagues';
             this.createComponents(0);
         } else {
-            this.leagueLoop().then(value => {
-                this.createComponents(this.userObj.leagues.length);
-            });
+            this.leagueLoop();
             this.page.title = 'League Page';
         }
     }
@@ -88,8 +88,9 @@ export class LeaguePage extends BasePage {
                 });
             }
         }).on('select', ({index}) => {
-            CacheManager.setCurrentLeagueId(this.userObj.leagues[index]);
-            window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title)
+            CacheManager.setCurrentLeagueId(this.leagues[index].id);
+            window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title);
+            console.log(this.leagues)
         }).appendTo(comp1);
 
         new CustomButton({
@@ -105,28 +106,29 @@ export class LeaguePage extends BasePage {
 
     }
 
-    private getLeagues(i): Promise<League> {
+    private getLeagues(i) {
         let p = new Promise((resolve, reject) => {
             ServiceLayer.httpGetAsync('/league', 'leagueId=' + this.userObj.leagues[i].toString(), (response) => {
-                resolve(response);
+                console.log(response);
+            resolve(response);
             });
         });
-        return p;
+        this.leagues.push(p);
     }
 
     private leagueLoop(): Promise<any> {
         return new Promise((resolve, reject) => {
             for (let i = 0; i < this.userObj.leagues.length; i++) {
-                this.getLeagues(i).then((League) => {
-                    this.leagues.push(League);
+                this.getLeagues(i);
+                    //this.leagues.push(League);
                     if (i == this.userObj.leagues.length - 1) {
-                        resolve();
                     }
-
-                }).catch((err) => {
-                    console.log(err);
-                });
             }
+            Promise.all(this.leagues).then((leagues) => {
+                this.leagues = leagues;
+                this.createComponents(this.leagues.length);
+                resolve();
+            });
         });
     };
 }
