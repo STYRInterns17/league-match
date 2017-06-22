@@ -39,7 +39,7 @@ export class ProfilePage extends BasePage {
             scaleMode: 'fill'
         }).appendTo(profileAttributeSection);
 
-        new tabris.ImageView({
+        let profilePic = new tabris.ImageView({
             layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
             image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
             scaleMode: 'auto'
@@ -58,7 +58,7 @@ export class ProfilePage extends BasePage {
         this.userId = CacheManager.getCurrentUserId();
 
         new tabris.Button({
-            right: 5, top: '20%',
+            right: 5, top: '20%', width: 50,
             text: '⇨',
         }).on('select', () => {
 
@@ -81,7 +81,7 @@ export class ProfilePage extends BasePage {
         }).appendTo(this.page);
 
         new tabris.Button({
-            left: 5, top: '20%',
+            left: 5, top: '20%', width: 50,
             text: '⇦'
         }).on('select', () => {
 
