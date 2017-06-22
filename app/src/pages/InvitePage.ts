@@ -145,8 +145,6 @@ export class InvitePage extends BasePage {
             } else {
                 window.plugins.toast.showShortCenter('You are already in the league!');
             }
-
-
         })
             .on('input', ({text}) => {
                 if (text.length > 0) {
