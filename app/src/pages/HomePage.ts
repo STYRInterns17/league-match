@@ -62,7 +62,7 @@ export class HomePage extends BasePage {
         }, 'Profile').on('tap', () => {
             this.page.parent().append(new ProfilePage().page);
 
-        }).changeBorderColor('#000000');
+        });
         profileButton.appendTo(drawer);
 
         let notificationButton = new CustomButton({
@@ -72,7 +72,7 @@ export class HomePage extends BasePage {
             background: ColorScheme.Secondary
         }, 'Notifications').on('tap', () => {
             this.page.parent().append(new NotificationPage().page);
-        }).changeBorderColor('#000000');
+        });
         notificationButton.appendTo(drawer);
 
         let leagueButton = new CustomButton({
@@ -87,7 +87,7 @@ export class HomePage extends BasePage {
             if (this.page.parent() == null) {
             }
             this.page.parent().append(leaguePage);
-        }).changeBorderColor('#000000');
+        });
         leagueButton.appendTo(drawer);
 
         let logMatchButton = new CustomButton({
@@ -100,7 +100,7 @@ export class HomePage extends BasePage {
                 logmatchPage.dispose();
             });
             this.page.parent().append(logmatchPage);
-        }).changeBorderColor('#000000').append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
+        }).append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
         logMatchButton.appendTo(drawer);
 
 
@@ -112,7 +112,7 @@ export class HomePage extends BasePage {
         }, 'Admin').on('tap', () => {
             // The '+' signifies that the string is actually a number
             this.page.parent().append(new AdminPage().page);
-        }).changeBorderColor('#000000');
+        });
         this.adminButton.appendTo(drawer);
 
         let signOutButton = new CustomButton({
@@ -123,7 +123,7 @@ export class HomePage extends BasePage {
             this.page.dispose();
             CacheManager.clearCache();
             tabris.app.reload();
-        }).changeBorderColor('#000000');
+        });
         signOutButton.appendTo(drawer);
 
         this.userId = CacheManager.getCurrentUserId();
