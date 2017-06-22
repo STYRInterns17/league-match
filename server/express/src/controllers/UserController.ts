@@ -97,11 +97,16 @@ export class UserController {
 
     public static updateUserName(userId: number, newName: string): Promise<User> {
         return new Promise((resolve, reject) => {
-            MapManager.doesItemExist('names', newName).then(doesExist => {
-                if (doesExist) {
-                    reject(newName + ' is already in use');
-                } else {
-                    UserController.get(userId).then(user => {
+            let user;
+
+            UserController.get(userId).then(userFromDb => {
+                user = userFromDb;
+                MapManager.doesItemExist('names', newName).then(doesExist => {
+                    if (user.name === newName) {
+                        resolve(user);
+                    } else if (doesExist) {
+                        reject(newName + ' is already in use');
+                    } else {
 
                         MapManager.changeItemKey('names', user.name, newName).then(value => {
 
@@ -115,9 +120,12 @@ export class UserController {
                                 reject('Could not change UserName');
                             }
                         })
-                    })
-                }
-            });
+
+                    }
+                });
+            })
+
+
         })
     }
 

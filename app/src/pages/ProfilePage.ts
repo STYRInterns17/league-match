@@ -57,6 +57,22 @@ export class ProfilePage extends BasePage {
 
         this.userId = CacheManager.getCurrentUserId();
 
+        new tabris.Button({
+            left: 10, top: 10,
+            text: 'Avatar!'
+        }).on('select', () => {
+
+            this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) + 0;
+
+            new tabris.ImageView({
+                layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
+                image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
+                scaleMode: 'auto'
+            }).appendTo(profileAttributeSection);
+
+            CacheManager.setCurrentUser(this.user);
+        }).appendTo(this.page);
+
         ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
 
             CacheManager.setCurrentUser(response.user);
@@ -78,10 +94,7 @@ export class ProfilePage extends BasePage {
 
             let changeSettings = new CustomButton({top: 'prev() 200', centerX: 0}, '   Update   ').on('tap', () => {
 
-                this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) - 1;
-
                 window.plugins.toast.showShortBottom('Your profile has been updated!');
-
 
                 let nameUpdateRequest = {userId: this.user.id, userName: firstName.text};
 
@@ -89,25 +102,14 @@ export class ProfilePage extends BasePage {
                     window.plugins.toast.showShortBottom(response.message);
                 });
 
-                let avatarUpdateRequest = {
-                    userId: this.user.id,
-                    userPref: new UserPreferences(this.user.pref.password, bio.text, Math.floor(Math.random() * (10 - 0 + 1)) - 1)
-                };
-
-                ServiceLayer.httpPostAsync('/user/pref', avatarUpdateRequest, response => {
-                    //window.plugins.toast.showShortBottom(response.message);
-                });
-
                 let userSettings = {
                     userId: this.user.id,
-                    userPref: new UserPreferences(this.user.pref.password, bio.text, 0)
+                    userPref: new UserPreferences(this.user.pref.password, bio.text, this.user.pref.avatarId)
                 };
                 ServiceLayer.httpPostAsync('/user/pref', userSettings, () => {
                     this.user.name = firstName.text;
                     this.user.pref.bio = bio.text;
                     this.page.title = this.user.name + "'s Profile";
-                    //this.user.pref.avatarId = Math.floor(Math.random() * (10 - 0 + 1)) - 1;
-                    //console.log(Math.floor(Math.random() * (10 - 1 + 1)) - 1);
                     CacheManager.setCurrentUser(this.user);
                 })
             });

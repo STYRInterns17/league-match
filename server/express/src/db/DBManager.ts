@@ -295,10 +295,8 @@ export class DBManager {
         let p = new Promise((resolve, reject) => {
             resolve(this.getVolatileItem(table, itemId));
         });
-
         return p;
     }
-
 
     //Will replace an item with an empty object just containing its orginal id
     //Once created the id can not be reused but the data can be cleaned up to quicken
