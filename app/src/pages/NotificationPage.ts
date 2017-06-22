@@ -90,6 +90,16 @@ export class NotificationPage extends BasePage {
             }
 
         }
+
+        if(this.notifications.length === 0) {
+            new tabris.TextView({
+                centerX: 0,
+                centerY: 0,
+                text: 'You have no notifications',
+                font: '30px',
+                textColor: '#9E9E9E'
+            }).appendTo(notificationContainer);
+        }
     }
 
 
