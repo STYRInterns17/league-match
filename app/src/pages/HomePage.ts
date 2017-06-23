@@ -81,9 +81,7 @@ export class HomePage extends BasePage {
             right: '10%',
             background: ColorScheme.Secondary
         }, 'Leagues').on('tap', () => {
-            let leaguePage = new LeaguePage().page.on('disappear', () => {
-                leaguePage.dispose();
-            });
+            let leaguePage = new LeaguePage().page;
             if (this.page.parent() == null) {
             }
             this.page.parent().append(leaguePage);
@@ -96,9 +94,7 @@ export class HomePage extends BasePage {
             right: '10%',
             background: ColorScheme.Secondary
         }, 'Log A Match').on('tap', () => {
-            let logmatchPage = new LogMatchPage().page.on('disappear', () => {
-                logmatchPage.dispose();
-            });
+            let logmatchPage = new LogMatchPage().page;
             this.page.parent().append(logmatchPage);
         }).append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
         logMatchButton.appendTo(drawer);

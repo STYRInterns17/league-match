@@ -24,6 +24,7 @@ export class ProfilePage extends BasePage {
         super();
         this.user = CacheManager.getCurrentUser();
         this.createProfilePage();
+
     }
 
     private createProfilePage() {
@@ -86,7 +87,7 @@ export class ProfilePage extends BasePage {
             }).appendTo(profileAttributeSection).on('load', () => {
                 this.animateIn(profilePic);
             });
-            
+
             CacheManager.setCurrentUser(this.user);
         }).appendTo(this.page);
 
