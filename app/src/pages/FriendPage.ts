@@ -50,13 +50,15 @@ export class FriendPage extends BasePage {
         this.animateIn(profilePic);
 
         new tabris.TextView({
-            layoutData: {top: '50%', centerX: 0},
-            text: this.user.name
+            layoutData: {top: '50%', left: '5%', right: '5%'},
+            font: 'bold 24px',
+            text: "Name: " + this.user.name
         }).appendTo(this.page);
 
         new tabris.TextView({
-            layoutData: {top: '60%', centerX: 0},
-            text: this.user.pref.bio
+            layoutData: {top: 'prev() 60', left: '5%', right: '5%'},
+            font: 'bold 24px',
+            text: "Bio: " + this.user.pref.bio
         }).appendTo(this.page);
 
         let messageInput = new tabris.TextInput({
