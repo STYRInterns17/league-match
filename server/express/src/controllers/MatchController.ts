@@ -42,6 +42,7 @@ export class MatchController {
                     }).then(user => {
                         return {user: user, team: 2};
                     }));
+
                 }
 
                 // Once all Users have been retrieved from database
@@ -103,19 +104,17 @@ export class MatchController {
 
                     // Update the MMR of all User Objects
                     for (let i = 0; i < team1.length; i++) {
-                        let team1 = team1[i];
-                        let team2 = team2[i];
                         if (team1wins) {
-                            team1.mmr[team1.leagues.indexOf(leaugeId)] += MMROffsets.winnerOffset;
-                            team2.mmr[team2.leagues.indexOf(leaugeId)] += MMROffsets.loserOffset;
+                            team1[i].mmr[team1[i].leagues.indexOf(leaugeId)] += MMROffsets.winnerOffset;
+                            team2[i].mmr[team2[i].leagues.indexOf(leaugeId)] += MMROffsets.loserOffset;
                         } else {
-                            team1.mmr[team1.leagues.indexOf(leaugeId)] += MMROffsets.loserOffset;
-                            team2.mmr[team2.leagues.indexOf(leaugeId)] += MMROffsets.winnerOffset;
+                            team1[i].mmr[team1[i].leagues.indexOf(leaugeId)] += MMROffsets.loserOffset;
+                            team2[i].mmr[team2[i].leagues.indexOf(leaugeId)] += MMROffsets.winnerOffset;
                         }
 
                         // Write User back to server
-                        UserController.updateUser(team1);
-                        UserController.updateUser(team2);
+                        UserController.updateUser(team1[i]);
+                        UserController.updateUser(team2[i]);
                     }
                     resolve('Match logged successfully');
                 }).catch(reason => {
