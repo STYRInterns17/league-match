@@ -43,7 +43,6 @@ export class MatchController {
                         return {user: user, team: 2};
                     }));
 
-
                 }
 
                 // Once all Users have been retrieved from database
@@ -103,7 +102,6 @@ export class MatchController {
                         reject('Invalid league.pref.highestScore');
                     }
 
-
                     // Update the MMR of all User Objects
                     for (let i = 0; i < team1.length; i++) {
                         if (team1wins) {
@@ -119,7 +117,6 @@ export class MatchController {
                         UserController.updateUser(team2[i]);
                     }
                     resolve('Match logged successfully');
-
                 }).catch(reason => {
                     console.log(reason);
                     reject(reason);

@@ -24,13 +24,15 @@ export class ProfilePage extends BasePage {
         super();
         this.user = CacheManager.getCurrentUser();
         this.createProfilePage();
+
     }
 
     private createProfilePage() {
 
         let profileAttributeSection = new tabris.Composite({
             layoutData: {left: 0, right: 0, bottom: 0, top: 0},
-            background: ColorScheme.Primary
+            background: ColorScheme.Primary,
+            gestures: null
         }).appendTo(this.page);
 
         new tabris.ImageView({
@@ -42,8 +44,13 @@ export class ProfilePage extends BasePage {
         let profilePic = new tabris.ImageView({
             layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
             image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
-            scaleMode: 'auto'
+            scaleMode: 'auto',
+            transform: {
+                translationX: -400
+            }
         }).appendTo(profileAttributeSection);
+        this.animateIn(profilePic);
+
 
         let firstName = new tabris.TextInput({
             layoutData: {top: '50%', centerX: 0},
@@ -62,20 +69,24 @@ export class ProfilePage extends BasePage {
             text: '⇨',
         }).on('select', () => {
 
-            if (this.user.pref.avatarId <= 10)
-            {
+            if (this.user.pref.avatarId <= 9) {
                 this.user.pref.avatarId++;
             }
-            else
-            {
+            else {
                 this.user.pref.avatarId = 0;
             }
+            this.animateOut(profilePic, true);
 
-            new tabris.ImageView({
+            profilePic = new tabris.ImageView({
                 layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
                 image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
-                scaleMode: 'auto'
-            }).appendTo(profileAttributeSection);
+                scaleMode: 'auto',
+                transform: {
+                    translationX: -400
+                }
+            }).appendTo(profileAttributeSection).on('load', () => {
+                this.animateIn(profilePic);
+            });
 
             CacheManager.setCurrentUser(this.user);
         }).appendTo(this.page);
@@ -85,20 +96,25 @@ export class ProfilePage extends BasePage {
             text: '⇦'
         }).on('select', () => {
 
-            if (this.user.pref.avatarId >= 0)
-            {
+            if (this.user.pref.avatarId >= 1) {
                 this.user.pref.avatarId--;
             }
-            else
-            {
+            else {
                 this.user.pref.avatarId = 10;
             }
 
-            new tabris.ImageView({
+            this.animateOut(profilePic, false);
+
+            profilePic = new tabris.ImageView({
                 layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
                 image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
-                scaleMode: 'auto'
-            }).appendTo(profileAttributeSection);
+                scaleMode: 'auto',
+                transform: {
+                    translationX: 400
+                }
+            }).appendTo(profileAttributeSection).on('load', () => {
+                this.animateIn(profilePic);
+            });
 
             CacheManager.setCurrentUser(this.user);
         }).appendTo(this.page);
@@ -122,7 +138,10 @@ export class ProfilePage extends BasePage {
                 text: "Date Joined: " + (profileDate.getMonth() + 1) + " " + profileDate.getDate() + ", " + profileDate.getFullYear()
             })).appendTo(this.page);
 
-            let changeSettings = new CustomButton({top: 'prev() 200', centerX: 0}, '   Update   ').changeBorderColor('#000000').on('tap', () => {
+            let changeSettings = new CustomButton({
+                top: 'prev() 200',
+                centerX: 0
+            }, '   Update   ').changeBorderColor('#000000').on('tap', () => {
 
                 window.plugins.toast.showShortBottom('Your profile has been updated!');
 
@@ -146,5 +165,39 @@ export class ProfilePage extends BasePage {
             changeSettings.appendTo(this.page);
         });
         return this.page;
+    }
+
+
+    private animateIn(widget: tabris.Widget) {
+        let direction: number;
+
+        widget.animate({
+            transform: {
+                translationX: 0
+            }
+        },{
+            duration: 250,
+            easing: "linear"
+        });
+    }
+
+    private  animateOut(widget: tabris.Widget, outRight: boolean) {
+        let direction: number;
+        if(outRight) {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
+
+        widget.animate({
+            transform: {
+                translationX: 400 * direction
+            }
+        },{
+            duration: 250,
+            easing: "linear"
+        }).then(value => {
+            widget.dispose();
+        });
     }
 }

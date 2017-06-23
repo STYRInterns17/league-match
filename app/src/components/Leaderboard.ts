@@ -4,6 +4,7 @@ import {League} from "../../../common/League";
 import {ServiceLayer} from "../util/ServiceLayer";
 import {ColorScheme} from "../util/ColorScheme";
 import {CacheManager} from "../util/CacheManager";
+import {FriendPage} from "../pages/FriendPage";
 /**
  * Created by Michael on 6/6/2017.
  */
@@ -106,7 +107,10 @@ export class Leaderboard{
                         TextView: {text: user.name + ' - ' + user.mmr[user.leagues.indexOf(CacheManager.getCurrentLeagueId())]},
                     });
                 }
-            }).on('select', ({index}) => console.log('selected', people[index].name));
+            }).on('select', ({index}) => {
+                let user = this.users[index];
+                this.page.parent().append(new FriendPage().page);
+            });
             return collectionView;
         }
     }
