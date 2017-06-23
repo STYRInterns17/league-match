@@ -30,7 +30,8 @@ export class ProfilePage extends BasePage {
 
         let profileAttributeSection = new tabris.Composite({
             layoutData: {left: 0, right: 0, bottom: 0, top: 0},
-            background: ColorScheme.Primary
+            background: ColorScheme.Primary,
+            gestures: null
         }).appendTo(this.page);
 
         new tabris.ImageView({
@@ -62,21 +63,17 @@ export class ProfilePage extends BasePage {
             text: '⇨',
         }).on('select', () => {
 
-            if (this.user.pref.avatarId <= 10)
-            {
+            if (this.user.pref.avatarId <= 9) {
                 this.user.pref.avatarId++;
             }
-            else
-            {
+            else {
                 this.user.pref.avatarId = 0;
             }
-
             new tabris.ImageView({
                 layoutData: {left: 0, right: 0, top: '5%', bottom: '60%'},
                 image: 'assets/' + 'avatar' + (this.user.pref.avatarId + 1).toString() + '.png',
                 scaleMode: 'auto'
             }).appendTo(profileAttributeSection);
-
             CacheManager.setCurrentUser(this.user);
         }).appendTo(this.page);
 
@@ -85,12 +82,10 @@ export class ProfilePage extends BasePage {
             text: '⇦'
         }).on('select', () => {
 
-            if (this.user.pref.avatarId >= 0)
-            {
+            if (this.user.pref.avatarId >= 1) {
                 this.user.pref.avatarId--;
             }
-            else
-            {
+            else {
                 this.user.pref.avatarId = 10;
             }
 
@@ -122,7 +117,10 @@ export class ProfilePage extends BasePage {
                 text: "Date Joined: " + (profileDate.getMonth() + 1) + " " + profileDate.getDate() + ", " + profileDate.getFullYear()
             })).appendTo(this.page);
 
-            let changeSettings = new CustomButton({top: 'prev() 200', centerX: 0}, '   Update   ').changeBorderColor('#000000').on('tap', () => {
+            let changeSettings = new CustomButton({
+                top: 'prev() 200',
+                centerX: 0
+            }, '   Update   ').changeBorderColor('#000000').on('tap', () => {
 
                 window.plugins.toast.showShortBottom('Your profile has been updated!');
 
