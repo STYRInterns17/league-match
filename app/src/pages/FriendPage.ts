@@ -20,9 +20,9 @@ export class FriendPage extends BasePage {
     public userId: number;
     public user: User;
 
-    constructor() {
+    constructor(user) {
         super();
-        this.user = CacheManager.getCurrentUser();
+        this.user = user;
         this.createProfilePage();
     }
 
@@ -50,41 +50,19 @@ export class FriendPage extends BasePage {
         this.animateIn(profilePic);
 
 
-        let firstName = new tabris.TextView({
+        new tabris.TextView({
             layoutData: {top: '50%', centerX: 0},
             text: this.user.name
         }).appendTo(this.page);
 
-        let bio = new tabris.TextView({
+        new tabris.TextView({
             layoutData: {top: '60%', centerX: 0},
-           text: this.user.pref.bio
+            text: this.user.pref.bio
         }).appendTo(this.page);
 
-        this.userId = CacheManager.getCurrentUserId();
-
-        ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
-
-            CacheManager.setCurrentUser(response.user);
-
-            this.user = CacheManager.getCurrentUser();
-
-            firstName.text = this.user.name;
-
-            bio.text = this.user.pref.bio;
-
-            this.page.title = this.user.name + "'s Profile Page!";
-
-            let profileDate = new Date(this.user.joinDate);
-
-            new tabris.TextView(({
-                layoutData: {top: '41%', centerX: 0},
-                text: "Date Joined: " + (profileDate.getMonth() + 1) + " " + profileDate.getDate() + ", " + profileDate.getFullYear()
-            })).appendTo(this.page);
-
-        });
         return this.page;
     }
-    
+
     private animateIn(widget: tabris.Widget) {
         let direction: number;
 
@@ -92,7 +70,7 @@ export class FriendPage extends BasePage {
             transform: {
                 translationX: 0
             }
-        },{
+        }, {
             duration: 250,
             easing: "linear"
         });
@@ -100,7 +78,7 @@ export class FriendPage extends BasePage {
 
     private  animateOut(widget: tabris.Widget, outRight: boolean) {
         let direction: number;
-        if(outRight) {
+        if (outRight) {
             direction = 1;
         } else {
             direction = -1;
@@ -110,7 +88,7 @@ export class FriendPage extends BasePage {
             transform: {
                 translationX: 400 * direction
             }
-        },{
+        }, {
             duration: 250,
             easing: "linear"
         }).then(value => {
