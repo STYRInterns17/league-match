@@ -1,134 +1,133 @@
 /**
- * Created by STYRLabs2 on 6/7/2017.
+ * Created by STYRLabs2 on 6/6/2017.
  */
-import {BasePage} from './BasePage';
-import {CustomButton} from '../components/CustomButton';
 import * as tabris from 'tabris';
-import {LeagueCreationPage} from "./LeagueCreationPage";
+
+import {BasePage} from './BasePage';
+import {Leaderboard} from '../components/Leaderboard';
+import {CustomButton} from '../components/CustomButton';
+import {AdminPage} from './AdminPage';
+import {LeaguePage} from "./LeaguePage";
 import {ServiceLayer} from "../util/ServiceLayer";
-import {League} from "../../../common/League";
 import {User} from "../../../common/User";
+import {NotificationPage} from "./NotificationPage";
+import {ProfilePage} from "./ProfilePage";
+import {LoginPage} from "./LoginPage";
+import {LogMatchPage} from "./LogMatchPage";
+import {Button, Color, Composite, Drawer, NavigationView} from "tabris";
 import {ColorScheme} from "../util/ColorScheme";
-import {Composite} from "tabris";
+import {League} from "../../../common/League";
 import {CacheManager} from "../util/CacheManager";
+
 const IMAGE_PATH = 'assets/';
-
-
-
-
 export class LeaguePage extends BasePage {
-    private leagues;
-    private userObj: User;
+    public navigationView: tabris.NavigationView;
+    public userId: number;
+    public user: User;
+    public userLeagueIds: Array = [];
+    public adminButton: CustomButton;
 
     constructor() {
         super();
-        this.userObj = CacheManager.getCurrentUser();
-        this.leagues = [];
+        this.page.background = '#B4E0E1';
+        console.log('new');
+        this.page.on('appear', () => {
+            this.reloadLeaderBoard(this.page);
+            this.reloadAdminButton();
+        });
 
-        if (!Array.isArray(this.userObj.leagues) || !this.userObj.leagues.length) {
-            this.page.title = 'You are not in any leagues';
-            this.createComponents(0);
+        this.createComponents();
+    }
+
+    public createComponents(): void {
+
+        this.userId = CacheManager.getCurrentUserId();
+        ServiceLayer.httpGetAsync('/user', 'userId=' + this.userId, (response) => {
+            //get the current user logged in
+            if (response.message !== 'success') {
+                console.log('Invalid UserId');
+                CacheManager.clearCache();
+                this.page.parent().append(new LoginPage().page);
+                this.page.dispose();
+
+            } else { //success
+                CacheManager.setCurrentUser(response.user);
+                this.user = CacheManager.getCurrentUser();
+                //set default league to display as the first league of User - any changes to currentleagueId will be set in LeaguePage
+
+                //user is in a league but currentLeagueId has not been set ie: logging into a new d
+                if (this.user.leagues[0] != null && CacheManager.getCurrentLeagueId() == null) {
+                    CacheManager.setCurrentLeagueId(this.user.leagues[0]);
+                }
+            }
+            this.reloadLeaderBoard(this.page);
+            this.reloadAdminButton();
+        });
+
+    }
+
+    private reloadLeaderBoard(page: tabris.Page) {
+        new Leaderboard(this.page);
+        let buttonComp = new Composite({top: 0, bottom: 0, left: 0, right: 0, background: ColorScheme.Background});
+        buttonComp.appendTo(this.page);
+
+        let logMatchButton = new CustomButton({
+            left: '10%', right: '60%',top: 10,
+            background: ColorScheme.Background
+        }, 'Log').on('tap', () => {
+            let logmatchPage = new LogMatchPage().page.on('disappear', () => {
+                logmatchPage.dispose();
+            });
+            this.page.parent().append(logmatchPage);
+        }).changeBorderColor('#000000').append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
+        logMatchButton.appendTo(buttonComp);
+
+
+        this.adminButton = new CustomButton({
+            left: '60%', right: '10%',top: 10,
+            background: ColorScheme.Background
+        }, 'Admin').on('tap', () => {
+            // The '+' signifies that the string is actually a number
+            this.page.parent().append(new AdminPage().page);
+        }).changeBorderColor('#000000');
+        this.adminButton.appendTo(buttonComp);
+    }
+
+    public reloadAdminButton() {
+        if (CacheManager.getCurrentLeagueId() != null) {
+            ServiceLayer.httpGetAsync('/league', 'leagueId=' + CacheManager.getCurrentLeagueId().toString(), (league: League) => {
+                if (league.adminIds.indexOf(this.userId) != -1) {
+                    this.adminButton.enabled = true;
+                    this.adminButton.opacity = 1;
+                } else {
+                    this.adminButton.enabled = false;
+                    this.adminButton.opacity = 0;
+                }
+            });
         } else {
-            this.leagueLoop();
-            this.page.title = 'League Page';
+            this.adminButton.enabled = false;
+            this.adminButton.opacity = 0;
         }
-    }
-
-    private createComponents(leagueLength: number): void {
-
-        let comp1 = new tabris.Composite({top: 0, bottom: '15%', left: 0, right: 0}).appendTo(this.page);
-        let comp2 = new tabris.Composite({
-            top: comp1,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            background: ColorScheme.Background
-        }).appendTo(this.page);
-
-
-        let collectionView = new tabris.CollectionView({
-            left: 0, top: 0, right: 0, bottom: 0,
-            itemCount: leagueLength,
-            cellHeight: 100,
-            background: ColorScheme.Background,
-            //TODO let user refresh league page
-            refreshEnabled: false,
-            createCell: () => {
-                let cell = new tabris.Composite();
-                let comp = new Composite({
-                    background: ColorScheme.Background,
-                    left: 2,
-                    right: 2,
-                    top: 2,
-                    bottom: 2,
-                    cornerRadius: 5,
-                    opacity: .96
-                });
-                new tabris.Composite({
-                    height: 80,
-                    background: '#000000',
-                    left: 10,
-                    right: 10,
-                    cornerRadius: 5,
-                    top: 'prev() 10'
-                }).appendTo(cell).append(comp);
-                new tabris.TextView({
-                    centerY: 0,
-                    centerX: 0,
-                    alignment: 'center',
-                    font: 'bold 20px',
-                    textColor: '#000000'
-                }).appendTo(comp);
-                return cell;
-            },
-            updateCell: (cell, index) => {
-                let title = this.leagues[index].pref.title;
-                cell.apply({
-                    TextView: {text: title}
-                });
-            }
-        }).on('select', ({index}) => {
-            CacheManager.setCurrentLeagueId(this.leagues[index].id);
-            window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title);
-            console.log(this.leagues)
-        }).appendTo(comp1);
-
-        new CustomButton({
-            centerY: 0,
-            left: 10,
-            right: 10,
-            background: ColorScheme.Background
-        }, '➕ Create a League').changeBorderColor('#000000').on('tap', () => {
-            this.page.parent().append(new LeagueCreationPage(CacheManager.getCurrentUserId()).page);
-        }).appendTo(comp2);
-
-        this.page.background = ColorScheme.Primary;
 
     }
 
-    private getLeagues(i) {
-        let p = new Promise((resolve, reject) => {
-            ServiceLayer.httpGetAsync('/league', 'leagueId=' + this.userObj.leagues[i].toString(), (response) => {
-                console.log(response);
-            resolve(response);
-            });
-        });
-        this.leagues.push(p);
-    }
-
-    private leagueLoop(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            for (let i = 0; i < this.userObj.leagues.length; i++) {
-                this.getLeagues(i);
-                    //this.leagues.push(League);
-                    if (i == this.userObj.leagues.length - 1) {
-                    }
-            }
-            Promise.all(this.leagues).then((leagues) => {
-                this.leagues = leagues;
-                this.createComponents(this.leagues.length);
-                resolve();
-            });
-        });
-    };
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

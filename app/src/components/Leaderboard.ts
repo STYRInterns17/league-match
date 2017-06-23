@@ -1,4 +1,4 @@
-import {Page} from "tabris";
+import {Composite, Page} from "tabris";
 import {User} from "../../../common/User";
 import {League} from "../../../common/League";
 import {ServiceLayer} from "../util/ServiceLayer";
@@ -78,7 +78,7 @@ export class Leaderboard{
             //let memberIds: Array<number> = league.adminIds.concat(league.playerIds);
             this.page.title = this.league.pref.title;
             let collectionView = new CollectionView({
-                left: 0, top: 0, right: 0, bottom: 0,
+                left: 0, top: '20%', right: 0, bottom: 0,
                 itemCount: this.users.length,
                 background: ColorScheme.Background,
                 cellHeight: 135,

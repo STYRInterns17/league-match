@@ -5,6 +5,7 @@ import {LogMatchPage} from "./pages/LogMatchPage";
 import {Leaderboard} from "./components/Leaderboard";
 import {HomePage} from "./pages/HomePage";
 import {CacheManager} from "./util/CacheManager";
+import {LeaguePage} from "./pages/LeaguePage";
 
 
 // Main Function

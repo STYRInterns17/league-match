@@ -9,6 +9,8 @@ import {User} from "../../../common/User";
 import {HomePage} from "./HomePage";
 import {SignUpPage} from "./SignUpPage";
 import {CacheManager} from "../util/CacheManager";
+import {League} from "../../../common/League";
+import {LeaguePage} from "./LeaguePage";
 
 export class LoginPage extends BasePage {
 
@@ -94,6 +96,7 @@ export class LoginPage extends BasePage {
                     CacheManager.setCurrentUserId(response.user.id);
                     window.plugins.toast.showShortCenter('Welcome');
                     new HomePage().page.appendTo(this.page.parent());
+                    // new HomePage().page.appendTo(this.page.parent());
                     this.page.dispose();
                 } else {
                     window.plugins.toast.showShortCenter('Login Invalid');
