@@ -34,7 +34,6 @@ export class InvitePage extends BasePage {
         this.page.on('disappear', () => {
             action.visible = false;
             action.dispose();
-            this.page.dispose();
         });
 
         let comp1 = new tabris.Composite({
@@ -191,11 +190,11 @@ export class InvitePage extends BasePage {
                                 console.log('Invite sent')
                             });
                             if (i == idArray.length - 1) {
-                                this.page.dispose();
+                                this.disposePage();
                             }
                         }
                     } else {
-                        this.page.dispose();
+                        this.disposePage();
                     }
                 });
             })

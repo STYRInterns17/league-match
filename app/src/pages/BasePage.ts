@@ -12,32 +12,42 @@ export abstract class BasePage {
             left: 0,
             right: 0,
             bottom: 0,
-            top: 0
+            top: 0,
+            transform: {
+
+                scaleY: 0.1,
+                scaleX: 0.1,
+            },
+            opacity: 0.1,
+            autoDispose: false
+
+        }).on('appear', (event) => {
+            event.target.translationX = 0;
+            event.target.translationY = 0;
+
+            event.target.animate({
+                transform: {
+                    scaleY: 1,
+                    scaleX: 1
+                },
+                opacity: 1
+            }, 1500)
+        }).on('disappear', (event) => {
+            console.log('is disposed?');
+            console.log(event.target.isDisposed());
+                event.target.animate({
+                    transform: {
+                        translationX: 450
+                    }
+                }, 150);
+
+        }).on('dispose', (event) => {
+            this.disposePage();
         });
-        //this.page.background = '#37474f';
     }
 
-    // public abstract navigationTo(): void;
-    //
-    // public find(selector: string) {
-    //     return this.page.find(selector);
-    // }
-    //
-    // public resolve(): any[] {
-    //     return [];
-    // }
-    //
-    // protected runResolve(): any {
-    //     if (this.resolve) {
-    //         let param = this.resolve();
-    //         return this.resolver(param);
-    //     }
-    //     return false;
-    // }
-    //
-    // private resolver(param: any[]): any {
-    //     return Promise.all(<any>param).catch((err) => {
-    //         console.error("Failed to resolve", err);
-    //     });
-    // }
+    public disposePage() {
+        setTimeout(() => this.page.dispose(), 160);
+    }
+
 }

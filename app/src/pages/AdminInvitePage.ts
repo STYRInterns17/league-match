@@ -159,11 +159,8 @@ export class AdminInvitePage extends BasePage {
         }
 
         this.page.on('disappear', () => {
-
             action.visible = false;
             action.dispose();
-            this.page.dispose();
-
         });
 
         let finishButton = new CustomButton({
