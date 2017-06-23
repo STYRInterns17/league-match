@@ -178,7 +178,6 @@ export class HomePage extends BasePage {
         }).on('select', ({index}) => {
             CacheManager.setCurrentLeagueId(this.leagues[index].id);
             new LeaguePage().page.appendTo(this.page.parent());
-            window.plugins.toast.showShortCenter('League changed to ' + this.leagues[index].pref.title);
         }).appendTo(comp1);
 
         new CustomButton({

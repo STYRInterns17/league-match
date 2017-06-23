@@ -17,11 +17,11 @@ export class LoginPage extends BasePage {
     public user: User;
     private userEmail;
     private userPassword;
-
-    constructor() {
+    private navigationView;
+    constructor(navView) {
         super();
         this.user = CacheManager.getCurrentUser();
-
+        this.navigationView = navView;
         this.createComponents();
     }
 
@@ -95,9 +95,8 @@ export class LoginPage extends BasePage {
                 if (response.success) {
                     CacheManager.setCurrentUserId(response.user.id);
                     window.plugins.toast.showShortCenter('Welcome');
-                    new HomePage().page.appendTo(this.page.parent());
-                    // new HomePage().page.appendTo(this.page.parent());
                     this.page.dispose();
+                    new HomePage().page.appendTo(this.navigationView);
                 } else {
                     window.plugins.toast.showShortCenter('Login Invalid');
                 }

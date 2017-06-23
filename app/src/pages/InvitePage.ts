@@ -190,11 +190,11 @@ export class InvitePage extends BasePage {
                                 console.log('Invite sent')
                             });
                             if (i == idArray.length - 1) {
-                                this.disposePage();
+                                this.page.dispose();
                             }
                         }
                     } else {
-                        this.disposePage();
+                        this.page.dispose();
                     }
                 });
             })

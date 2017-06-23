@@ -19,7 +19,7 @@ class Main {
 
 
         if (CacheManager.getCurrentUserId() === null) {
-            new LoginPage().page.appendTo(this.navigationView);
+            new LoginPage(this.navigationView).page.appendTo(this.navigationView);
         } else {
             new HomePage().page.appendTo(this.navigationView);
         }

@@ -102,10 +102,12 @@ export class Leaderboard{
                 },
                 updateCell: (cell, index) => {
                     let user = this.users[index];
+                    let i = 1;
                     cell.apply({
                         ImageView: {image: IMAGE_PATH + 'avatar' + (user.pref.avatarId + 1).toString() + '.png'},
-                        TextView: {text: user.name + ' - ' + user.mmr[user.leagues.indexOf(CacheManager.getCurrentLeagueId())]},
+                        TextView: {text: index + 1 + ')  ' + user.name + ' - ' + user.mmr[user.leagues.indexOf(CacheManager.getCurrentLeagueId())]},
                     });
+                    i++;
                 }
             }).on('select', ({index}) => {
                 let user = this.users[index];

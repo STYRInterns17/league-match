@@ -32,22 +32,9 @@ export abstract class BasePage {
                 },
                 opacity: 1
             }, 1500)
-        }).on('disappear', (event) => {
-            console.log('is disposed?');
-            console.log(event.target.isDisposed());
-                event.target.animate({
-                    transform: {
-                        translationX: 450
-                    }
-                }, 150);
-
-        }).on('dispose', (event) => {
-            this.disposePage();
         });
     }
 
-    public disposePage() {
-        setTimeout(() => this.page.dispose(), 160);
-    }
+
 
 }
