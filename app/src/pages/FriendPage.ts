@@ -49,7 +49,6 @@ export class FriendPage extends BasePage {
         }).appendTo(profileAttributeSection);
         this.animateIn(profilePic);
 
-
         new tabris.TextView({
             layoutData: {top: '50%', centerX: 0},
             text: this.user.name
@@ -59,6 +58,47 @@ export class FriendPage extends BasePage {
             layoutData: {top: '60%', centerX: 0},
             text: this.user.pref.bio
         }).appendTo(this.page);
+
+        let messageInput = new tabris.TextInput({
+            layoutData: {left: '5%', top: '90%', right: '40%', height: 50},
+            message: 'Send your friend a message!',
+            enterKeyType: 'send',
+            autoCorrect: true
+        }).on('accept', (event) => {
+            let currentUser: User = CacheManager.getCurrentUser();
+            let broadcastRequest = {
+                leagueId: CacheManager.getCurrentLeagueId(),
+                message: event.target.text,
+                submitterName: currentUser.name
+            };
+
+            ServiceLayer.httpPostAsync('/notification/league', broadcastRequest, (response => {
+                window.plugins.toast.showShortCenter(response.message);
+                if(response.message === 'Message Sent') {
+                    event.target.text = '';
+                }
+            }));
+        }).appendTo(this.page);
+
+        new CustomButton({
+            top: '90%',
+            left: 'prev() 45',
+            height: 20,
+            background: ColorScheme.Background
+        }, 'Send').on('tap', (event) => {
+            let currentUser: User = CacheManager.getCurrentUser();
+            let broadcastRequest = {
+                leagueId: CacheManager.getCurrentLeagueId(),
+                message: messageInput.text,
+                submitterName: currentUser.name
+            };
+            ServiceLayer.httpPostAsync('/notification/league', broadcastRequest, (response => {
+                window.plugins.toast.showShortCenter(response.message);
+                if(response.message === 'Message Sent!') {
+                    messageInput.text = '';
+                }
+            }));
+        }).changeBorderColor('#000000').appendTo(this.page);
 
         return this.page;
     }
