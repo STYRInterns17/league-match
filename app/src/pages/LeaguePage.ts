@@ -26,7 +26,7 @@ export class LeaguePage extends BasePage {
     public user: User;
     public userLeagueIds: Array = [];
     public adminButton: CustomButton;
-
+    public logMatchButton: CustomButton;
     constructor() {
         super();
         this.page.background = '#B4E0E1';
@@ -71,7 +71,7 @@ export class LeaguePage extends BasePage {
         let buttonComp = new Composite({top: 0, bottom: 0, left: 0, right: 0, background: ColorScheme.Background});
         buttonComp.appendTo(this.page);
 
-        let logMatchButton = new CustomButton({
+        this.logMatchButton = new CustomButton({
             left: '10%', right: '60%',top: 10,
             background: ColorScheme.Background
         }, 'Log').on('tap', () => {
@@ -80,14 +80,13 @@ export class LeaguePage extends BasePage {
             });
             this.page.parent().append(logmatchPage);
         }).changeBorderColor('#000000').append(new Composite({backgroundImage: IMAGE_PATH + 'pencil.png'}));
-        logMatchButton.appendTo(buttonComp);
+        this.logMatchButton.appendTo(buttonComp);
 
 
         this.adminButton = new CustomButton({
             left: '60%', right: '10%',top: 10,
             background: ColorScheme.Background
         }, 'Admin').on('tap', () => {
-            // The '+' signifies that the string is actually a number
             this.page.parent().append(new AdminPage().page);
         }).changeBorderColor('#000000');
         this.adminButton.appendTo(buttonComp);
@@ -102,11 +101,13 @@ export class LeaguePage extends BasePage {
                 } else {
                     this.adminButton.enabled = false;
                     this.adminButton.opacity = 0;
+                    this.logMatchButton.right = '10%'
                 }
             });
         } else {
             this.adminButton.enabled = false;
             this.adminButton.opacity = 0;
+            this.logMatchButton.right = '10%'
         }
 
     }
