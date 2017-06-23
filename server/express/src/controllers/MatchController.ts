@@ -89,6 +89,7 @@ export class MatchController {
                             team1wins = false;
                         }
                     }
+
                     // If lower score wins
                     else if (league.pref.highestScore === 1) {
                         if (match.team1Score > match.team2Score) {

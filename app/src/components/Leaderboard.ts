@@ -109,7 +109,7 @@ export class Leaderboard{
                 }
             }).on('select', ({index}) => {
                 let user = this.users[index];
-                this.page.parent().append(new FriendPage().page);
+                this.page.parent().append(new FriendPage(user).page);
             });
             return collectionView;
         }
