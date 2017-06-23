@@ -11,6 +11,9 @@ export class SignUpPage extends  BasePage{
         this.page.title = 'Create an Account!';
         this.page.background = '#b8d2ff';
         this.createComponents();
+        this.page.on('disappear', () =>{
+            this.page.dispose();
+        })
     }
 
     private createComponents(): void {

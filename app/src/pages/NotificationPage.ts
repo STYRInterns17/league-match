@@ -194,11 +194,10 @@ export class NotificationPage extends BasePage {
             CacheManager.setCurrentLeagueId(leagueId);
             let userObj: User = CacheManager.getCurrentUser();
             userObj.leagues.push(leagueId);
+            userObj.mmr.push(5000);
             CacheManager.setCurrentUser(userObj);
 
         }));
-
-
     }
 
     private animateCancel({target}) {
